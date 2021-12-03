@@ -7,6 +7,9 @@ tags:
 - devops
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 执行glance命令报http 503错误
 
     HTTPServiceUnavailable: 503 Service Unavailable: No server is available to handle this request. (HTTP 503)

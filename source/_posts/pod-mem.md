@@ -1,6 +1,6 @@
 title: k8s OOMkilled超出内存限制的容器
 date: 2020-05-22 13:52:15
-categories: 容器
+categories: 云原生
 tags:
 - k8s
 - Kubernetes

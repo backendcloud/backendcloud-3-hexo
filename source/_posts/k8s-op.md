@@ -1,10 +1,12 @@
 title: k8s常用操作
 date: 2020-05-27 17:32:08
-categories:
-- 容器
+categories: 云原生
 tags:
 - k8s
 ---
+
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
 
 # POD创建时指定工作节点主机host上一个dir分配给POD
 

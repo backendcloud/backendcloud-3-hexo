@@ -5,6 +5,9 @@ tags:
 - Stein
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 OpenStack 的第 19 个版本 Stein，支持 5G 和边缘计算。
 OpenStack Stein 强化裸机和网络管理性能，同时更快速的启动 Kubernetes 集群，还为边缘计算和 NFV 用例提供网络升级功能，增强了资源管理和跟踪性能。
 

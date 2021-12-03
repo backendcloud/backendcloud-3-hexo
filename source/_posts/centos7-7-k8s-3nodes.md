@@ -1,11 +1,13 @@
 title: CentOS7.7部署k8s（1 master + 2 node）
 date: 2020-04-10 13:46:34
-categories:
-- 容器
+categories: 云原生
 tags:
 - CentOS7.7
 - k8s
 ---
+
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
 
 VMware创建三个vm，规格2cpu 4G mem 200G disk，一个NAT网卡
 

@@ -26,3 +26,14 @@ tags:
 * goland 2020.3
 * IntelliJ ideaIU 2020.3
 * PyCharm 2020.3
+
+也可使用下面的方法和上面的方法组合使用，双保险，防止一方突然失效。
+
+Jetbrains 家的产品有一个很良心的地方，他会允许你试用 30 天（这个数字写死在代码里了）以评估是否你真的需要为它而付费。有一款插件你或许可以用它来重置一下试用时间。但切记不要无休止的一直试用，这并不是这个插件的初衷！
+
+插件市场安装：
+在 Settings/Preferences... -> Plugins 内手动添加第三方插件仓库地址：https://plugins.zhile.io 搜索：IDE Eval Reset 插件进行安装。
+![](/images/jetbrains-mac-m1/1.jpg)
+![](/images/jetbrains-mac-m1/2.jpg)
+![](/images/jetbrains-mac-m1/3.jpg)
+![](/images/jetbrains-mac-m1/4.jpg)

@@ -7,6 +7,9 @@ tags:
 - devops
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 # 自动清除镜像缓存
 
 在一台计算节点创建虚拟机，若是第一次在该节点创建次虚拟机，会先将镜像文件复制到该计算节点目录/var/lib/nova/instances/_base。长期下来，该目录会占用比较大的磁盘空间而要清理。
@@ -182,6 +185,6 @@ dashboard neutron报错 Invalid service catalog service: network
 
 
 # **系列文章链接**
-- [Openstack运维常见问题记录(3)](https://www.backendcloud.cn/2018/09/29/openstackopmemo3/)
-- [Openstack运维常见问题记录(2)](https://www.backendcloud.cn/2018/08/28/openstackopmemo2/)
-- [Openstack运维常见问题记录(1)](https://www.backendcloud.cn/2018/08/26/openstackopmemo/)
+- {% post_link openstackopmemo3 Openstack运维常见问题记录(3) %}
+- {% post_link openstackopmemo2 Openstack运维常见问题记录(2) %}
+- {% post_link openstackopmemo Openstack运维常见问题记录(1) %}

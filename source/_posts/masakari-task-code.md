@@ -10,6 +10,9 @@ tags:
 
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 Masakari一词来源于日语板斧，该项目是Openstack社区的一个用来实现VM HA的开源项目。目前masakari支持下面3种故障恢复：
 1. provisioning process down
 2. VM process down
