@@ -86,7 +86,7 @@ menu:
 # 文末声明
 article_txt: 转载请注明来源，欢迎指出任何有错误或不够清晰的表达。可以邮件至 backendcloud@gmail.com
 
-bottom_text: ©2017-2021 后端云
+bottom_text: ©2017-2022 后端云
 # 自定义页面最下方的站点版权信息
 # 如果不填，则自定义为 ©2017 author (这个author为hexo根目录_config.yml中配置的)
 

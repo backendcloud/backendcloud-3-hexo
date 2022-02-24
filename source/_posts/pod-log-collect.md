@@ -80,8 +80,30 @@ Fluentd 典型的部署架构需要包含两种不同角色：转发器（forwar
 	</source>
 	
 	<match **>
-	  @type stdout                                              # Uses file plugin to write logs to
+	  @type stdout
 	</match>
+
+日志回滚配置如下：
+
+```bash
+# cat /etc/logrotate.d/cmp-pod
+/tmp/ftp_path/log_pod/*.log {
+    missingok
+    copytruncate
+    rotate 30
+    compress
+    dateext
+    dateformat -%Y%m%d-%H-%s
+    sharedscripts
+}
+#  cat /etc/cron.d/cmp-pod 
+# Run system activity accounting tool every 10 minutes
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+*/5 * * * * root logrotate -f /etc/logrotate.d/cmp-pod
+```
+
 
 # 用Fluentd收集Pod日志过程中遇到的几个问题记录下
 
