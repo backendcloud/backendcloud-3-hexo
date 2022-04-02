@@ -34,20 +34,21 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$HEXO_DEPLOY_PRI" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git config --global user.name "hanwei"
-          git config --global user.email "backendcloud@gmail.com"
+#          ssh-keyscan github.com >> ~/.ssh/known_hosts
+#          git config --global user.name "hanwei"
+#          git config --global user.email "backendcloud@gmail.com"
       - name: Install dependencies
         run: |
           npm i -g hexo-cli
           npm i
-          npm install hexo-deployer-git --save
+#          npm install hexo-deployer-git --save
       - name: Deploy hexo
         run: |
-          hexo clean && hexo generate
-          mkdir -p ./public/.github/workflows
-          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows/ci.yml
-          hexo deploy
+          hexo clean && hexo generate && hexo deploy
+#          hexo clean && hexo generate
+#          mkdir -p ./public/.github/workflows
+#          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows/ci.yml
+#          hexo deploy
 
 
 
