@@ -134,3 +134,5 @@ deploy:
   repo: git@github.com:backendcloud/backendcloud.github.io.git
   # example, https://github.com/hexojs/hexojs.github.io
   branch: master
+  ignore_hidden:
+    public: false
