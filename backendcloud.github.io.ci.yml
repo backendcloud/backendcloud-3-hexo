@@ -19,18 +19,18 @@ jobs:
         uses: AEnterprise/rsync-deploy@v1.0 # 使用别人包装好的步骤镜像
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }} # 引用配置，SSH私钥
-          ARGS: -avz --delete --exclude='*.pyc' # rsync参数，排除.pyc文件
+          ARGS: -avz --delete --exclude '.git/' --exclude '.github/' # rsync参数，排除文件和目录
           SERVER_PORT: "22" # SSH端口
           FOLDER: ./ # 要推送的文件夹，路径相对于代码仓库的根目录
           SERVER_IP: ${{ secrets.SSH_HOST }} # 引用配置，服务器的host名（IP或者域名domain.com）
           USERNAME: root # 引用配置，服务器登录名
           SERVER_DESTINATION: /usr/share/nginx/html/backendcloud/www/ # 部署到目标文件夹
-      - name: Restart server # 第三步，重启服务
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }} # 下面三个配置与上一步类似
-          username: root
-          key: ${{ secrets.DEPLOY_KEY }}
-          # 重启的脚本，根据自身情况做相应改动，一般要做的是migrate数据库以及重启服务器
-          script: |
-            rm -rf /usr/share/nginx/html/backendcloud/www/.git*
+#      - name: Restart server # 第三步，重启服务
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.SSH_HOST }} # 下面三个配置与上一步类似
+#          username: root
+#          key: ${{ secrets.DEPLOY_KEY }}
+#          # 重启的脚本，根据自身情况做相应改动，一般要做的是migrate数据库以及重启服务器
+#          script: |
+#            rm -rf /usr/share/nginx/html/backendcloud/www/.git*
