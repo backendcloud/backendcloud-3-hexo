@@ -1,0 +1,101 @@
+使用 GitHub Actions 实现博客自动化部署
+Published on April 26, 2020
+使用 GitHub Actions 实现博客自动化部署
+如果大家以前是用过静态博客，比如 Hugo、Hexo，可能配置过自动部署，也就是提交代码到源文件分支，自动生成静态文件提交到静态分支。静态博客的部署都是基于文件，目标只是一个 Git 仓库，一切都比较自然。那么如果是喜欢折腾，使用了动态博客呢？这里就涉及到服务器远程登录了。下面介绍一下我使用的方法。
+
+我看过很多同学部署网站，都是手动 FTP 推包，手动 ssh 连上服务器操作重启。这种方式一是操作烦琐，二是不推崇总是在生产环境人工操作，因为人工操作越多，越容易出错。推文件——重启这种重复性动作，应该交给机器人去做，把自己从运维中解放出来，只有在十分紧急的情况，才登录到服务器上。
+
+使用 GitHub Actions 自动化
+实现代码提交的自动化工作流，要依靠持续集成（或者加上持续交付）服务。现在主流的公用免费的持续集成服务有：
+
+Travis CI
+Jenkins
+Circle CI
+Azure Pipeline
+GitHub Actions
+其中 GitHub Actions 是 GitHub 自家的持续集成及自动化工作流服务，简单易用，也是本文推荐使用的服务。它使用起来非常简单，只要在你的仓库根目录建立.github/workflows文件夹，将你的工作流配置(YAML 文件)放到这个目录下，就能启用 GitHub Actions 服务。
+
+建立 SSH 密钥对
+要把文件部署到远程服务器，首先要解决登录校验的问题。要么用密码登录、要么用 SSH 密钥登录。这里推荐用第二种方式，因为密码可能要定期更换，而用 SSH 密钥可以一劳永逸。
+
+假设当前用户是 root，是其他用户也行。生成 SSH 密钥对：
+
+$ mkdir -p ~/.ssh && cd ~/.ssh
+$ ssh-keygen -t rsa -f mysite
+Generating public/private rsa key pair.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+这里一路回车就行，执行完成后，会在~/.ssh下生成两个文件：mysite（私钥）和mysite.pub（公钥）。其中私钥是你的个人登录凭证，不可以分享给他人，如果别人得到了你的私钥，就能登录到你的服务器。公钥则需要放到登录的目标服务器上。
+
+将公钥mysite.pub的内容贴到目标服务器的~/.ssh/authorized_keys中，如果上一步你直接是在服务器中执行，则只要：
+
+$ cat mysite.pub >> authorized_keys
+否则，手动复制公钥的内容，粘贴到~/.ssh/authorized_keys后面即可，若文件或目录不存在，可以自己创建。这一步的目的，是告诉目标服务器：「我以后用这个私钥登录，你需要允许哈」。
+
+确保服务器~/.ssh文件夹的权限低于 711，我这里直接用 600（仅本用户可读写）：
+
+$ chmod 600 -R ~/.ssh
+最后，查看私钥文件mysite，将内容复制下来以备后续使用，私钥的文件内容大致如下：
+
+-----BEGIN RSA PRIVATE KEY-----
+...
+-----END RSA PRIVATE KEY-----
+将自动化配置写到 GitHub 仓库
+打开你的网站代码仓库，点击 Settings 标签，找到 Secrets 设定：
+
+image-20200426115120829
+选择 Add a new secret，添加一个配置项DEPLOY_KEY，将刚才复制的私钥的内容粘贴在其中。然后，你可以像我上图中一样，把你的服务器 host 和用户名也添加到配置中。这里用户名应该与你上一步操作使用的登录用户一致。
+
+添加在这里的配置，将只对你可见，不用担心会泄露给他人。
+
+编写工作流文件
+好，准备工作都做好了，现在我们来写自动化工作流的配置。
+
+在仓库根目录中创建.github/workflows文件夹，再创建一个 YAML 文件，文件名自定，我这里起名叫deploy.yml，所以文件的完整路径应该为.github/workflows/deploy.yml，我将配置的意义写在注释中，文件内容如下：
+
+name: Deploy site files
+
+on:
+  push:
+    branches:
+      - master # 只在master上push触发部署
+    paths-ignore: # 下列文件的变更不触发部署，可以自行添加
+      - README.md
+      - LICENSE
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # 使用ubuntu系统镜像运行自动化脚本
+
+    steps: # 自动化步骤
+      - uses: actions/checkout@v2 # 第一步，下载代码仓库
+
+      - name: Deploy to Server # 第二步，rsync推文件
+        uses: AEnterprise/rsync-deploy@v1.0 # 使用别人包装好的步骤镜像
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }} # 引用配置，SSH私钥
+          ARGS: -avz --delete --exclude='*.pyc' # rsync参数，排除.pyc文件
+          SERVER_PORT: "22" # SSH端口
+          FOLDER: ./ # 要推送的文件夹，路径相对于代码仓库的根目录
+          SERVER_IP: ${{ secrets.SSH_HOST }} # 引用配置，服务器的host名（IP或者域名domain.com）
+          USERNAME: ${{ secrets.SSH_USERNAME }} # 引用配置，服务器登录名
+          SERVER_DESTINATION: /home/fming/mysite/ # 部署到目标文件夹
+      - name: Restart server # 第三步，重启服务
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }} # 下面三个配置与上一步类似
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          # 重启的脚本，根据自身情况做相应改动，一般要做的是migrate数据库以及重启服务器
+          script: |
+            cd /home/fming/mysite/
+            python manage.py migrate
+            supervisorctl restart web
+可以发现 GitHub Actions 的最大特点就是有很多第三方提供的镜像，已经把一些常用的步骤封装好了，你只需要填下配置即可。而这些镜像也很容易提供，发布在自己的 GitHub 仓库即可，所以扩展性很强。
+
+把文件写好，提交到仓库，就可以发现 GitHub Actions 已经启动了！可以在提交历史后面的状态，或者 Actions 标签中看到运行的状态。
+
+image-20200426124204056
+总结
+有 GitHub Actions 这个利器，除了自动部署，还可以做自动备份，自动 XXX……只要你想，你甚至能提交代码自动触发房间开灯。这些奇技淫巧，就留给读者自己去探索了。当然，这些都必须围绕一个 GitHub 代码仓库来做。推荐大家把自己用到的代码都放到 Git 上管理，一是可以备份方便重建，二是可以利用这些周边的生态，来让你的生活更简单。不要再用百度网盘存代码、用 FTP 客户端传文件了。
+

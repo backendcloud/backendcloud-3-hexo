@@ -119,13 +119,18 @@ baidu_analytics: 2858b2d509d28416712739c9a6a31204
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
+#deploy:
+#  type: rsync
+#  host: 120.26.200.226
+#  user: root
+#  root: /usr/share/nginx/html/backendcloud/www/
+#  #root: /usr/share/nginx/html/backendcloud/www/blog/h
+#  port: 22
+#  delete: true
+#  verbose: true
+#  ignore_errors: false
 deploy:
-  type: rsync
-  host: 120.26.200.226
-  user: root
-  root: /usr/share/nginx/html/backendcloud/www/
-  #root: /usr/share/nginx/html/backendcloud/www/blog/h
-  port: 22
-  delete: true
-  verbose: true
-  ignore_errors: false
+  type: git
+  repo: git@github.com:backendcloud/backendcloud.github.io.git
+  # example, https://github.com/hexojs/hexojs.github.io
+  branch: master
