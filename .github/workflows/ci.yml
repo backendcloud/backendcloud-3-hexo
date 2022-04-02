@@ -39,14 +39,7 @@ jobs:
         run: |
           hexo clean && hexo generate
           mkdir -p ./public/.github/workflows
-          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows
-          echo "abc"
-          cp ./backendcloud.github.io.ci.yml ./public/
-          echo "tt" > ./public/abc
-          echo "tt" > ./public/weixin-mp/abc
-          echo "tt" > ./public/.abc
-          echo "tt" > ./public/weixin-mp/.abc
-          echo "tt" > ./public/.github/workflows/abc
+          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows/ci.yml
           hexo deploy
 
 
