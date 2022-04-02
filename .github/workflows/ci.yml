@@ -35,15 +35,14 @@ jobs:
           npm i -g hexo-cli
           npm i
           npm install hexo-deployer-git --save
-          mkdir -p ./public/.github/workflows
-          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows
-          echo "abc"
-          cp ./backendcloud.github.io.ci.yml ./public/
       - name: Deploy hexo
         run: |
           hexo clean && hexo generate
           mkdir -p ./public/.github/workflows
           cp ./backendcloud.github.io.ci.yml ./public/.github/workflows
+          echo "abc"
+          cp ./backendcloud.github.io.ci.yml ./public/
+          echo "tt" > ./public/abc.txt
           hexo deploy
 
 
