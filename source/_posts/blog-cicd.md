@@ -1,8 +1,13 @@
-# backendcloud-3-hexo
-https://github.com/backendcloud/backendcloud-3-hexo 是 https://www.backendcloud.cn/ 的hexo项目仓库。该仓库下的./public/文件不一定更新，只有用到下面的Github Action CICD流程的情况下会自动更新。
-
-# backendcloud.github.io
-https://github.com/backendcloud/backendcloud.github.io 是对应的静态html仓库。该仓库是Github Action CICD流程自动更新的。
+---
+title: 博客CICD升级
+date: 2022-04-03 00:17:47
+categories: Tools
+tags: 
+- Github Action
+- Hexo
+- Blog
+- CICD
+---
 
 # CICD方案升级
 
@@ -131,8 +136,8 @@ on:
     paths: # 这里是用来指定哪个文件更改，才会触发的
       - './source/_posts/**'
 ```
-
-![](.README_images/d3dba8a4.png)
+/images/blog-cicd
+![](/images/blog-cicd/d3dba8a4.png)
 
     Invalid workflow file: .github/workflows/ci.yml#L1
       you may only define one of `paths` and `paths-ignore` for a single event
@@ -140,12 +145,12 @@ on:
 ## rsync use市场里选错了开源组件
 
 burnett01/rsync-deployments@5.2 这个不知道哪里有问题
-![](.README_images/75229aef.png)
+![](/images/blog-cicd/75229aef.png)
 
 use换了一个：AEnterprise/rsync-deploy@v1.0 立马正常。
 
 ## hexo git找不到
-![](.README_images/ae49c07c.png)
+![](/images/blog-cicd/ae49c07c.png)
 
 需要在
 
@@ -171,12 +176,12 @@ use换了一个：AEnterprise/rsync-deploy@v1.0 立马正常。
 ```
 
 ## 推送到静态网页仓库没有权限
-![](.README_images/7ba42045.png)
+![](/images/blog-cicd/7ba42045.png)
 
 需要在静态网页的Github仓库的`Settings`标签里，配置下公钥，该公钥需要和github action中的容器里的私钥一致。
 
 ## 推送到静态网页仓库正常，Github能看到最新的推送的代码仓库，但是该仓库的CI配置文件总是找不到
-![](.README_images/86145081.png)
+![](/images/blog-cicd/86145081.png)
 
 ```yaml
       - name: Deploy hexo
@@ -220,5 +225,5 @@ deploy:
 不能放在`hexo clean && hexo generate`之前，只能放在之后。因为hexo clean会清空`public`文件夹。
 
 至此，双代码仓库的 三 Github Action CICD流程完全跑通。
-![](.README_images/584f8b6f.png)
-![](.README_images/98823356.png)
+![](/images/blog-cicd/584f8b6f.png)
+![](/images/blog-cicd/98823356.png)
