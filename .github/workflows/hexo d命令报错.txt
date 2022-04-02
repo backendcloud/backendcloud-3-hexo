@@ -1,0 +1,18 @@
+hexo d命令报错：ERROR Deployer not found: git
+
+问题
+使用hexo d或hexo deploy命令时报错：
+
+ERROR Deployer not found: git
+解决
+安装hexo-deployer-git：
+
+npm install --save hexo-deployer-git
+在_config.yml配置中将deploy的type由github改为git：
+
+deploy
+  type: git
+  repository: git@github.com:YOUR_ID/YOUR_ID.github.io.git
+  branch: master
+
+将其中的YOUR_ID改成你自己的GitHub账号
