@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>windows虚拟机激活失败问题 | 后端云</title>
+  <meta name="keywords" content=" windows ">
+  <meta name="description" content="windows虚拟机激活失败问题 | 后端云">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="penstack linux kernel NFV OPNFV MANO OPEN-O 虚拟机 容器 裸机 微服务 lambda计算 kubernetes 异构计算 人工智能">
+<meta property="og:type" content="website">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="https://www.backendcloud.cn/categories/index.html">
+<meta property="og:site_name" content="后端云">
+<meta property="og:description" content="penstack linux kernel NFV OPNFV MANO OPEN-O 虚拟机 容器 裸机 微服务 lambda计算 kubernetes 异构计算 人工智能">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-01-27T22:06:06.000Z">
+<meta property="article:modified_time" content="2022-04-02T00:42:52.642Z">
+<meta property="article:author" content="后端云">
+<meta property="article:tag" content="penstack linux kernel NFV OPNFV MANO OPEN-O 虚拟机 容器 裸机 微服务 lambda计算 kubernetes 异构计算 人工智能">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/zenbum.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?2858b2d509d28416712739c9a6a31204";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.jpg" />
+</a>
+<div class="author">
+    <span>后端云</span>
+</div>
+
+<div class="icon">
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active" data-rel="全部文章">全部文章<small>(108)</small></div></li>
+    
+        
+            
+            <li><div data-rel="边缘云">边缘云<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="动态">动态<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="基础篇">基础篇<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="敏捷">敏捷<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="生活">生活<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="业界">业界<small>(6)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="云原生">云原生<small>(14)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="智能云">智能云<small>(5)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="自动化">自动化<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Collectd">Collectd<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Java">Java<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="NFV">NFV<small>(16)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Openstack_dev">Openstack_dev<small>(6)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Openstack_op">Openstack_op<small>(29)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Python">Python<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Tools">Tools<small>(14)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="108">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" />
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>4G</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>5G</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>安装</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>边缘计算</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>边缘云</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>参与</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>插件</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>产业趋势</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>产业需求</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>成熟</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>持续集成</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>存储</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>多级跳转</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>孵化</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>工具</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>管理体制</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>广告</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>归档</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>华为</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>会员</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>会员制</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>集成</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>脚本</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>开发</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>开源</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>美国</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>目标</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>内存</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>配置</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>破解</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>热迁移</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>日本</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>上游关系</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>生命周期</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>生态</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>隧道</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>提案</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>效率</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>印象笔记国内版</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>源码分析</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>云硬盘</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>云原生</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>运营商</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>中心云</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>转发</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>自动化测试</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>子项目</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>aggregation</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>AI</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>ansible</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>API</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>async</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>available zone</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Board</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>bug</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Bug</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Capability</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>CentOS7.7</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>centos8</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>CI/CD</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Collectd</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>CPU</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>cpu-pinning</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>cpu绑定</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>cpu核绑定</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Cyborg</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>devops</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>docker</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Doctor</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>DSL</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>ETSI</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>evacuate</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Fluentd</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>FPGA</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Game</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>gerrit</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>git</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>git flow</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Github Action</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>goland</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>google</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Gossip</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>GPU</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>HA</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>hosts</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>https</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Huge Page</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Idea</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>ideaIU</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>InfluxDB</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Intel Clear Container</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>iperf3</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Java</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>JDK</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>jenkins</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>jetbrains</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>JIRA</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>K3S</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>k8s</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>K8S</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Kata Containers</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>KSM</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>kubeconfig</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>KubeEdge</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Kubernetes</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Kubernetes API</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Load Balance</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>LVS</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>masakari</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Masakari</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>NB-IoT</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Notion</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Nova</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>nova-scheduler</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>noVNC</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>numa</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>NUMA</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Ocata</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>OOMkilled</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Openstack</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Openstack Ocata</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Openstack Pike</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>openstack token管理</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>OpenYurt</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>OPNFV Prediction</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>ovs</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>parameter</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>passthrough</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>PCI</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Pike</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>placement</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>PLG</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Pod</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>POWER</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>privileged</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Prometheus</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>pycharm</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>PyCharm</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Python</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>qemu</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>QQ</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Raft</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>RAID</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>React</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Region</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>RT</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>selinux</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>serverless</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Serverless</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Serverwalker</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Service</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>spring-boot</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>SR-IOV</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>sriov</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Stein</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Switch</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>SYS_TIME</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>systemd</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>template</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Tools</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>TSC</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>tunnel</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Typora</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>vdbench</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>vim</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Vitrage</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>VM HA</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>vnc</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>VNFD</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>WebStorm</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>widget</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>windows</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>xshell</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>yum</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="全部文章 Java "
+           href="/2022/03/25/spring-boot-async-demo/"
+           data-tag="spring-boot,async"
+           data-author="" >
+            <span class="post-title" title="spring-boot异步的example">spring-boot异步的example</span>
+            <span class="post-date" title="2022-03-25 11:24:27">2022/03/25</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2022/02/25/github-action-demo/"
+           data-tag="CI/CD,Github Action,React"
+           data-author="" >
+            <span class="post-title" title="试用Github Action CI/CD流程（创建一个React项目，并打包部署）">试用Github Action CI/CD流程（创建一个React项目，并打包部署）</span>
+            <span class="post-date" title="2022-02-25 11:54:20">2022/02/25</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2022/01/06/notion-widget/"
+           data-tag="Notion,widget"
+           data-author="" >
+            <span class="post-title" title="Notion的页面插入小控件Widget">Notion的页面插入小控件Widget</span>
+            <span class="post-date" title="2022-01-06 11:06:12">2022/01/06</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2022/01/06/notion/"
+           data-tag="Notion,印象笔记国内版"
+           data-author="" >
+            <span class="post-title" title="Notion笔记和印象笔记同时使用的分工">Notion笔记和印象笔记同时使用的分工</span>
+            <span class="post-date" title="2022-01-06 10:28:42">2022/01/06</span>
+        </a>
+        
+        <a  class="全部文章 生活 "
+           href="/2022/01/06/switch/"
+           data-tag="Switch,Game"
+           data-author="" >
+            <span class="post-title" title="Switch游戏推荐">Switch游戏推荐</span>
+            <span class="post-date" title="2022-01-06 09:58:49">2022/01/06</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2021/12/16/idea-plugin/"
+           data-tag="Idea,插件"
+           data-author="" >
+            <span class="post-title" title="Idea 插件推荐">Idea 插件推荐</span>
+            <span class="post-date" title="2021-12-16 17:48:09">2021/12/16</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2021/12/01/PLG/"
+           data-tag="Kubernetes,Pod,PLG"
+           data-author="" >
+            <span class="post-title" title="PLG 实现 Kubernetes Pod 日志收集和展示">PLG 实现 Kubernetes Pod 日志收集和展示</span>
+            <span class="post-date" title="2021-12-01 17:48:46">2021/12/01</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2021/11/30/pod-log-collect/"
+           data-tag="Kubernetes,Pod,Fluentd"
+           data-author="" >
+            <span class="post-title" title="Fluentd 实现 Kubernetes Pod 日志收集">Fluentd 实现 Kubernetes Pod 日志收集</span>
+            <span class="post-date" title="2021-11-30 16:36:50">2021/11/30</span>
+        </a>
+        
+        <a  class="全部文章 Java "
+           href="/2021/11/23/java-memo/"
+           data-tag="Java"
+           data-author="" >
+            <span class="post-title" title="Java项目开发中的点滴记录（1）">Java项目开发中的点滴记录（1）</span>
+            <span class="post-date" title="2021-11-23 15:04:04">2021/11/23</span>
+        </a>
+        
+        <a  class="全部文章 Java "
+           href="/2021/11/23/jdkbug/"
+           data-tag="JDK,bug"
+           data-author="" >
+            <span class="post-title" title="JDK bug - Encrypt Private Key failed  unrecognized algorithm name  PBEWithSHA1AndDESede">JDK bug - Encrypt Private Key failed  unrecognized algorithm name  PBEWithSHA1AndDESede</span>
+            <span class="post-date" title="2021-11-23 14:22:24">2021/11/23</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2021/09/28/kubernetes-api/"
+           data-tag="边缘计算,Kubernetes API,云原生,中心云,边缘云"
+           data-author="" >
+            <span class="post-title" title="在产品开发中调用Kubernetes API接口遇到的几个问题">在产品开发中调用Kubernetes API接口遇到的几个问题</span>
+            <span class="post-date" title="2021-09-28 17:25:28">2021/09/28</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2021/09/26/git-flow/"
+           data-tag="git flow,git"
+           data-author="" >
+            <span class="post-title" title="开始尝试使用git flow工作流">开始尝试使用git flow工作流</span>
+            <span class="post-date" title="2021-09-26 15:32:59">2021/09/26</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2021/09/15/typora-auto-numbering/"
+           data-tag="Typora,Tools"
+           data-author="" >
+            <span class="post-title" title="Mac版Typora 标题自动编号">Mac版Typora 标题自动编号</span>
+            <span class="post-date" title="2021-09-15 17:36:23">2021/09/15</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2021/09/13/create-kubeconfig/"
+           data-tag="kubeconfig"
+           data-author="" >
+            <span class="post-title" title="云管平台创建资源池租户功能的实现">云管平台创建资源池租户功能的实现</span>
+            <span class="post-date" title="2021-09-13 14:22:18">2021/09/13</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2021/08/10/kubernetes-iperf3-2/"
+           data-tag="Kubernetes,iperf3,Service"
+           data-author="" >
+            <span class="post-title" title="iperf3测试Kubernetes Service的四层性能（下）">iperf3测试Kubernetes Service的四层性能（下）</span>
+            <span class="post-date" title="2021-08-10 07:06:01">2021/08/10</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2021/08/09/kubernetes-iperf3/"
+           data-tag="Kubernetes,iperf3,Service"
+           data-author="" >
+            <span class="post-title" title="iperf3测试Kubernetes Service的四层性能（上）">iperf3测试Kubernetes Service的四层性能（上）</span>
+            <span class="post-date" title="2021-08-09 17:06:01">2021/08/09</span>
+        </a>
+        
+        <a  class="全部文章 边缘云 "
+           href="/2021/03/12/edge2021/"
+           data-tag="serverless,边缘计算,5G,4G,NB-IoT,AI"
+           data-author="" >
+            <span class="post-title" title="边缘计算2021年展望">边缘计算2021年展望</span>
+            <span class="post-date" title="2021-03-12 09:41:42">2021/03/12</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2021/03/11/jetbrains-mac-m1/"
+           data-tag="jetbrains,goland,ideaIU,pycharm,WebStorm,破解"
+           data-author="" >
+            <span class="post-title" title="jetbrains macbook m1版全家桶破解">jetbrains macbook m1版全家桶破解</span>
+            <span class="post-date" title="2021-03-11 17:01:57">2021/03/11</span>
+        </a>
+        
+        <a  class="全部文章 边缘云 "
+           href="/2021/01/26/edge-think/"
+           data-tag="serverless,边缘计算,FPGA,GPU"
+           data-author="" >
+            <span class="post-title" title="边缘计算的几点思考">边缘计算的几点思考</span>
+            <span class="post-date" title="2021-01-26 17:11:34">2021/01/26</span>
+        </a>
+        
+        <a  class="全部文章 边缘云 "
+           href="/2021/01/21/kubernetes2edge/"
+           data-tag="Kubernetes,K8S,K3S,OpenYurt,KubeEdge"
+           data-author="" >
+            <span class="post-title" title="K3S, OpenYurt, KubeEdge 主要差异">K3S, OpenYurt, KubeEdge 主要差异</span>
+            <span class="post-date" title="2021-01-21 16:47:45">2021/01/21</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2020/05/27/k8s-op/"
+           data-tag="k8s"
+           data-author="" >
+            <span class="post-title" title="k8s常用操作">k8s常用操作</span>
+            <span class="post-date" title="2020-05-27 17:32:08">2020/05/27</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2020/05/22/k8s-cpubond/"
+           data-tag="Kubernetes,k8s,cpu核绑定"
+           data-author="" >
+            <span class="post-title" title="k8s支持容器核绑定">k8s支持容器核绑定</span>
+            <span class="post-date" title="2020-05-22 16:24:44">2020/05/22</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2020/05/22/k8s-capability/"
+           data-tag="Kubernetes,k8s,Capability,SYS_TIME"
+           data-author="" >
+            <span class="post-title" title="k8s支持Capability机制">k8s支持Capability机制</span>
+            <span class="post-date" title="2020-05-22 15:18:59">2020/05/22</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2020/05/22/pod-mem/"
+           data-tag="Kubernetes,k8s,OOMkilled,privileged"
+           data-author="" >
+            <span class="post-title" title="k8s OOMkilled超出内存限制的容器">k8s OOMkilled超出内存限制的容器</span>
+            <span class="post-date" title="2020-05-22 13:52:15">2020/05/22</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2020/04/16/centos7-7-k8s-3nodes-prometheus/"
+           data-tag="CentOS7.7,k8s,Prometheus"
+           data-author="" >
+            <span class="post-title" title="CentOS7.7部署k8s + Prometheus（1 master + 2 node）">CentOS7.7部署k8s + Prometheus（1 master + 2 node）</span>
+            <span class="post-date" title="2020-04-16 13:46:34">2020/04/16</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2020/04/13/centos7-7-k8s-7nodes/"
+           data-tag="CentOS7.7,k8s"
+           data-author="" >
+            <span class="post-title" title="CentOS7.7部署k8s（3 master + 3 node + 1 client）">CentOS7.7部署k8s（3 master + 3 node + 1 client）</span>
+            <span class="post-date" title="2020-04-13 13:46:34">2020/04/13</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2020/04/10/centos7-7-k8s-3nodes/"
+           data-tag="CentOS7.7,k8s"
+           data-author="" >
+            <span class="post-title" title="CentOS7.7部署k8s（1 master + 2 node）">CentOS7.7部署k8s（1 master + 2 node）</span>
+            <span class="post-date" title="2020-04-10 13:46:34">2020/04/10</span>
+        </a>
+        
+        <a  class="全部文章 云原生 "
+           href="/2020/03/16/centos8installdocker/"
+           data-tag="docker,centos8"
+           data-author="" >
+            <span class="post-title" title="CentOS 8.0 安装docker 报错：Problem: package docker-ce-3:19.03.8-3.el7.x86_64 requires containerd.io &gt;= 1.2.2-3">CentOS 8.0 安装docker 报错：Problem: package docker-ce-3:19.03.8-3.el7.x86_64 requires containerd.io &gt;= 1.2.2-3</span>
+            <span class="post-date" title="2020-03-16 16:04:21">2020/03/16</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_dev "
+           href="/2020/01/09/masakari-task-code/"
+           data-tag="VM HA,Openstack,Masakari,源码分析"
+           data-author="" >
+            <span class="post-title" title="Openstack Masakari task流程源码分析">Openstack Masakari task流程源码分析</span>
+            <span class="post-date" title="2020-01-09 09:18:53">2020/01/09</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2020/01/01/openstackopmemo4/"
+           data-tag="Openstack,devops"
+           data-author="" >
+            <span class="post-title" title="Openstack运维常见问题记录(4)">Openstack运维常见问题记录(4)</span>
+            <span class="post-date" title="2020-01-01 20:28:32">2020/01/01</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2019/09/20/stein-deploy-problem/"
+           data-tag="Stein"
+           data-author="" >
+            <span class="post-title" title="Openstack Stein 部署遇到的问题">Openstack Stein 部署遇到的问题</span>
+            <span class="post-date" title="2019-09-20 18:49:06">2019/09/20</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2019/08/28/jetbrains/"
+           data-tag="jetbrains,goland,ideaIU,pycharm,WebStorm,破解"
+           data-author="" >
+            <span class="post-title" title="jetbrains windows版全家桶破解">jetbrains windows版全家桶破解</span>
+            <span class="post-date" title="2019-08-28 15:15:39">2019/08/28</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2019/08/27/tunnel/"
+           data-tag="xshell,tunnel,隧道,工具"
+           data-author="" >
+            <span class="post-title" title="xshell隧道转发的三种类型">xshell隧道转发的三种类型</span>
+            <span class="post-date" title="2019-08-27 15:25:01">2019/08/27</span>
+        </a>
+        
+        <a  class="全部文章 业界 "
+           href="/2019/06/15/huaweijpqa/"
+           data-tag="华为,日本,美国"
+           data-author="" >
+            <span class="post-title" title="任正非5月18日接受日本媒体采访的中文纪要">任正非5月18日接受日本媒体采访的中文纪要</span>
+            <span class="post-date" title="2019-06-15 13:02:34">2019/06/15</span>
+        </a>
+        
+        <a  class="全部文章 业界 "
+           href="/2019/05/21/huaweiyun/"
+           data-tag="华为"
+           data-author="" >
+            <span class="post-title" title="华为云可能也要被美国釜底抽薪">华为云可能也要被美国釜底抽薪</span>
+            <span class="post-date" title="2019-05-21 11:52:58">2019/05/21</span>
+        </a>
+        
+        <a  class="全部文章 业界 "
+           href="/2019/05/20/huaweivsa/"
+           data-tag="华为"
+           data-author="" >
+            <span class="post-title" title="属于华为的荣耀时刻">属于华为的荣耀时刻</span>
+            <span class="post-date" title="2019-05-20 18:28:25">2019/05/20</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2019/04/19/sriov2ovs/"
+           data-tag="sriov,ovs,脚本"
+           data-author="" >
+            <span class="post-title" title="sriov计算节点转ovs计算节点脚本">sriov计算节点转ovs计算节点脚本</span>
+            <span class="post-date" title="2019-04-19 16:50:16">2019/04/19</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2019/04/18/placement/"
+           data-tag="placement"
+           data-author="" >
+            <span class="post-title" title="Openstack Placement">Openstack Placement</span>
+            <span class="post-date" title="2019-04-18 09:14:54">2019/04/18</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/10/21/power/"
+           data-tag="POWER"
+           data-author="" >
+            <span class="post-title" title="POWER架构服务器作为计算节点">POWER架构服务器作为计算节点</span>
+            <span class="post-date" title="2018-10-21 16:21:52">2018/10/21</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/10/14/sriov/"
+           data-tag="SR-IOV,passthrough"
+           data-author="" >
+            <span class="post-title" title="OpenStack实践SR-IOV计算节点">OpenStack实践SR-IOV计算节点</span>
+            <span class="post-date" title="2018-10-14 05:15:24">2018/10/14</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/09/29/openstackopmemo3/"
+           data-tag="Openstack,devops"
+           data-author="" >
+            <span class="post-title" title="Openstack运维常见问题记录(3)">Openstack运维常见问题记录(3)</span>
+            <span class="post-date" title="2018-09-29 20:28:32">2018/09/29</span>
+        </a>
+        
+        <a  class="全部文章 基础篇 "
+           href="/2018/09/05/ceph/"
+           data-tag="vdbench"
+           data-author="" >
+            <span class="post-title" title="ceph数据存储的几个概念">ceph数据存储的几个概念</span>
+            <span class="post-date" title="2018-09-05 17:32:47">2018/09/05</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/08/28/openstackopmemo2/"
+           data-tag="Openstack,devops"
+           data-author="" >
+            <span class="post-title" title="Openstack运维常见问题记录(2)">Openstack运维常见问题记录(2)</span>
+            <span class="post-date" title="2018-08-28 14:48:42">2018/08/28</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/08/26/openstackopmemo/"
+           data-tag="Openstack,devops"
+           data-author="" >
+            <span class="post-title" title="Openstack运维常见问题记录(1)">Openstack运维常见问题记录(1)</span>
+            <span class="post-date" title="2018-08-26 18:38:42">2018/08/26</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/08/16/2concepts/"
+           data-tag="aggregation,available zone,numa"
+           data-author="" >
+            <span class="post-title" title="Openstack两组容易混淆的概念">Openstack两组容易混淆的概念</span>
+            <span class="post-date" title="2018-08-16 15:08:05">2018/08/16</span>
+        </a>
+        
+        <a  class="全部文章 自动化 "
+           href="/2018/07/14/serverwalker/"
+           data-tag="Serverwalker,自动化测试,DSL"
+           data-author="" >
+            <span class="post-title" title="自动化测试工具Serverwalker介绍">自动化测试工具Serverwalker介绍</span>
+            <span class="post-date" title="2018-07-14 11:52:51">2018/07/14</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_dev "
+           href="/2018/07/13/cpupin/"
+           data-tag="cpu绑定"
+           data-author="" >
+            <span class="post-title" title="Openstack中的虚拟机的cpu绑定">Openstack中的虚拟机的cpu绑定</span>
+            <span class="post-date" title="2018-07-13 20:09:41">2018/07/13</span>
+        </a>
+        
+        <a  class="全部文章 业界 "
+           href="/2018/05/10/huawei/"
+           data-tag="华为,运营商"
+           data-author="" >
+            <span class="post-title" title="华为的发展已越来越不需要运营商">华为的发展已越来越不需要运营商</span>
+            <span class="post-date" title="2018-05-10 23:45:05">2018/05/10</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/04/14/pike-novnc/"
+           data-tag="Pike,noVNC"
+           data-author="" >
+            <span class="post-title" title="OpenStack Pike dashboard noVNC 不能访问">OpenStack Pike dashboard noVNC 不能访问</span>
+            <span class="post-date" title="2018-04-14 05:18:22">2018/04/14</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2018/04/14/pycharm2018/"
+           data-tag="PyCharm"
+           data-author="" >
+            <span class="post-title" title="JetBrains PyCharm 2018.1.1 x64专业版永久激活">JetBrains PyCharm 2018.1.1 x64专业版永久激活</span>
+            <span class="post-date" title="2018-04-14 04:47:29">2018/04/14</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/04/14/vmsystemddel/"
+           data-tag="selinux,qemu,systemd"
+           data-author="" >
+            <span class="post-title" title="vm被systemd删除">vm被systemd删除</span>
+            <span class="post-date" title="2018-04-14 04:30:35">2018/04/14</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/04/14/vmcantstart/"
+           data-tag="selinux"
+           data-author="" >
+            <span class="post-title" title="虚拟机无法启动">虚拟机无法启动</span>
+            <span class="post-date" title="2018-04-14 03:15:39">2018/04/14</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2018/01/23/rt-vm/"
+           data-tag="RT"
+           data-author="" >
+            <span class="post-title" title="部署实时OpenStack实例">部署实时OpenStack实例</span>
+            <span class="post-date" title="2018-01-23 16:28:28">2018/01/23</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2018/01/23/scheduler-win-linux/"
+           data-tag="nova-scheduler"
+           data-author="" >
+            <span class="post-title" title="支持windows虚拟机和linux虚拟机分区调度">支持windows虚拟机和linux虚拟机分区调度</span>
+            <span class="post-date" title="2018-01-23 14:40:11">2018/01/23</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/12/28/local-yum/"
+           data-tag="yum"
+           data-author="" >
+            <span class="post-title" title="Openstack Pike本地yum源搭建">Openstack Pike本地yum源搭建</span>
+            <span class="post-date" title="2017-12-28 22:20:40">2017/12/28</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/12/28/p7-4-shell/"
+           data-tag="Openstack Pike,安装"
+           data-author="" >
+            <span class="post-title" title="脚本安装Openstack Pike">脚本安装Openstack Pike</span>
+            <span class="post-date" title="2017-12-28 20:43:27">2017/12/28</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2017/12/08/kata-containers/"
+           data-tag="Kata Containers,Intel Clear Container,Serverless"
+           data-author="" >
+            <span class="post-title" title="Kata Containers">Kata Containers</span>
+            <span class="post-date" title="2017-12-08 00:27:10">2017/12/08</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2017/11/12/raft-gossip/"
+           data-tag="Raft,Gossip"
+           data-author="" >
+            <span class="post-title" title="Raft算法和Gossip协议">Raft算法和Gossip协议</span>
+            <span class="post-date" title="2017-11-12 12:34:11">2017/11/12</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/11/10/vitrage/"
+           data-tag="Vitrage"
+           data-author="" >
+            <span class="post-title" title="Openstack Vitrage（根因分析）">Openstack Vitrage（根因分析）</span>
+            <span class="post-date" title="2017-11-10 08:02:15">2017/11/10</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2017/11/08/RTOS/"
+           data-tag="RT"
+           data-author="" >
+            <span class="post-title" title="实时操作系统">实时操作系统</span>
+            <span class="post-date" title="2017-11-08 15:13:56">2017/11/08</span>
+        </a>
+        
+        <a  class="全部文章 基础篇 "
+           href="/2017/08/01/raid/"
+           data-tag="RAID"
+           data-author="" >
+            <span class="post-title" title="RAID">RAID</span>
+            <span class="post-date" title="2017-08-01 08:42:40">2017/08/01</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/07/31/vm-cpu/"
+           data-tag="Nova,CPU"
+           data-author="" >
+            <span class="post-title" title="云主机的指令集配置">云主机的指令集配置</span>
+            <span class="post-date" title="2017-07-31 05:05:20">2017/07/31</span>
+        </a>
+        
+        <a  class="全部文章 业界 "
+           href="/2017/07/20/yunyingshang-kongjian/"
+           data-tag="运营商"
+           data-author="" >
+            <span class="post-title" title="AI大环境下的运营商">AI大环境下的运营商</span>
+            <span class="post-date" title="2017-07-20 18:51:01">2017/07/20</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2017/07/20/cpu-pinning/"
+           data-tag="cpu-pinning"
+           data-author="" >
+            <span class="post-title" title="cpu-pinning CPU绑定">cpu-pinning CPU绑定</span>
+            <span class="post-date" title="2017-07-20 18:30:18">2017/07/20</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2017/07/20/numa/"
+           data-tag="NUMA"
+           data-author="" >
+            <span class="post-title" title="NUMA 非一致性内存访问">NUMA 非一致性内存访问</span>
+            <span class="post-date" title="2017-07-20 17:47:16">2017/07/20</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2017/07/19/vmem/"
+           data-tag="KSM,Huge Page"
+           data-author="" >
+            <span class="post-title" title="内存虚拟化">内存虚拟化</span>
+            <span class="post-date" title="2017-07-19 05:17:46">2017/07/19</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/07/04/resize-error/"
+           data-tag="Nova"
+           data-author="" >
+            <span class="post-title" title="resize失败原因调查">resize失败原因调查</span>
+            <span class="post-date" title="2017-07-04 10:20:06">2017/07/04</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/06/30/attach-yunyingpan/"
+           data-tag="云硬盘"
+           data-author="" >
+            <span class="post-title" title="挂载云硬盘">挂载云硬盘</span>
+            <span class="post-date" title="2017-06-30 05:16:38">2017/06/30</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_dev "
+           href="/2017/06/28/ocata-nova-evacuate-bug/"
+           data-tag="Nova,Ocata,Bug"
+           data-author="" >
+            <span class="post-title" title="Ocata nova evacuate bug">Ocata nova evacuate bug</span>
+            <span class="post-date" title="2017-06-28 18:24:18">2017/06/28</span>
+        </a>
+        
+        <a  class="全部文章 敏捷 "
+           href="/2017/06/28/trigger-build/"
+           data-tag="gerrit,jenkins,持续集成"
+           data-author="" >
+            <span class="post-title" title="gerrit触发jenkins执行脚本自动构建rpm包">gerrit触发jenkins执行脚本自动构建rpm包</span>
+            <span class="post-date" title="2017-06-28 18:17:13">2017/06/28</span>
+        </a>
+        
+        <a  class="全部文章 敏捷 "
+           href="/2017/06/28/gerrit-install/"
+           data-tag="gerrit"
+           data-author="" >
+            <span class="post-title" title="gerrit install">gerrit install</span>
+            <span class="post-date" title="2017-06-28 15:51:07">2017/06/28</span>
+        </a>
+        
+        <a  class="全部文章 敏捷 "
+           href="/2017/06/27/jira-install/"
+           data-tag="JIRA"
+           data-author="" >
+            <span class="post-title" title="JIRA安装">JIRA安装</span>
+            <span class="post-date" title="2017-06-27 01:53:54">2017/06/27</span>
+        </a>
+        
+        <a  class="全部文章 "
+           href="/2017/06/22/compute-node-ha/"
+           data-tag="HA,masakari"
+           data-author="" >
+            <span class="post-title" title="compute node ha 主流开源实现">compute node ha 主流开源实现</span>
+            <span class="post-date" title="2017-06-22 09:16:48">2017/06/22</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/06/15/live-migration-fail/"
+           data-tag="热迁移"
+           data-author="" >
+            <span class="post-title" title="热迁移失败总结">热迁移失败总结</span>
+            <span class="post-date" title="2017-06-15 18:54:53">2017/06/15</span>
+        </a>
+        
+        <a  class="全部文章 Collectd "
+           href="/2017/06/15/collectd-influxdb/"
+           data-tag="Collectd,InfluxDB"
+           data-author="" >
+            <span class="post-title" title="Collectd 和 InfluxDB 的部署和使用">Collectd 和 InfluxDB 的部署和使用</span>
+            <span class="post-date" title="2017-06-15 06:47:53">2017/06/15</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/06/14/block-migrate/"
+           data-tag="Nova,热迁移"
+           data-author="" >
+            <span class="post-title" title="本地存储条件下的热迁移">本地存储条件下的热迁移</span>
+            <span class="post-date" title="2017-06-14 15:25:48">2017/06/14</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2017/06/14/doctor/"
+           data-tag="Doctor"
+           data-author="" >
+            <span class="post-title" title="Doctor framework">Doctor framework</span>
+            <span class="post-date" title="2017-06-14 11:51:04">2017/06/14</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_dev "
+           href="/2017/06/10/add-quick-evacuate/"
+           data-tag="VM HA,Nova"
+           data-author="" >
+            <span class="post-title" title="将快速疏散功能加入VM HA程序中">将快速疏散功能加入VM HA程序中</span>
+            <span class="post-date" title="2017-06-10 03:27:36">2017/06/10</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_dev "
+           href="/2017/06/08/force-down/"
+           data-tag="Nova,evacuate"
+           data-author="" >
+            <span class="post-title" title="新增OpenStack NOVA API用于强制计算节点nova-compute服务down">新增OpenStack NOVA API用于强制计算节点nova-compute服务down</span>
+            <span class="post-date" title="2017-06-08 20:11:17">2017/06/08</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/06/07/storage-arch/"
+           data-tag="存储"
+           data-author="" >
+            <span class="post-title" title="vm挂载卷，镜像，vm实例的共享存储架构">vm挂载卷，镜像，vm实例的共享存储架构</span>
+            <span class="post-date" title="2017-06-07 08:20:29">2017/06/07</span>
+        </a>
+        
+        <a  class="全部文章 动态 "
+           href="/2017/05/06/https/"
+           data-tag="https"
+           data-author="" >
+            <span class="post-title" title="后端云站全部采用https连接">后端云站全部采用https连接</span>
+            <span class="post-date" title="2017-05-06 11:03:57">2017/05/06</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/05/04/win-register/"
+           data-tag="windows"
+           data-author="" >
+            <span class="post-title" title="windows虚拟机激活失败问题">windows虚拟机激活失败问题</span>
+            <span class="post-date" title="2017-05-04 22:21:24">2017/05/04</span>
+        </a>
+        
+        <a  class="全部文章 自动化 "
+           href="/2017/05/03/ansible/"
+           data-tag="ansible"
+           data-author="" >
+            <span class="post-title" title="ansible简单使用">ansible简单使用</span>
+            <span class="post-date" title="2017-05-03 07:55:42">2017/05/03</span>
+        </a>
+        
+        <a  class="全部文章 智能云 "
+           href="/2017/05/02/pci-api/"
+           data-tag="PCI,API"
+           data-author="" >
+            <span class="post-title" title="pci-api support">pci-api support</span>
+            <span class="post-date" title="2017-05-02 10:11:54">2017/05/02</span>
+        </a>
+        
+        <a  class="全部文章 智能云 "
+           href="/2017/05/01/cyborg-agent/"
+           data-tag="Cyborg"
+           data-author="" >
+            <span class="post-title" title="cyborg agent">cyborg agent</span>
+            <span class="post-date" title="2017-05-01 17:49:47">2017/05/01</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/05/01/vm-mem/"
+           data-tag="内存"
+           data-author="" >
+            <span class="post-title" title="获取虚机内存">获取虚机内存</span>
+            <span class="post-date" title="2017-05-01 14:27:38">2017/05/01</span>
+        </a>
+        
+        <a  class="全部文章 智能云 "
+           href="/2017/05/01/fpag-user-case/"
+           data-tag="FPGA"
+           data-author="" >
+            <span class="post-title" title="FPGA用户用例提案">FPGA用户用例提案</span>
+            <span class="post-date" title="2017-05-01 13:39:58">2017/05/01</span>
+        </a>
+        
+        <a  class="全部文章 智能云 "
+           href="/2017/04/29/gpu-config-rst/"
+           data-tag="GPU,配置"
+           data-author="" >
+            <span class="post-title" title="云环境中GPU配置">云环境中GPU配置</span>
+            <span class="post-date" title="2017-04-29 18:49:59">2017/04/29</span>
+        </a>
+        
+        <a  class="全部文章 业界 "
+           href="/2017/03/10/yunying-huawei/"
+           data-tag="华为,运营商"
+           data-author="" >
+            <span class="post-title" title="华为和运营商们">华为和运营商们</span>
+            <span class="post-date" title="2017-03-10 21:25:44">2017/03/10</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2017/03/07/hosts-google/"
+           data-tag="google,hosts"
+           data-author="" >
+            <span class="post-title" title="访问google">访问google</span>
+            <span class="post-date" title="2017-03-07 01:14:05">2017/03/07</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/02/24/ocata-packstack/"
+           data-tag="Openstack Ocata"
+           data-author="" >
+            <span class="post-title" title="Openstack Ocata初体验">Openstack Ocata初体验</span>
+            <span class="post-date" title="2017-02-24 16:45:50">2017/02/24</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2017/02/17/qq-ad/"
+           data-tag="QQ,广告"
+           data-author="" >
+            <span class="post-title" title="去QQ广告">去QQ广告</span>
+            <span class="post-date" title="2017-02-17 03:41:34">2017/02/17</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2017/02/08/glance-regiontwo2one/"
+           data-tag="Region"
+           data-author="" >
+            <span class="post-title" title="openstack两个region分别用各自glance服务-&gt;共用glance服务">openstack两个region分别用各自glance服务-&gt;共用glance服务</span>
+            <span class="post-date" title="2017-02-08 16:51:34">2017/02/08</span>
+        </a>
+        
+        <a  class="全部文章 Python "
+           href="/2017/01/17/zh-google-python-styleguide/"
+           data-tag="Python"
+           data-author="" >
+            <span class="post-title" title="google Python 风格指南（中文版）">google Python 风格指南（中文版）</span>
+            <span class="post-date" title="2017-01-17 18:03:22">2017/01/17</span>
+        </a>
+        
+        <a  class="全部文章 智能云 "
+           href="/2017/01/07/cyborg_intro/"
+           data-tag="Cyborg,Openstack"
+           data-author="" >
+            <span class="post-title" title="Openstack Cyborg 项目介绍">Openstack Cyborg 项目介绍</span>
+            <span class="post-date" title="2017-01-07 00:38:19">2017/01/07</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2016/12/24/xshell-skill/"
+           data-tag="xshell,隧道,效率,转发,多级跳转"
+           data-author="" >
+            <span class="post-title" title="xshell工具在开发中的使用技巧">xshell工具在开发中的使用技巧</span>
+            <span class="post-date" title="2016-12-24 23:10:36">2016/12/24</span>
+        </a>
+        
+        <a  class="全部文章 Tools "
+           href="/2016/09/02/vim-python/"
+           data-tag="vim"
+           data-author="" >
+            <span class="post-title" title="python，NFV项目开发--vim">python，NFV项目开发--vim</span>
+            <span class="post-date" title="2016-09-02 19:35:02">2016/09/02</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2016/08/18/vncviewer-openstack-vm/"
+           data-tag="vnc"
+           data-author="" >
+            <span class="post-title" title="网络不通的情况下，不通过dashboard，在未装图形化系统上查看openstack 创建的vm">网络不通的情况下，不通过dashboard，在未装图形化系统上查看openstack 创建的vm</span>
+            <span class="post-date" title="2016-08-18 13:49:11">2016/08/18</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_op "
+           href="/2016/07/05/lb/"
+           data-tag="Load Balance,LVS"
+           data-author="" >
+            <span class="post-title" title="Load Balance(LVS实现方式)">Load Balance(LVS实现方式)</span>
+            <span class="post-date" title="2016-07-05 23:10:25">2016/07/05</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2016/07/05/vnfd-template-para/"
+           data-tag="VNFD,template,parameter"
+           data-author="" >
+            <span class="post-title" title="VNFD模板参数化">VNFD模板参数化</span>
+            <span class="post-date" title="2016-07-05 22:57:33">2016/07/05</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2016/06/11/prediction/"
+           data-tag="OPNFV Prediction"
+           data-author="" >
+            <span class="post-title" title="OPNFV Prediction">OPNFV Prediction</span>
+            <span class="post-date" title="2016-06-11 16:11:10">2016/06/11</span>
+        </a>
+        
+        <a  class="全部文章 Openstack_dev "
+           href="/2016/06/11/token-manage/"
+           data-tag="openstack token管理"
+           data-author="" >
+            <span class="post-title" title="openstack token管理">openstack token管理</span>
+            <span class="post-date" title="2016-06-11 15:23:00">2016/06/11</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2015/12/20/project-life-cycle/"
+           data-tag="生命周期,提案,孵化,成熟,集成,归档"
+           data-author="" >
+            <span class="post-title" title="OPNFV项目生命周期">OPNFV项目生命周期</span>
+            <span class="post-date" title="2015-12-20 20:02:27">2015/12/20</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2015/12/20/system_membership/"
+           data-tag="管理体制,会员制,会员,Board,TSC"
+           data-author="" >
+            <span class="post-title" title="OPNFV的管理体制和会员制">OPNFV的管理体制和会员制</span>
+            <span class="post-date" title="2015-12-20 19:32:42">2015/12/20</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2015/12/19/introduction-4/"
+           data-tag="开发,开源,参与"
+           data-author="" >
+            <span class="post-title" title="OPNFV简介(4) - 对所有人开放">OPNFV简介(4) - 对所有人开放</span>
+            <span class="post-date" title="2015-12-19 16:16:06">2015/12/19</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2015/12/19/introduction-3/"
+           data-tag="上游关系"
+           data-author="" >
+            <span class="post-title" title="OPNFV简介(3) - 和上游关系">OPNFV简介(3) - 和上游关系</span>
+            <span class="post-date" title="2015-12-19 16:04:59">2015/12/19</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2015/12/19/introduction-2/"
+           data-tag="子项目,ETSI,目标,生态"
+           data-author="" >
+            <span class="post-title" title="OPNFV简介(2) - overview">OPNFV简介(2) - overview</span>
+            <span class="post-date" title="2015-12-19 15:54:34">2015/12/19</span>
+        </a>
+        
+        <a  class="全部文章 NFV "
+           href="/2015/12/18/introduction-1/"
+           data-tag="产业趋势,产业需求"
+           data-author="" >
+            <span class="post-title" title="OPNFV简介(1) - 背景">OPNFV简介(1) - 背景</span>
+            <span class="post-date" title="2015-12-18 00:44:16">2015/12/18</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-win-register" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">windows虚拟机激活失败问题</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Openstack_op">Openstack_op</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color3">windows</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2022-04-02 08:42:52'>2017-05-04 22:21</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%B0%83%E6%9F%A5"><span class="toc-text">问题调查</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E5%8E%9F%E5%9B%A0"><span class="toc-text">直接原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%97%B6%E9%97%B4%E5%81%8F%E5%B7%AE"><span class="toc-text">具体时间偏差</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95%E5%87%BA%E7%8E%B0%E6%97%B6%E9%97%B4%E5%81%8F%E5%B7%AE%E5%91%A2%EF%BC%9F"><span class="toc-text">为何出现时间偏差呢？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UTC%E6%97%B6%E9%97%B4-%E4%B8%8E-%E6%9C%AC%E5%9C%B0%E6%97%B6%E9%97%B4"><span class="toc-text">UTC时间 与 本地时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#guest-OS%E6%97%B6%E9%97%B4%E4%BF%9D%E6%8C%81"><span class="toc-text">guest OS时间保持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#libvirt%E4%B8%AD%E8%AE%BE%E7%BD%AE%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A1%AC%E4%BB%B6%E6%97%B6%E9%92%9F"><span class="toc-text">libvirt中设置虚拟机硬件时钟</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#openstack%E4%BA%91%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E5%AF%B9%E7%AD%96"><span class="toc-text">openstack云环境下的对策</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E6%96%B0%E5%BB%BAwindows%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">对于新建windows虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E5%AD%98%E9%87%8F%E7%9A%84windows%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">对于存量的windows虚拟机</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%EF%BC%9Anova-boot%E7%94%9F%E6%88%90%E7%9A%84vm%E6%98%AF%E5%90%A6%E4%BC%9A%E5%B8%A6%E6%9C%89image%E7%9A%84keyword"><span class="toc-text">测试：nova boot生成的vm是否会带有image的keyword</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E4%BC%BC%E7%9A%84%EF%BC%8C%E5%AF%B9%E4%BA%8E%E6%97%A0%E6%B3%95%E8%8E%B7%E5%8F%96%E7%9B%91%E6%8E%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E8%99%9A%E6%9C%BA%EF%BC%8C%E4%BD%BF%E7%94%A8%E4%BB%A5%E4%B8%8B%E5%8A%9E%E6%B3%95%E4%BF%AE%E6%94%B9%E8%99%9A%E6%9C%BA%E9%85%8D%E7%BD%AE%EF%BC%9A"><span class="toc-text">类似的，对于无法获取监控数据的虚机，使用以下办法修改虚机配置：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95%E4%BF%AE%E6%94%B9os-type-%E2%80%99windows%E2%80%99%E4%BC%9A%E5%BD%B1%E5%93%8Dwindows%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E6%97%B6%E9%97%B4"><span class="toc-text">为何修改os_type&#x3D;’windows’会影响windows虚拟机的时间</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#openstack%E4%BC%9A%E6%A0%B9%E6%8D%AEos-type%E7%9A%84%E5%86%85%E5%AE%B9%E6%9D%A5%E5%86%B3%E5%AE%9A%E6%8F%90%E4%BE%9B%E7%BB%99%E5%BA%95%E4%B8%8B%E4%B8%80%E5%B1%82kvm%E7%9A%84vm%E6%89%80%E9%9C%80%E7%9A%84xml%E5%86%85%E5%AE%B9"><span class="toc-text">openstack会根据os_type的内容来决定提供给底下一层kvm的vm所需的xml内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#windows%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">windows虚拟机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">linux虚拟机</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E7%9B%B8%E5%85%B3%E7%9A%84nova%E4%BB%A3%E7%A0%81"><span class="toc-text">分析相关的nova代码</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="问题调查"><a href="#问题调查" class="headerlink" title="问题调查"></a>问题调查</h1><h2 id="直接原因"><a href="#直接原因" class="headerlink" title="直接原因"></a>直接原因</h2><p>关于Windows虚机激活的问题分析，进行调研后总结如下：Windows 虚机在使用KMS激活方式进行激活时其与KMS Server服务器的时间如果同步则激活成功，但经过我们调查发现，由于云环境中，windows虚机时间与物理机的时间存在偏差，所以导致激活失败。</p>
+<h2 id="具体时间偏差"><a href="#具体时间偏差" class="headerlink" title="具体时间偏差"></a>具体时间偏差</h2><p>Windows instance 有时候会发现操作系统时间总是慢 8 个小时，即使手工调整好时间和时区，下次 instance 重启后又会差 8 个小时。</p>
+<h2 id="为何出现时间偏差呢？"><a href="#为何出现时间偏差呢？" class="headerlink" title="为何出现时间偏差呢？"></a>为何出现时间偏差呢？</h2><p>KVM 对 Linux 和 Windows 虚拟机在系统时间上处理有所不同，Windows 需要额外一些设置。<br>为何Linux 和 Windows 虚拟机在系统时间上处理有所不同呢？要了解下面三个概念。</p>
+<h3 id="UTC时间-与-本地时间"><a href="#UTC时间-与-本地时间" class="headerlink" title="UTC时间 与 本地时间"></a>UTC时间 与 本地时间</h3><p>UTC时间：又称世界标准时间、世界统一时间，UTC是以原子钟校准的，世界其它地区是以此为基准时间加上自己时区来设置其本地时间的</p>
+<p>本地时间：由于处在不同的时区，本地时间一般与UTC是不同的，换算方法就是</p>
+<p>本地时间 = UTC + 时区 或 UTC = 本地时间 - 时区<br>时区东为正，西为负，在中国，时区为东八区，也就是 +8区，本地时间都使用北京时间，在linux上显示就是 CST, 所以CST=UTC+(+8小时) 或 UTC=CST-(+8小时)</p>
+<h3 id="guest-OS时间保持"><a href="#guest-OS时间保持" class="headerlink" title="guest OS时间保持"></a>guest OS时间保持</h3><p>kvm技术是全虚拟化，guest OS并不需要做修改就可以直接运行，然而在计时方面却存在问题，guest OS计时的一种方式是通过时钟中断计数，进而换算得到，但host产生的时钟中断不能及时到达所有guest OS，因为guest OS中的中断并不是真正的硬件中断，它是由host注入的中断</p>
+<p>许多网络应用，web中的sessions验证等，都会调用系统时间，guest OS中若时间有误，则会引起程序出错，为此，kvm给guest vms提供了一个半虚拟化时钟(kvm-clock),在RHEL5.5及其以上版本中，都使用了kvm-clock作为默认时钟源，可以在guest 中使用下面命令查看是否使用了kvm-clock</p>
+<pre><code>cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+kvm-clock</code></pre>
+<p>在kvm-clock方式下，guest OS不能直接访问Host时钟，Host把系统时间写入一个guest可以读取的内存页，这样guest就可以读取此内存页设置自身硬件时间，但是Host并不是实时更新时间到此内存页，而是在发生一个vm event(vm关机，重启等)时才更新，因此此种方式也不能保持guest时间准确无误</p>
+<h3 id="libvirt中设置虚拟机硬件时钟"><a href="#libvirt中设置虚拟机硬件时钟" class="headerlink" title="libvirt中设置虚拟机硬件时钟"></a>libvirt中设置虚拟机硬件时钟</h3><p>kvm虚拟机一般使用libvirt进行管理，在虚拟机配置的xml文件中，有关于虚拟机硬件时钟设置项</p>
+<pre><code>&lt;clock offset=&#39;localtime&#39;&gt;
+&lt;/clock&gt;</code></pre>
+<p>clock的offset属性有”utc”,”localtime”,”timezone”,”variable”四个可选项</p>
+<p>如果guest OS是Linux系统，应该选用”utc”，guest OS在启动时便会向host同步一次utc时间，然后根据/etc/localtime中设置的时区，来计算系统时间</p>
+<p>如果guest OS是windows系统，则应该选用”localtime”，guest OS在启动时向host同步一次系统时间</p>
+<h1 id="openstack云环境下的对策"><a href="#openstack云环境下的对策" class="headerlink" title="openstack云环境下的对策"></a>openstack云环境下的对策</h1><p>知道了问题的前因后果，只需要在openstack上加以配置即可。分两类情况，新建的windows虚拟机和存量的windows虚拟机。</p>
+<h2 id="对于新建windows虚拟机"><a href="#对于新建windows虚拟机" class="headerlink" title="对于新建windows虚拟机"></a>对于新建windows虚拟机</h2><p>就是对已有的windows镜像和以后新建的windows镜像，添加os_type=”windows”信息</p>
+<pre><code>[root@build localhost]# glance image-update  --property os_type=&quot;windows&quot; 1d2afd0f-9162-415c-ace3-97de254b6c9c
+1d2afd0f-9162-415c-ace3-97de254b6c9c 是vm id</code></pre>
+<h2 id="对于存量的windows虚拟机"><a href="#对于存量的windows虚拟机" class="headerlink" title="对于存量的windows虚拟机"></a>对于存量的windows虚拟机</h2><p>要通过暴力修改数据库的办法，具体方案：<br>（1）   找出要修改的全部的存量windows虚拟机的uuid信息<br>（2）   进入nova数据库，修改instances表的windows虚拟机的os_type字段，将该字段修改为windows<br>例如修改windows vm id为f64bf83d-a9f0-4ec5-b481-e3e76e19b6bd 的vm的os_type字段为windows<br>update instances set os_type=’windows’ where uuid=’ f64bf83d-a9f0-4ec5-b481-e3e76e19b6bd ‘;<br>（3）   检查os_type字段是否被修改成’windows’<br>例如select * from instances where uuid=’f64bf83d-a9f0-4ec5-b481-e3e76e19b6bd’;<br>（4）   硬重启虚机，需提前联系客户<br>    # nova reboot f64bf83d-a9f0-4ec5-b481-e3e76e19b6bd –hard –poll<br>重启原因：KVM 会获取修改后的数据库信息，更新 XML 配置，保证时间同步。</p>
+<h1 id="测试：nova-boot生成的vm是否会带有image的keyword"><a href="#测试：nova-boot生成的vm是否会带有image的keyword" class="headerlink" title="测试：nova boot生成的vm是否会带有image的keyword"></a>测试：nova boot生成的vm是否会带有image的keyword</h1><pre><code>[root@NFJD-TESTVM-CORE-API-1 ~]# glance image-update --property os_type=&quot;windows&quot; fb5bc637-c8ab-4999-9e88-da28561fed21
++---------------------+--------------------------------------------------+
+| Property            | Value                                            |
++---------------------+--------------------------------------------------+
+| checksum            | 8049db08971bec254be86067025d0c32                 |
+| container_format    | bare                                             |
+| created_at          | 2016-07-12T06:16:50Z                             |
+| direct_url          | sheepdog://fb5bc637-c8ab-4999-9e88-da28561fed21  |
+| disk_format         | qcow2                                            |
+| hw_qemu_guest_agent | yes                                              |
+| id                  | fb5bc637-c8ab-4999-9e88-da28561fed21             |
+| image.os_type       | windows                                          |
+| min_disk            | 0                                                |
+| min_ram             | 0                                                |
+| name                | Windows-Server-2008-R2-Enterprise-64bit-20160706 |
+| os_distro           | windows                                          |
+| os_type             | windows                                          |
+| owner               | 6c149dcd3cf64171b8dd972dd03bbac0                 |
+| protected           | False                                            |
+| size                | 10015539200                                      |
+| status              | active                                           |
+| tags                | []                                               |
+| updated_at          | 2017-05-05T03:42:50Z                             |
+| virtual_size        | None                                             |
+| visibility          | public                                           |
++---------------------+--------------------------------------------------+
+[root@NFJD-TESTVM-CORE-API-1 ~]# nova image-show fb5bc637-c8ab-4999-9e88-da28561fed21
++------------------------------+--------------------------------------------------+
+| Property                     | Value                                            |
++------------------------------+--------------------------------------------------+
+| OS-EXT-IMG-SIZE:size         | 10015539200                                      |
+| created                      | 2016-07-12T06:16:50Z                             |
+| id                           | fb5bc637-c8ab-4999-9e88-da28561fed21             |
+| metadata hw_qemu_guest_agent | yes                                              |
+| metadata image.os_type       | windows                                          |
+| metadata os_distro           | windows                                          |
+| metadata os_type             | windows                                          |
+| minDisk                      | 0                                                |
+| minRam                       | 0                                                |
+| name                         | Windows-Server-2008-R2-Enterprise-64bit-20160706 |
+| progress                     | 100                                              |
+| status                       | ACTIVE                                           |
+| updated                      | 2017-05-05T03:42:50Z                             |
++------------------------------+--------------------------------------------------+
+[root@NFJD-TESTVM-CORE-API-1 ~]# nova boot --image fb5bc637-c8ab-4999-9e88-da28561fed21 --flavor 3 --nic net-id=ee98ec6a-e1ed-43eb-9d0a-26080d277484 t4 --availability-zone nova:NFJD-TESTN-COMPUTE-3
++--------------------------------------+-----------------------------------------------------------------------------------------+
+| Property                             | Value                                                                                   |
++--------------------------------------+-----------------------------------------------------------------------------------------+
+| OS-DCF:diskConfig                    | MANUAL                                                                                  |
+| OS-EXT-AZ:availability_zone          | nova                                                                                    |
+| OS-EXT-SRV-ATTR:host                 | -                                                                                       |
+| OS-EXT-SRV-ATTR:hypervisor_hostname  | -                                                                                       |
+| OS-EXT-SRV-ATTR:instance_name        | instance-000056dc                                                                       |
+| OS-EXT-STS:power_state               | 0                                                                                       |
+| OS-EXT-STS:task_state                | scheduling                                                                              |
+| OS-EXT-STS:vm_state                  | building                                                                                |
+| OS-SRV-USG:launched_at               | -                                                                                       |
+| OS-SRV-USG:terminated_at             | -                                                                                       |
+| accessIPv4                           |                                                                                         |
+| accessIPv6                           |                                                                                         |
+| adminPass                            | DoLL3d65w7cN                                                                            |
+| config_drive                         |                                                                                         |
+| created                              | 2017-05-05T03:46:42Z                                                                    |
+| flavor                               | m1.medium (3)                                                                           |
+| hostId                               |                                                                                         |
+| id                                   | f64bf83d-a9f0-4ec5-b481-e3e76e19b6bd                                                    |
+| image                                | Windows-Server-2008-R2-Enterprise-64bit-20160706 (fb5bc637-c8ab-4999-9e88-da28561fed21) |
+| key_name                             | -                                                                                       |
+| metadata                             | &#123;&#125;                                                                                      |
+| name                                 | t4                                                                                      |
+| os-extended-volumes:volumes_attached | []                                                                                      |
+| progress                             | 0                                                                                       |
+| security_groups                      | default                                                                                 |
+| status                               | BUILD                                                                                   |
+| tenant_id                            | 6c149dcd3cf64171b8dd972dd03bbac0                                                        |
+| updated                              | 2017-05-05T03:46:43Z                                                                    |
+| user_id                              | 62f52135115f4898bd0d82c1f0cd632b                                                        |
++--------------------------------------+-----------------------------------------------------------------------------------------+
+[root@NFJD-TESTVM-CORE-API-1 ~]# nova show t4
++--------------------------------------+-----------------------------------------------------------------------------------------+
+| Property                             | Value                                                                                   |
++--------------------------------------+-----------------------------------------------------------------------------------------+
+| OS-DCF:diskConfig                    | MANUAL                                                                                  |
+| OS-EXT-AZ:availability_zone          | nova                                                                                    |
+| OS-EXT-SRV-ATTR:host                 | NFJD-TESTN-COMPUTE-3                                                                    |
+| OS-EXT-SRV-ATTR:hypervisor_hostname  | NFJD-TESTN-COMPUTE-3                                                                    |
+| OS-EXT-SRV-ATTR:instance_name        | instance-000056dc                                                                       |
+| OS-EXT-STS:power_state               | 1                                                                                       |
+| OS-EXT-STS:task_state                | -                                                                                       |
+| OS-EXT-STS:vm_state                  | active                                                                                  |
+| OS-SRV-USG:launched_at               | 2017-05-05T03:46:50.000000                                                              |
+| OS-SRV-USG:terminated_at             | -                                                                                       |
+| accessIPv4                           |                                                                                         |
+| accessIPv6                           |                                                                                         |
+| config_drive                         | True                                                                                    |
+| created                              | 2017-05-05T03:46:42Z                                                                    |
+| flavor                               | m1.medium (3)                                                                           |
+| hostId                               | c34578f3d9c097be0d91fda237706199673ca7e5a87051f5aad24637                                |
+| id                                   | f64bf83d-a9f0-4ec5-b481-e3e76e19b6bd                                                    |
+| image                                | Windows-Server-2008-R2-Enterprise-64bit-20160706 (fb5bc637-c8ab-4999-9e88-da28561fed21) |
+| key_name                             | -                                                                                       |
+| metadata                             | &#123;&#125;                                                                                      |
+| name                                 | t4                                                                                      |
+| net001 network                       | 192.168.2.92                                                                            |
+| os-extended-volumes:volumes_attached | []                                                                                      |
+| progress                             | 0                                                                                       |
+| security_groups                      | default                                                                                 |
+| status                               | ACTIVE                                                                                  |
+| tenant_id                            | 6c149dcd3cf64171b8dd972dd03bbac0                                                        |
+| updated                              | 2017-05-05T03:46:51Z                                                                    |
+| user_id                              | 62f52135115f4898bd0d82c1f0cd632b                                                        |
++--------------------------------------+-----------------------------------------------------------------------------------------+
+MySQL [nova]&gt; select * from instances where uuid=&#39;f64bf83d-a9f0-4ec5-b481-e3e76e19b6bd&#39;;
++---------------------+---------------------+------------+-------+-------------+----------------------------------+----------------------------------+--------------------------------------+-----------+------------+--------------+----------+----------+-------------+----------+-----------+-------+----------+----------------------+-----------+----------------+--------------+---------------------+---------------+--------------+---------------------+-------------------+--------+---------+----------------------+------------------+---------+--------------------------------------+--------------+------------------+--------------+--------------+--------------+------------+--------------------------+---------------------+----------+------------------+--------------------+-------------------+---------+--------------+-----------+----------------------+---------+-----------+---------+--------------------+
+| created_at          | updated_at          | deleted_at | id    | internal_id | user_id                          | project_id                       | image_ref                            | kernel_id | ramdisk_id | launch_index | key_name | key_data | power_state | vm_state | memory_mb | vcpus | hostname | host                 | user_data | reservation_id | scheduled_at | launched_at         | terminated_at | display_name | display_description | availability_zone | locked | os_type | launched_on          | instance_type_id | vm_mode | uuid                                 | architecture | root_device_name | access_ip_v4 | access_ip_v6 | config_drive | task_state | default_ephemeral_device | default_swap_device | progress | auto_disk_config | shutdown_terminate | disable_terminate | root_gb | ephemeral_gb | cell_name | node                 | deleted | locked_by | cleaned | ephemeral_key_uuid |
++---------------------+---------------------+------------+-------+-------------+----------------------------------+----------------------------------+--------------------------------------+-----------+------------+--------------+----------+----------+-------------+----------+-----------+-------+----------+----------------------+-----------+----------------+--------------+---------------------+---------------+--------------+---------------------+-------------------+--------+---------+----------------------+------------------+---------+--------------------------------------+--------------+------------------+--------------+--------------+--------------+------------+--------------------------+---------------------+----------+------------------+--------------------+-------------------+---------+--------------+-----------+----------------------+---------+-----------+---------+--------------------+
+| 2017-05-05 03:46:42 | 2017-05-05 03:46:51 | NULL       | 22236 |        NULL | 62f52135115f4898bd0d82c1f0cd632b | 6c149dcd3cf64171b8dd972dd03bbac0 | fb5bc637-c8ab-4999-9e88-da28561fed21 |           |            |            0 | NULL     | NULL     |           1 | active   |      4096 |     2 | t4       | NFJD-TESTN-COMPUTE-3 | NULL      | r-ae2dhvll     | NULL         | 2017-05-05 03:46:50 | NULL          | t4           | t4                  | nova              |      0 | windows | NFJD-TESTN-COMPUTE-3 |                3 | NULL    | f64bf83d-a9f0-4ec5-b481-e3e76e19b6bd | NULL         | /dev/vda         | NULL         | NULL         | True         | NULL       | NULL                     | NULL                |        0 |                0 |                  0 |                 0 |      40 |            0 | NULL      | NFJD-TESTN-COMPUTE-3 |       0 | NULL      |       0 | NULL               |
++---------------------+---------------------+------------+-------+-------------+----------------------------------+----------------------------------+--------------------------------------+-----------+------------+--------------+----------+----------+-------------+----------+-----------+-------+----------+----------------------+-----------+----------------+--------------+---------------------+---------------+--------------+---------------------+-------------------+--------+---------+----------------------+------------------+---------+--------------------------------------+--------------+------------------+--------------+--------------+--------------+------------+--------------------------+---------------------+----------+------------------+--------------------+-------------------+---------+--------------+-----------+----------------------+---------+-----------+---------+--------------------+
+1 row in set (0.00 sec)
+
+查看到nova数据库里instances表的os_type=&#39;windows&#39;</code></pre>
+<h1 id="类似的，对于无法获取监控数据的虚机，使用以下办法修改虚机配置："><a href="#类似的，对于无法获取监控数据的虚机，使用以下办法修改虚机配置：" class="headerlink" title="类似的，对于无法获取监控数据的虚机，使用以下办法修改虚机配置："></a>类似的，对于无法获取监控数据的虚机，使用以下办法修改虚机配置：</h1><p>（1）联系提供镜像的同事确认虚机内已安装qemu-guest-agent<br>（2）修改nova数据库改虚机字段：</p>
+<pre><code>MariaDB [(none)]&gt; use nova;
+MariaDB [nova]&gt; insert into instance_system_metadata values(NULL,NULL,NULL,NULL,&#39;2cf79497-d1ba-42c3-adf5-3b45c6927dfb&#39;,&#39;image_hw_qemu_guest_agent&#39;,&#39;yes&#39;,0);
+注： 2cf79497-d1ba-42c3-adf5-3b45c6927dfb 为对应instance的uuid
+检查：select * from instance_system_metadata where instance_uuid=&#39;3ce9d8b0-a0a3-48ed-ba54-415883f717e5&#39;;</code></pre>
+<p>（3）再修改虚机所用镜像</p>
+<pre><code># glance image-update xxx --property hw_qemu_guest_agent=yes --property hw_ovirt_guest_agent=yes</code></pre>
+<p>（4）硬重启虚机，需提前联系客户</p>
+<pre><code># nova reboot 2cf79497-d1ba-42c3-adf5-3b45c6927dfb --hard --poll</code></pre>
+<h1 id="为何修改os-type-’windows’会影响windows虚拟机的时间"><a href="#为何修改os-type-’windows’会影响windows虚拟机的时间" class="headerlink" title="为何修改os_type=’windows’会影响windows虚拟机的时间"></a>为何修改os_type=’windows’会影响windows虚拟机的时间</h1><h2 id="openstack会根据os-type的内容来决定提供给底下一层kvm的vm所需的xml内容"><a href="#openstack会根据os-type的内容来决定提供给底下一层kvm的vm所需的xml内容" class="headerlink" title="openstack会根据os_type的内容来决定提供给底下一层kvm的vm所需的xml内容"></a>openstack会根据os_type的内容来决定提供给底下一层kvm的vm所需的xml内容</h2><p>通过查询一台windows虚拟机和一台linux虚拟机来对比xml内容，确实windows vm为clock offset=’localtime’  linux vm为clock offset=’utc’</p>
+<p>The <code>&lt;clock&gt;</code> element is used to determine how the guest virtual machine clock is synchronized with the host physical machine clock. The clock element has the following attributes:</p>
+<p><code>offset</code> determines how the guest virtual machine clock is offset from the host physical machine clock. </p>
+<h3 id="windows虚拟机"><a href="#windows虚拟机" class="headerlink" title="windows虚拟机"></a>windows虚拟机</h3><pre><code>[root@NFJD-TESTVM-CORE-API-1 ~]# nova show t4
++--------------------------------------+-----------------------------------------------------------------------------------------+
+| Property                             | Value                                                                                   |
++--------------------------------------+-----------------------------------------------------------------------------------------+
+| OS-DCF:diskConfig                    | MANUAL                                                                                  |
+| OS-EXT-AZ:availability_zone          | nova                                                                                    |
+| OS-EXT-SRV-ATTR:host                 | NFJD-TESTN-COMPUTE-3                                                                    |
+| OS-EXT-SRV-ATTR:hypervisor_hostname  | NFJD-TESTN-COMPUTE-3                                                                    |
+| OS-EXT-SRV-ATTR:instance_name        | instance-000056dc                                                                       |
+| OS-EXT-STS:power_state               | 1                                                                                       |
+| OS-EXT-STS:task_state                | -                                                                                       |
+| OS-EXT-STS:vm_state                  | active                                                                                  |
+| OS-SRV-USG:launched_at               | 2017-05-05T03:46:50.000000                                                              |
+| OS-SRV-USG:terminated_at             | -                                                                                       |
+| accessIPv4                           |                                                                                         |
+| accessIPv6                           |                                                                                         |
+| config_drive                         | True                                                                                    |
+| created                              | 2017-05-05T03:46:42Z                                                                    |
+| flavor                               | m1.medium (3)                                                                           |
+| hostId                               | c34578f3d9c097be0d91fda237706199673ca7e5a87051f5aad24637                                |
+| id                                   | f64bf83d-a9f0-4ec5-b481-e3e76e19b6bd                                                    |
+| image                                | Windows-Server-2008-R2-Enterprise-64bit-20160706 (fb5bc637-c8ab-4999-9e88-da28561fed21) |
+| key_name                             | -                                                                                       |
+| metadata                             | &#123;&#125;                                                                                      |
+| name                                 | t4                                                                                      |
+| net001 network                       | 192.168.2.92                                                                            |
+| os-extended-volumes:volumes_attached | []                                                                                      |
+| progress                             | 0                                                                                       |
+| security_groups                      | default                                                                                 |
+| status                               | ACTIVE                                                                                  |
+| tenant_id                            | 6c149dcd3cf64171b8dd972dd03bbac0                                                        |
+| updated                              | 2017-05-05T03:46:51Z                                                                    |
+| user_id                              | 62f52135115f4898bd0d82c1f0cd632b                                                        |
++--------------------------------------+-----------------------------------------------------------------------------------------+
+[root@NFJD-TESTN-COMPUTE-3 ~]# virsh dumpxml instance-000056dc
+...
+  &lt;clock offset=&#39;localtime&#39;&gt;
+    &lt;timer name=&#39;pit&#39; tickpolicy=&#39;delay&#39;/&gt;
+    &lt;timer name=&#39;rtc&#39; tickpolicy=&#39;catchup&#39;/&gt;
+    &lt;timer name=&#39;hpet&#39; present=&#39;no&#39;/&gt;
+  &lt;/clock&gt;
+...</code></pre>
+<h3 id="linux虚拟机"><a href="#linux虚拟机" class="headerlink" title="linux虚拟机"></a>linux虚拟机</h3><pre><code>[root@NFJD-TESTVM-CORE-API-1 ~]# nova show t1
++--------------------------------------+-------------------------------------------------------------------+
+| Property                             | Value                                                             |
++--------------------------------------+-------------------------------------------------------------------+
+| OS-DCF:diskConfig                    | MANUAL                                                            |
+| OS-EXT-AZ:availability_zone          | nova                                                              |
+| OS-EXT-SRV-ATTR:host                 | NFJD-TESTN-COMPUTE-1                                              |
+| OS-EXT-SRV-ATTR:hypervisor_hostname  | NFJD-TESTN-COMPUTE-1                                              |
+| OS-EXT-SRV-ATTR:instance_name        | instance-000056d9                                                 |
+| OS-EXT-STS:power_state               | 1                                                                 |
+| OS-EXT-STS:task_state                | -                                                                 |
+| OS-EXT-STS:vm_state                  | active                                                            |
+| OS-SRV-USG:launched_at               | 2017-05-05T02:44:20.000000                                        |
+| OS-SRV-USG:terminated_at             | -                                                                 |
+| accessIPv4                           |                                                                   |
+| accessIPv6                           |                                                                   |
+| config_drive                         | True                                                              |
+| created                              | 2017-05-05T02:44:11Z                                              |
+| flavor                               | m1.medium (3)                                                     |
+| hostId                               | f091880caebe68654030e5df4825e49548af0037454e5723961bfc3d          |
+| id                                   | 6316dc6e-2fb0-4d72-8e99-ad5749efc295                              |
+| image                                | CentOS-7.1-x86_64-20161018 (8aaf1759-9fb4-4ba9-8cff-1743eb824c5f) |
+| key_name                             | -                                                                 |
+| metadata                             | &#123;&#125;                                                                |
+| name                                 | t1                                                                |
+| net001 network                       | 192.168.2.90                                                      |
+| os-extended-volumes:volumes_attached | []                                                                |
+| progress                             | 0                                                                 |
+| security_groups                      | default                                                           |
+| status                               | ACTIVE                                                            |
+| tenant_id                            | 6c149dcd3cf64171b8dd972dd03bbac0                                  |
+| updated                              | 2017-05-05T03:36:09Z                                              |
+| user_id                              | 62f52135115f4898bd0d82c1f0cd632b                                  |
++--------------------------------------+-------------------------------------------------------------------+
+[root@NFJD-TESTN-COMPUTE-1 ~]# virsh dumpxml instance-000056d9
+...
+  &lt;clock offset=&#39;utc&#39;&gt;
+    &lt;timer name=&#39;pit&#39; tickpolicy=&#39;delay&#39;/&gt;
+    &lt;timer name=&#39;rtc&#39; tickpolicy=&#39;catchup&#39;/&gt;
+    &lt;timer name=&#39;hpet&#39; present=&#39;no&#39;/&gt;
+  &lt;/clock&gt;
+...</code></pre>
+<h2 id="分析相关的nova代码"><a href="#分析相关的nova代码" class="headerlink" title="分析相关的nova代码"></a>分析相关的nova代码</h2><pre class="language-Python" data-language="Python"><code class="language-Python"># nova&#x2F;virt&#x2F;libvirt&#x2F;driver.py
+
+def _set_clock(self, guest, os_type, image_meta, virt_type):
+    # NOTE(mikal): Microsoft Windows expects the clock to be in
+    # &quot;localtime&quot;. If the clock is set to UTC, then you can use a
+    # registry key to let windows know, but Microsoft says this is
+    # buggy in http:&#x2F;&#x2F;support.microsoft.com&#x2F;kb&#x2F;2687252
+    clk &#x3D; vconfig.LibvirtConfigGuestClock()
+    if os_type &#x3D;&#x3D; &#39;windows&#39;:
+        LOG.info(_LI(&#39;Configuring timezone for windows instance to &#39;
+                     &#39;localtime&#39;))
+        clk.offset &#x3D; &#39;localtime&#39;  # 在os_type为windows的时候clk.offset设置为localtime
+    else:
+        clk.offset &#x3D; &#39;utc&#39;
+    guest.set_clock(clk)  # 在os_type为linux的时候clk.offset设置为utc
+
+    if virt_type &#x3D;&#x3D; &quot;kvm&quot;:
+        self._set_kvm_timers(clk, os_type, image_meta)</code></pre>
+
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎指出任何有错误或不够清晰的表达。可以邮件至 backendcloud@gmail.com </span>
+    </div>
+</article>
+
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <div class="wechat_OA">
+	<span>欢迎您扫一扫下面的微信公众号对"后端云"进行订阅！</span>
+	<br>
+    <!-- 这里添加你的二维码图片 -->
+	<img src ="/img/wechat-dingyuehao.jpg">
+</div>
+
+<p class="footer-entry"><span class="miit">
+                <img src="/img/gov.png" title="中华人民共和国工业和信息化部">
+                <a target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">苏ICP备15031601-2号</a>
+        </span>
+    
+    ©2017-2022 后端云
+</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

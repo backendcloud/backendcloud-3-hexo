@@ -1,0 +1,20 @@
+name: DEPLOY
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: rsync deployments
+      uses: burnett01/rsync-deployments@5.2
+      with:
+        switches: -avzr --delete
+        path: public/
+        remote_path: /usr/share/nginx/html/backendcloud/www/
+        remote_host: 120.26.200.226
+        remote_user: root
+        remote_key: ${{ secrets.DEPLOY_KEY }}
