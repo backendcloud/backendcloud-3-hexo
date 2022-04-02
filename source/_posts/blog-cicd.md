@@ -35,11 +35,11 @@ on:
   push:
     branches:
       - master # 只在master上push触发部署
-#    paths-ignore: # 下列文件的变更不触发部署，可以自行添加
-#      - README.md
-#      - LICENSE
-    paths: # 这里是用来指定哪个文件更改，才会触发的
-      - './source/_posts/**'
+    paths-ignore: # 下列文件的变更不触发部署，可以自行添加
+      - README.md
+      - LICENSE
+#    paths: # 这里是用来指定哪个文件更改，才会触发的
+#      - './source/_posts/**'
 
 jobs:
   build:
@@ -109,6 +109,15 @@ jobs:
           SERVER_IP: ${{ secrets.SSH_HOST }} # 引用配置，服务器的host名（IP或者域名domain.com）
           USERNAME: root # 引用配置，服务器登录名
           SERVER_DESTINATION: /usr/share/nginx/html/backendcloud/www/ # 部署到目标文件夹
+      - name: Restart server # 第三步，重启服务
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }} # 下面三个配置与上一步类似
+          username: root
+          key: ${{ secrets.DEPLOY_KEY }}
+          # 重启的脚本，根据自身情况做相应改动，一般要做的是migrate数据库以及重启服务器
+          script: |
+            rm -rf /usr/share/nginx/html/backendcloud/www/.git*
 ```
 
 `Hexo git deploy`配置
