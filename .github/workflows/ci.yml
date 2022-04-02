@@ -42,7 +42,11 @@ jobs:
           cp ./backendcloud.github.io.ci.yml ./public/.github/workflows
           echo "abc"
           cp ./backendcloud.github.io.ci.yml ./public/
-          echo "tt" > ./public/abc.txt
+          echo "tt" > ./public/abc
+          echo "tt" > ./public/weixin-mp/abc
+          echo "tt" > ./public/.abc
+          echo "tt" > ./public/weixin-mp/.abc
+          echo "tt" > ./public/.github/workflows/abc
           hexo deploy
 
 
