@@ -8,14 +8,14 @@ https://github.com/backendcloud/backendcloud.github.io 是对应的静态html仓
 
 过去博客更新的方式是：执行`hexo g -d`进行打包部署，git版本管理push到Github。
 
-自从上次试用过Github Action后，觉得应该紧跟潮流，用Github Action完成CICD自动化。其实事后效率也没提升，反而下降了，因为`hexo g -d`编译加部署一共一两秒。换成新流程这是省去了`hexo g -d`这一步，只剩下push到Github，但是Github Action自动执行完大约需要30秒到60秒。
+自从上次试用过Github Action后，觉得应该紧跟技术趋势，用Github Action完成CICD自动化。其实事后效率也没提升，反而下降了，因为`hexo g -d`编译加部署一共一两秒。换成新流程只是省去了`hexo g -d`这一步，只剩下push到Github，但是Github Action自动执行这个过程大约需要30秒到60秒。
 
-原来2秒就能看到博客更新的效果，现在要1分钟左右才能看到。就是从流程上没有优化啥，但是流程方式是极大升级的。且本地可以不用node环境，不需要装hexo。
+原来2秒就能看到博客更新的效果，现在要近1分钟才能看到。就是从方便程度，效率上没有优化，但是流程方式是极大升级的。该CICD思想用在大型项目上优势及其明显。且本地可以不用node环境，不需要装hexo。
 
 自动化方案CICD流程升级：
-1. Github代码仓库CI流程：监控到有push到静态目录public，则用rsync同步阿里云的nginx html目录。这种方案还需要本地执行`hexo g`。
-2. Github代码仓库CI流程：监控到源文件文件夹有push，则部署node环境，安装hexo，安装本地包，执行`hexo g -d`，通过hexo rsync部署到阿里云的nginx html目录。
-3. 终极方案，双代码仓库，hexo代码仓库和静态网页代码仓库。Github代码仓库CI流程：监控到源文件文件夹有push，则部署node环境，安装hexo，安装本地包，执行`hexo g -d`，通过hexo git部署到Github另一个代码仓库并触发另一个代码仓库的CI流程：通过rsync部署到阿里云的nginx html目录。
+1. Hexo代码仓库CI流程：监控到有push到静态目录public，则用rsync同步阿里云的nginx html目录。这种方案还需要本地执行`hexo g`。
+2. Hexo代码仓库CI流程：监控到源文件文件夹有push，则部署node环境，安装hexo，安装本地包，执行`hexo g -d`，通过hexo rsync部署到阿里云的nginx html目录。
+3. 终极方案，双代码仓库，hexo代码仓库和静态网页代码仓库。Hexo代码仓库CI流程：监控到源文件文件夹有push，则部署node环境，安装hexo，安装本地包，执行`hexo g -d`，通过hexo git部署到Github静态网页仓库并触发静态网页仓库的CI流程：通过rsync部署到阿里云的nginx html目录。
 
 因为方案3已经包含了1和2的所有实现，所以就介绍下方案3。
 
