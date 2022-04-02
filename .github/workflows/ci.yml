@@ -41,7 +41,10 @@ jobs:
           cp ./backendcloud.github.io.ci.yml ./public/
       - name: Deploy hexo
         run: |
-          hexo clean && hexo generate && hexo deploy
+          hexo clean && hexo generate
+          mkdir -p ./public/.github/workflows
+          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows
+          hexo deploy
 
 
 
