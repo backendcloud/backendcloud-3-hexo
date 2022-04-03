@@ -11,7 +11,7 @@ tags:
 
 # CICD方案升级
 
-过去博客更新的方式是：执行`hexo g -d`进行打包部署，git版本管理push到Github。
+过去博客更新的方式是：执行`hexo g -d`进行编译部署到阿里云，git版本管理push到Github。
 
 自从上次试用过Github Action后，觉得应该紧跟技术趋势，用Github Action完成CICD自动化。其实事后效率也没提升，反而下降了，因为`hexo g -d`编译加部署一共一两秒。换成新流程只是省去了`hexo g -d`这一步，只剩下push到Github，但是Github Action自动执行这个过程大约需要30秒到60秒。
 
