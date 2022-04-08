@@ -38,6 +38,7 @@ jobs:
             
 
   my_second_job:
+    needs: my_first_job
     name: My second job
     runs-on: ubuntu-latest # 使用ubuntu系统镜像运行自动化脚本
 
