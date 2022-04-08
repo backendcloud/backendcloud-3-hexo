@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest # 使用ubuntu系统镜像运行自动化脚本
 
     steps: # 自动化步骤
-      - name: sleep 60s
+      - name: sleep 60s # 一个大坑，该Action和hexo git触发的Action冲突了，会导致有很大的概率rsync执行失败，等待60s，让hexo git执行完毕再执行此Action
         run: |
           sleep 60
       - uses: actions/checkout@v2 # 第一步，下载代码仓库
