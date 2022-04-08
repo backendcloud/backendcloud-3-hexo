@@ -17,7 +17,7 @@ tags:
 
 原来2秒就能看到博客更新的效果，现在要近1分钟才能看到。就是从方便程度，效率上没有优化，但是流程方式是极大升级的。该CICD思想用在大型项目上优势及其明显。且本地可以不用node环境，不需要装hexo。
 
-自动化方案CICD流程升级：
+三种CICD升级方案：
 1. Hexo代码仓库CI流程：监控到有push到静态目录public，则用rsync同步阿里云的nginx html目录。这种方案还需要本地执行`hexo g`。
 2. Hexo代码仓库CI流程：监控到源文件文件夹有push，则部署node环境，安装hexo，安装本地包，执行`hexo g -d`，通过hexo rsync部署到阿里云的nginx html目录。
 3. 终极方案，双代码仓库，hexo代码仓库和静态网页代码仓库。Hexo代码仓库CI流程：监控到源文件文件夹有push，则部署node环境，安装hexo，安装本地包，执行`hexo g -d`，通过hexo git部署到Github静态网页仓库并触发静态网页仓库的CI流程：通过rsync部署到阿里云的nginx html目录。
