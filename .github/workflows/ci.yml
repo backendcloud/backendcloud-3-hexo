@@ -43,12 +43,15 @@ jobs:
           npm i
           npm install hexo-deployer-git --save
       - name: Deploy hexo
+        env:
+          SSH_HOST_PRI: ${{ secrets.SSH_HOST }}
         run: |
           hexo clean && hexo generate
+          rsync --delete -avz ./public/ ${SSH_HOST_PRI}:/usr/share/nginx/html/backendcloud/www/
+          hexo deploy
 #          rsync --delete -avz ./public/ ${SSH_HOST_PRI}:/usr/share/nginx/html/backendcloud/www/
 #          mkdir -p ./public/.github/workflows
 #          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows/ci.yml
-          hexo deploy
 
 
 
