@@ -349,3 +349,50 @@ Github actions Artifact 可以用来存储action生产出来的产物，比如np
       run: |
         echo $MY_VAR $FIRST_NAME $MIDDLE_NAME $LAST_NAME
 ```
+
+## 什么是矩阵？
+就是有时候，我们的代码可能编译环境有多个。我们需要在 macos 上编译 dmg 压缩包，在 windows 上编译 exe 可执行文件。这种时候，我们使用矩阵就可以啦~
+
+比如下面的代码，我们使用了矩阵指定了：2 个操作系统，3 个 node 版本。
+
+这时候下面这段代码就会执行 6 次—— 2 x 3 = 6！！！
+
+```yaml
+runs-on: ${{ matrix.os }}
+strategy:
+  matrix:
+    os: [ubuntu-16.04, ubuntu-18.04]
+    node: [6, 8, 10]
+steps:
+  - uses: actions/setup-node@v1
+    with:
+      node-version: ${{ matrix.node }}
+```
+
+# 跳过Github Actions 或者 选择性的执行CICD流程
+在 commit 信息中只要包含了下面几个关键词就会跳过 CI，不会触发 CI Build
+
+    [skip ci]
+    [ci skip]
+    [no ci]
+    [skip actions]
+    [actions skip]
+
+需求：不想每次提交都触发Github Actions构建，只有git commit message不包含指定的内容才触发
+
+Github Actions 支持 jobs.<job_id>.if (opens new window)语法 Github Actions运行中我们可以拿到一些当前的环境信息，比如git的提交内容信息，通过这些内容来控制actions的执行
+
+比如，当git message不包含wip才触发构建
+
+    jobs:
+        format:
+            runs-on: ubuntu-latest
+            if: "! contains(github.event.head_commit.message, 'wip')"
+
+同理，下面的workflow表示，只有git message中包含[build]才触发构建，否则跳过
+
+    jobs:
+        format:
+            runs-on: ubuntu-latest
+            if: "contains(github.event.head_commit.message, '[build]')"
+
