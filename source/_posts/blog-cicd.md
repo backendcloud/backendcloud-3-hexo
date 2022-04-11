@@ -240,7 +240,7 @@ deploy:
 ![](/images/blog-cicd/98823356.png)
 
 # 其他补充
-上面的对于hexo部署已经足够了，也可以干其他很多事情，不过github action还有些强大的特性没涉及，补充罗列下其他常用的地方，不得不说设计太精妙了。Github被微软收购后，竟然变更强了。Intel推出的12代酷睿，性能远超mac的m1了，不再挤牙膏了。Wintel的时代没有过去，老当益壮，还可再战。
+上面的对于hexo部署已经足够了，也可以干其他很多事情，不过github action还有些强大的特性没涉及，补充罗列下其他常用的地方，不得不说设计太精妙了。Github被微软收购后，竟然变更强了。Intel推出的12代酷睿，性能远超mac的m1了，这次没挤牙膏。Wintel的时代没有过去，老当益壮，还可再战。
 
 ## Github Action 的使用限制
 2000分钟/月 的总使用时长限制，每个 Workflow 中的 job 最多可以执行 6 个小时 每个 Workflow 最多可以执行 72 小时 每个 Workflow 中的 job 最多可以排队 24 小时 在一个存储库的所有 Action 中，一个小时最多可以执行 1000 个 API 请求 并发工作数：Linux：20，Mac：5。
@@ -280,4 +280,49 @@ needs 可以标识 job 是否依赖于别的 job——如果 job 失败，则会
             needs: job1
         job3:
             needs: [job1, job2]
+
+不同的job之间如何共享数据 可以通过  和need打配合共享字符串变量 或者  artifact 在 workflow job 之间共享数据
+### 和need打配合共享字符串变量
+```yaml
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      output1: ${{ steps.step1.outputs.test }}
+      output2: ${{ steps.step2.outputs.test }}
+    steps:
+    - id: step1
+      run: echo "::set-output name=test::hello"
+    - id: step2
+      run: echo "::set-output name=test::world"
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+    - run: echo ${{needs.job1.outputs.output1}} ${{needs.job1.outputs.output2}}
+```
+### artifact 在 workflow job 之间共享数据
+Github actions Artifact 可以用来存储action生产出来的产物，比如npm build生成的静态文件。当上传成功后，后续的流程就可以下载这些文件来使用。
+
+其中一个job要上传文件到Github actions Artifact，use使用 actions/upload-artifact@v2
+
+```yaml
+- uses: actions/upload-artifact@v2
+  with:
+  name: agileconfig-ui   # name：上传的artifact的名称，下载的时候需要使用。
+  path: xxx/yyy/   # path：需要上传的文件夹的path
+```
+
+另一个job需要needs上传文件的job，use使用 actions/download-artifact@v2
+
+```yaml
+- uses: actions/download-artifact@v2
+  with:
+    name: agileconfig-ui   # name：需要下载的artifact的名称
+    path: aaa/bbb   # path：下载后存储数据的path
+```
+
+Github actions Artifact除了可以不同job共享文件，也可以手动到Github Action下载文件，比如编译打包后的文件。只是Github只帮忙保存30天，不是永久保存的。
+
 
