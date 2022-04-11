@@ -369,7 +369,7 @@ steps:
       node-version: ${{ matrix.node }}
 ```
 
-# 跳过Github Actions 或者 选择性的执行CICD流程
+## 跳过Github Actions 或者 选择性的执行CICD流程
 在 commit 信息中只要包含了下面几个关键词就会跳过 CI，不会触发 CI Build
 
     [skip ci]
@@ -396,3 +396,46 @@ Github Actions 支持 jobs.<job_id>.if (opens new window)语法 Github Actions�
             runs-on: ubuntu-latest
             if: "contains(github.event.head_commit.message, '[build]')"
 
+## 如何手动触发构建
+默认情况只有push和pull request动作才会触发构建
+
+    on:
+        push:
+            branches: [ main ]
+        pull_request:
+            branches: [ main ]
+
+最简单的做法，添加workflow_dispatch动作
+
+    on:
+        workflow_dispatch:
+        push:
+            branches: [ main ]
+        pull_request:
+            branches: [ main ]
+
+这样在actions页面可以看到执行构建的按钮，选择分支后可以执行手动构建。
+![](/images/blog-cicd/img.png)
+
+```yaml
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Person to greet'
+        required: true
+        default: 'Mona the Octocat'
+      home:
+        description: 'location'
+        required: false
+
+jobs:
+  say_hello:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "Hello ${{ github.event.inputs.name }}!"
+        echo "- in ${{ github.event.inputs.home }}!"
+```
+关于手动触发还支持自定义输入文本，也就是输入文本当成传入的参数，用在后续的构建命令中
+![](/images/blog-cicd/img_1.png)
