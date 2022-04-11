@@ -323,6 +323,29 @@ Github actions Artifact 可以用来存储action生产出来的产物，比如np
     path: aaa/bbb   # path：下载后存储数据的path
 ```
 
-Github actions Artifact除了可以不同job共享文件，也可以手动到Github Action下载文件，比如编译打包后的文件。只是Github只帮忙保存30天，不是永久保存的。
+> Github actions Artifact除了可以不同job共享文件，也可以手动到Github Action下载文件，比如编译打包后的文件。只是Github只帮忙保存30天，不是永久保存的。
 
+## 定义环境变量
+### job定义环境变量
 
+    jobs:
+        job1:
+            env:
+                FIRST_NAME: Mona
+
+### step定义环境变量
+
+```yaml
+    steps:
+    # 定义 step 的名称
+    - name: Print a greeting
+      # 定义 step 的环境变量
+      env:
+        MY_VAR: Hi there! My name is
+        FIRST_NAME: Mona
+        MIDDLE_NAME: The
+        LAST_NAME: Octocat
+      # 运行指令：输出环境变量
+      run: |
+        echo $MY_VAR $FIRST_NAME $MIDDLE_NAME $LAST_NAME
+```
