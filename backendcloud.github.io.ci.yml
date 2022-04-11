@@ -17,13 +17,14 @@ jobs:
       - name: sleep 60s # 一个大坑，该Action和hexo git触发的Action冲突了，会导致有很大的概率rsync执行失败，等待60s，让hexo git执行完毕再执行此Action
         run: |
           sleep 60
+          echo ".git" > exclude.list
       - uses: actions/checkout@v2 # 第一步，下载代码仓库
 
       - name: Deploy to Server # 第二步，rsync推文件
         uses: AEnterprise/rsync-deploy@v1.0 # 使用别人包装好的步骤镜像
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }} # 引用配置，SSH私钥
-          ARGS: -avz --delete
+          ARGS: -avz --delete --exclude-from=exclude.list
           SERVER_PORT: "22" # SSH端口
           FOLDER: ./ # 要推送的文件夹，路径相对于代码仓库的根目录
           SERVER_IP: ${{ secrets.SSH_HOST }} # 引用配置，服务器的host名（IP或者域名domain.com）
