@@ -238,3 +238,46 @@ deploy:
 至此，双代码仓库的 三 Github Action CICD流程完全跑通。
 ![](/images/blog-cicd/584f8b6f.png)
 ![](/images/blog-cicd/98823356.png)
+
+# 其他补充
+上面的对于hexo部署已经足够了，也可以干其他很多事情，不过github action还有些强大的特性没涉及，补充罗列下其他常用的地方，不得不说设计太精妙了。Github被微软收购后，竟然变更强了。Intel推出的12代酷睿，性能远超mac的m1了，不再挤牙膏了。Wintel的时代没有过去，老当益壮，还可再战。
+
+## Github Action 的使用限制
+2000分钟/月 的总使用时长限制，每个 Workflow 中的 job 最多可以执行 6 个小时 每个 Workflow 最多可以执行 72 小时 每个 Workflow 中的 job 最多可以排队 24 小时 在一个存储库的所有 Action 中，一个小时最多可以执行 1000 个 API 请求 并发工作数：Linux：20，Mac：5。
+
+> 这些限制对于个人开发足够了。当然也限制了使用Github的资源当服务器，Github有那Github当服务器的action，使用了该action，可以ssh到Github服务器上使用服务器的算力，Github的服务器性能还是非常强劲的。
+
+## 什么是Workflow
+Workflow 是由一个或多个 job 组成的可配置的自动化过程。可以自定义名称，Github Action页面就会显示自定义的名称，否则用默认的命名方式。
+
+on 可以定义 触发 Workflow 执行的 event 名称。下面是最常用的两种。
+
+    // 单个事件
+    on: push
+    
+    // 多个事件
+    on: [push,pull_request]
+
+## Workflow 的 job 是什么？ 以及不同的job之间如何共享数据
+
+一个 Workflow 由一个或多个 jobs 构成，含义是一次持续集成的运行，可以完成多个任务，Github任务叫step，一个step可以有多个action。
+
+因为一个job对应一次持续集成。不同的job是不能共享数据的。上面的hexo两次ci.yaml定义的workflow都是单job的。Github默认多job是并行执行的。
+
+job必须定义id，且id就是key，这个和step不同，step的id和name是用key value对定义的，且不同的step是以数组的形式，按书写顺序，顺序执行。job的name 会显示在 Github Action页面上。
+
+    jobs:
+        my_first_job:
+            name: My first job
+        my_second_job:
+            name: My second job
+
+needs 可以标识 job 是否依赖于别的 job——如果 job 失败，则会跳过所有需要该 job 的 job
+
+    jobs:
+        job1:
+        job2:
+            needs: job1
+        job3:
+            needs: [job1, job2]
+
