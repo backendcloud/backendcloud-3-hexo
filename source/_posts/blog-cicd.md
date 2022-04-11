@@ -439,3 +439,91 @@ jobs:
 ```
 关于手动触发还支持自定义输入文本，也就是输入文本当成传入的参数，用在后续的构建命令中
 ![](/images/blog-cicd/img_1.png)
+
+
+## GitHub Actions 编译安卓
+```yaml
+name: android_build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        # 拉取 android_builder 的源代码
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        # 设置 Java 运行环境
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+          # 用 1.8 版本覆盖环境中自带的 Java 11 版本
+      - id: get-project
+        # 读取项目地址
+        name: Get project name
+        run: echo "::set-output name=PROJECT::$(cat project-to-build)"
+      - name: Clone project
+        # 拉取项目源码到虚拟环境
+        run: git clone --depth=1 ${{ steps.get-project.outputs.PROJECT }} project
+      - name: Build the app
+        # 构建调试版 APK
+        working-directory: ./project
+        run: |
+          if [ ! -f "gradlew" ]; then gradle wrapper; fi
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
+      - name: Upload APK
+        # 打包上传生成的 APK 到的网页端
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-build-apk
+          path: ./**/*.apk
+```
+
+
+## Docker构建镜像和推送到Docker Hub
+进到https://hub.docker.com/settings/security生成access token，注意好记好。 然后打开Github到Settings > Secrets > New secret添加两条记录：
+
+* 键名：DOCKER_HUB_USERNAME，值是Docker hub的用户名
+* 键名：DOCKER_HUB_ACCESS_TOKEN，值是刚才复制的access token，值类似c292155d-1bd7-xxxx-xxxx-4da75bedb178
+
+```yaml
+name: CI to Docker Hub 
+
+on:
+  push:
+        branches: [ master ]
+   # tags:
+   #   - "v*.*.*"
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      -
+        name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: finleyma/simplewhale:latest
+          build-args: |
+            arg1=value1
+            arg2=value2
+      -
+        name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+```
