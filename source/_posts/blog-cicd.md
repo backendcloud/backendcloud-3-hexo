@@ -485,7 +485,7 @@ jobs:
 
 
 ## Docker构建镜像和推送到Docker Hub
-进到https://hub.docker.com/settings/security生成access token，注意好记好。 然后打开Github到Settings > Secrets > New secret添加两条记录：
+进到 https://hub.docker.com/settings/security 生成access token，注意好记好。 然后打开Github到Settings > Secrets > New secret添加两条记录：
 
 * 键名：DOCKER_HUB_USERNAME，值是Docker hub的用户名
 * 键名：DOCKER_HUB_ACCESS_TOKEN，值是刚才复制的access token，值类似c292155d-1bd7-xxxx-xxxx-4da75bedb178
