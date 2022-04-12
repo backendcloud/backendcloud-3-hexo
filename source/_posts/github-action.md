@@ -11,7 +11,9 @@ tags:
 
 
 # 其他补充
-上面的对于hexo部署已经足够了，也可以干其他很多事情，不过github action还有些强大的特性没涉及，补充罗列下其他常用的地方，不得不说设计太精妙了。Github被微软收购后，竟然变更强了。Intel推出的12代酷睿，性能远超mac的m1了，这次没挤牙膏。Wintel的时代没有过去，老当益壮，还可再战。
+继续上篇文章 {% post_link centos7-7-k8s-3nodes %} 
+
+上篇的介绍对于hexo部署已经足够了，也可以干其他很多事情，不过github action还有些强大的特性没涉及，补充罗列下其他常用的地方，不得不说设计太精妙了。Github被微软收购后，竟然变更强了。Intel推出的12代酷睿，性能远超mac的m1了，这次没挤牙膏。Wintel的时代没有过去，老当益壮，还可再战。
 
 ## Github Action 的使用限制
 2000分钟/月 的总使用时长限制，每个 Workflow 中的 job 最多可以执行 6 个小时 每个 Workflow 最多可以执行 72 小时 每个 Workflow 中的 job 最多可以排队 24 小时 在一个存储库的所有 Action 中，一个小时最多可以执行 1000 个 API 请求 并发工作数：Linux：20，Mac：5。
@@ -94,7 +96,7 @@ Github actions Artifact 可以用来存储action生产出来的产物，比如np
     path: aaa/bbb   # path：下载后存储数据的path
 ```
 
-> Github actions Artifact除了可以不同job共享文件，也可以手动到Github Action下载文件，比如编译打包后的文件。只是Github只帮忙保存30天，不是永久保存的。
+> Github actions Artifact除了可以不同job共享文件，也可以手动到Github Action下载文件，比如编译打包后的文件。
 
 ## 定义环境变量
 ### job定义环境变量
@@ -406,4 +408,4 @@ jobs:
 ```
 ![](/images/blog-cicd/img3.png)
 ![](/images/blog-cicd/img4.png)
-这样仅一顿饭的功夫，自动完成了5，6个最新版本的openstack环境的准备。
+这样仅一顿饭的功夫，自动完成了5，6个最新版本的openstack环境的并行准备。
