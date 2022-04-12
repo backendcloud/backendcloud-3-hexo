@@ -634,3 +634,4 @@ jobs:
           enabled_services: 'ir-api,ir-cond,s-account,s-container,s-object,s-proxy,q-svc,q-agt,q-dhcp,q-l3,q-meta,-cinder,-c-sch,-c-api,-c-vol,-c-bak,-ovn,-ovn-controller,-ovn-northd,-q-ovn-metadata-agent'
 ```
 ![](/images/blog-cicd/img3.png)
+![](/images/blog-cicd/img4.png)
