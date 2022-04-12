@@ -14,14 +14,13 @@ jobs:
     runs-on: ubuntu-latest # 使用ubuntu系统镜像运行自动化脚本
 
     steps: # 自动化步骤
-      - name: sleep 60s # 一个大坑，该Action和hexo git触发的Action冲突了，会导致有很大的概率rsync执行失败，等待60s，让hexo git执行完毕再执行此Action
+      - name: sleep seconds # 一个大坑，该Action和hexo git触发的Action冲突了，会导致有很大的概率rsync执行失败，等待60s，让hexo git执行完毕再执行此Action
         run: |
-          sleep 60
+          sleep 1
       - uses: actions/checkout@v2 # 第一步，下载代码仓库
       - name: echo exclude list # 一个大坑，该Action和hexo git触发的Action冲突了，会导致有很大的概率rsync执行失败，等待60s，让hexo git执行完毕再执行此Action
         run: |
           echo ".git" > exclude.list
-          echo "exclude.list" >> exclude.list
       - name: Deploy to Server # 第二步，rsync推文件
         uses: AEnterprise/rsync-deploy@v1.0 # 使用别人包装好的步骤镜像
         env:

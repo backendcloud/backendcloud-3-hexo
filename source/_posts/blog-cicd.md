@@ -635,3 +635,4 @@ jobs:
 ```
 ![](/images/blog-cicd/img3.png)
 ![](/images/blog-cicd/img4.png)
+这样仅一顿饭的功夫，自动完成了5，6个最新版本的openstack环境的准备。
