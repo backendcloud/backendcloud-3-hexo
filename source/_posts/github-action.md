@@ -11,7 +11,7 @@ tags:
 
 
 # 其他补充
-继续上篇文章 {% post_link centos7-7-k8s-3nodes %} 
+继续上篇文章 {% post_link blog-cicd %} 
 
 上篇的介绍对于hexo部署已经足够了，也可以干其他很多事情，不过github action还有些强大的特性没涉及，补充罗列下其他常用的地方，不得不说设计太精妙了。Github被微软收购后，竟然变更强了。Intel推出的12代酷睿，性能远超mac的m1了，这次没挤牙膏。Wintel的时代没有过去，老当益壮，还可再战。
 
