@@ -529,7 +529,7 @@ jobs:
 ```
 
 ## Github Action 部署 Openstack 环境
-下面两个例子分别是 在最新的几个Openstack版本 T-X版 部署基本服务和Ironic服务的例子
+下面两个例子分别是 在最新的几个Openstack版本 T-X版 `部署nova等基本服务` 和 `部署Ironic等服务` 的例子
 
 ```yaml
 jobs:
