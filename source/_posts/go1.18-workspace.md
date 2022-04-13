@@ -80,9 +80,7 @@ go 1.18
 
 replace github.com/go1.18-workspace/mypkg => ../mypkg
 ```
-
 （v1.0.0 根据具体情况修改，还未提交，可以使用 v1.0.0）
-
 ```bash
 hanwei@hanweideMacBook-Air example]$ cat go.mod 
 module github.com/go1.18-workspace/example
