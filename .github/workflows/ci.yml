@@ -8,9 +8,11 @@ on:
       - master # 只在master上push触发部署
     paths:
       - './source/_post'
-    paths-ignore: # 下列文件的变更不触发部署，可以自行添加
-      - README.md
-      - LICENSE
+      - './source/images'
+      - './source/files'
+#    paths-ignore: # 下列文件的变更不触发部署，可以自行添加
+#      - README.md
+#      - LICENSE
 #    paths: # 这里是用来指定哪个文件更改，才会触发的 # 不起效果，暂时不明原因
 #      - './source/_posts/**'
 

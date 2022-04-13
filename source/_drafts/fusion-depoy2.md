@@ -102,3 +102,4 @@ Warning: Permanently added '192.168.49.2' (ECDSA) to the list of known hosts.
 root@192.168.49.2's password:
 root@minikube:~#
 ```
+
