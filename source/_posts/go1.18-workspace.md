@@ -7,7 +7,7 @@ tags:
 - workspace
 ---
 
-> 多模块管理的时候，有的模块还在开发中，还没发布到github上，过去通过replace来做的，go1.18 新增了工作区特性，给多模块管理提供了方便。
+> 在管理多模块管理时，可能有的模块还在开发中，还没发布到github上，在Go 1.18之前是通过 go mod 的 replace 来做的。2022 年2 月份正式发布的 go1.18 由于新增了工作区特性，给多模块管理提供另一种更方便的解决途径。
 
 # 过去的replace模式
 
@@ -153,6 +153,6 @@ This is package mypkg
 
 > go.work 文件的语法和 go.mod 类似，因此也支持 replace。
 
-> 注意，go.work 不需要提交到 Git 中，因为它只是你本地开发使用的。
+> 注意，go.work 不需要提交到 Git 中，因为它只是本地开发使用的。
 
 > 在 GOPATH 年代，多 GOPATH 是一个头疼的问题。当时没有很好的解决，Module 就出现了，多 GOPATH 问题因此消失。但多 Module 问题随之出现。Workspace 方案较好的解决了这个问题。
