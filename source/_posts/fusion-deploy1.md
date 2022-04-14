@@ -34,11 +34,11 @@ step4 Kubernetes中部署helm-openstack
 
 ## 原理
 由于桥接模式，NAT模式，host-only模式类似，以NAT模式介绍原理。
-![](/source/images/fusion-deploy1/a7438588.png)
+![](/images/fusion-deploy1/a7438588.png)
 当登录VPN时，则主机的部分（也可能是所有）数据会先走VPN再出主机网卡。其网络结构如下图所示。可知，虚拟机的数据始终不会通过VPN。
-![](/source/images/fusion-deploy1/9abc1dc7.png)
+![](/images/fusion-deploy1/9abc1dc7.png)
 通过共享VPN虚拟网卡给VMnet8，则虚拟机便可使用VPN与目的网络进行通信。其网络结果如下图所示。
-![](/source/images/fusion-deploy1/080d2480.png)
+![](/images/fusion-deploy1/080d2480.png)
 不止是VMnet8，采用“仅主机模式”，原理也同样适用。
 
 ## 操作
