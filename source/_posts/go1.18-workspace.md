@@ -155,4 +155,24 @@ This is package mypkg
 
 > 注意，go.work 不需要提交到 Git 中，因为它只是本地开发使用的。
 
+    cat .gitignore
+    # ---> Go
+    # If you prefer the allow list template instead of the deny list, see community template:
+    # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
+    #
+    # Binaries for programs and plugins
+    *.exe
+    *.exe~
+    *.dll
+    *.so
+    *.dylib
+    # Test binary, built with `go test -c`
+    *.test
+    # Output of the go coverage tool, specifically when used with LiteIDE
+    *.out
+    # Dependency directories (remove the comment below to include it)
+    # vendor/
+    # Go workspace file
+    go.work
+
 > 在 GOPATH 年代，多 GOPATH 是一个头疼的问题。当时没有很好的解决，Module 就出现了，多 GOPATH 问题因此消失。但多 Module 问题随之出现。Workspace 方案较好的解决了这个问题。
