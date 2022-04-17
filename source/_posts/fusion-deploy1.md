@@ -46,7 +46,13 @@ step4 Kubernetes中部署helm-openstack
 
 登录vmware虚拟机，网络不要用DHCP配置的，用手动分配的192.168.137.0/24网段的。
 
+    #BOOTPROTO=DHCP
+    BOOTPROTO=STATIC
+    IPADDR=192.168.137.10
+    PREFIX=24
+    GATEWAY=192.168.137.1
 
+> 若是虚拟机有多块网卡，将192.168.137.0/24网段的网卡配成默认路由器。
 
 ## 虚拟机借助宿主机翻墙测试
 
