@@ -73,7 +73,7 @@ minikube需要docker环境
 
     yum install -y yum-utils
     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    sudo yum install docker-ce docker-ce-cli containerd.io
+    sudo yum install -y docker-ce docker-ce-cli containerd.io
     systemctl start docker && systemctl enable docker && systemctl status docker
 
 
@@ -143,6 +143,9 @@ kube-system   kube-controller-manager-minikube   1/1     Running   0          4m
 kube-system   kube-proxy-9v7q5                   1/1     Running   0          4m38s
 kube-system   kube-scheduler-minikube            1/1     Running   0          4m50s
 kube-system   storage-provisioner                1/1     Running   0          4m48s
+```
+可登录到该节点上查看，密码为root
+```bash
 [developer@localhost ~]$ ssh root@$(minikube ip)
 The authenticity of host '192.168.49.2 (192.168.49.2)' can't be established.
 ECDSA key fingerprint is SHA256:GVF6b6EEpMDMDtYRJ/x8LdHaFytmzSx6/bLd8XF/ZsA.
