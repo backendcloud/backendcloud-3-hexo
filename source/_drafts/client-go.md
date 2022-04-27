@@ -5,8 +5,42 @@ categories: 云原生
 tags:
 - Golang
 ---
+https://www.cnblogs.com/bolingcavalry/p/15245354.html
 
 ```go
+    config := kubeutil.Config{
+		Hosts: service.hosts,
+		Token: service.token,
+	}
+	clientset, err := kubeutil.NewKubernetesClient(&config)
+	if err != nil {
+		logger.Log.Errorf("get clientset error:%+v, host:%s", err, strings.Join(service.hosts, ","))
+		return err
+	}
+	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
+	list, _ := deploymentsClient.List(context.TODO(), metav1.ListOptions{})
+	for _, d := range list.Items {
+		fmt.Printf(" * deployment %s (%d replicas)\n", d.Name, *d.Spec.Replicas)
+	}
+
+	scClient := clientset.StorageV1().StorageClasses()
+	scList, _ := scClient.List(context.TODO(), metav1.ListOptions{})
+	for _, d := range scList.Items {
+		fmt.Printf(" * sc %v %v\n", d.Name, d.Provisioner)
+	}
+
+	pvcClient := clientset.CoreV1().PersistentVolumeClaims(apiv1.NamespaceDefault)
+	pvcList, _ := pvcClient.List(context.TODO(), metav1.ListOptions{})
+	for _, d := range pvcList.Items {
+		fmt.Printf(" * pvc %v %v\n", d.Name, d.Status.Capacity)
+	}
+
+	podClient := clientset.CoreV1().Pods(apiv1.NamespaceDefault)
+	podList, _ := podClient.List(context.TODO(), metav1.ListOptions{})
+	for _, d := range podList.Items {
+		fmt.Printf(" * pod %v %v\n", d.Name, d.Status.PodIP)
+	}
+	
     var pod apiv1.Pod
 	pod.APIVersion = "v1"
 	pod.Kind = "Pod"
