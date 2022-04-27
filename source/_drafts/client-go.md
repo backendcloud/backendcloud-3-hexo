@@ -8,6 +8,59 @@ tags:
 https://www.cnblogs.com/bolingcavalry/p/15245354.html
 
 ```go
+type Config struct {
+	Hosts []string
+	Token string
+}
+
+func NewKubernetesClient(c *Config) (*kubernetes.Clientset, error) {
+	var aliveHost string
+	aliveHost, err := SelectAliveHost(c.Hosts)
+	if err != nil {
+		return nil, err
+	}
+	if !strings.Contains(aliveHost, ":") {
+		aliveHost = fmt.Sprintf("%s:%d", aliveHost, constant.ClusterApiServerPort)
+	}
+	kubeConf := &rest.Config{
+		Host:        string(aliveHost),
+		BearerToken: c.Token,
+		TLSClientConfig: rest.TLSClientConfig{
+			Insecure: true,
+		},
+	}
+	client, err := kubernetes.NewForConfig(kubeConf)
+	if err != nil {
+		return client, errors.Wrap(err, fmt.Sprintf("new kubernetes client with config failed: %v", err))
+	}
+	return client, nil
+}
+
+func NewKubernetesDynamicClient(c *Config) (dynamic.Interface, error) {
+	var aliveHost string
+	aliveHost, err := SelectAliveHost(c.Hosts)
+	if err != nil {
+		return nil, err
+	}
+	if !strings.Contains(aliveHost, ":") {
+		aliveHost = fmt.Sprintf("%s:%d", aliveHost, constant.ClusterApiServerPort)
+	}
+	kubeConf := &rest.Config{
+		Host:        string(aliveHost),
+		BearerToken: c.Token,
+		TLSClientConfig: rest.TLSClientConfig{
+			Insecure: true,
+		},
+	}
+	client, err := dynamic.NewForConfig(kubeConf)
+	if err != nil {
+		return client, errors.Wrap(err, fmt.Sprintf("new kubernetes client with config failed: %v", err))
+	}
+	return client, nil
+}
+```
+
+```go
     config := kubeutil.Config{
 		Hosts: service.hosts,
 		Token: service.token,
