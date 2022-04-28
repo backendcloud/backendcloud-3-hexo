@@ -165,3 +165,59 @@ func NewKubernetesDynamicClient(c *Config) (dynamic.Interface, error) {
 	fmt.Println("utd")
 	fmt.Println(utd)
 ```
+
+```go
+func (service *ClusterSCService) TT() error {
+
+	config := kubeutil.Config{
+		Hosts: service.hosts,
+		Token: service.token,
+	}
+	clientset, err := kubeutil.NewKubernetesClient(&config)
+	if err != nil {
+		logger.Log.Errorf("get clientset error:%+v, host:%s", err, strings.Join(service.hosts, ","))
+		return err
+	}
+
+	secretClient := clientset.CoreV1().Secrets("kube-system")
+	secretList, _ := secretClient.List(context.TODO(), metav1.ListOptions{})
+	for _, d := range secretList.Items {
+		fmt.Printf(" * secret: %v %v\n", d.Name, d.Type)
+	}
+
+	var secret apiv1.Secret
+	secret.Kind = "Secret"
+	secret.APIVersion = "v1"
+	secret.ObjectMeta = metav1.ObjectMeta{
+		Name:      "cloud-config",
+		Namespace: "kube-system",
+	}
+	dataMap := make(map[string][]byte)
+	dataMap["cloud.conf"] = []byte("W0dsb2JhbF0KdXNlcm5hbWUgPSBhZG1pbgpwYXNzd29yZCA9IEFkbWluX1BXRF84NjQ4NjczNTFxc2Myd2R2M2VmYjRyZ24KdGVuYW50LWlkID0gOWEyY2I0MDlmMGRhNDhlMzg1ODY4ZjI3ZmM5YzhjOWIKZG9tYWluLW5hbWUgPSBEZWZhdWx0CmF1dGgtdXJsID0gaHR0cDovL29wZW5zdGFjay1rZXlzdG9uZS12aXA6MzUzNTcvdjMKcmVnaW9uID0gcmVnaW9ub25lCg==")
+	secret.Data = dataMap
+	fmt.Println(secret)
+	result, err := secretClient.Create(context.TODO(), &secret, metav1.CreateOptions{})
+	if err != nil {
+		fmt.Printf("err ... %v", err)
+		return err
+	}
+	fmt.Printf(" * secret create: %v\n", result)
+
+	result.Data["cloud.conf"] = []byte("hhh")
+	fmt.Printf(" * new secret: %v\n", result)
+	result, err = secretClient.Update(context.TODO(), result, metav1.UpdateOptions{})
+	if err != nil {
+		fmt.Printf("err ... %v", err)
+		return err
+	}
+	fmt.Printf(" * secret update: %v\n", result)
+
+	err = secretClient.Delete(context.TODO(), "cloud-config", metav1.DeleteOptions{})
+	if err != nil {
+		fmt.Printf("err ... %v", err)
+		return err
+	}
+
+	return nil
+}
+```
