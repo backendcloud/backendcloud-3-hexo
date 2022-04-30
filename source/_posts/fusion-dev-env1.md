@@ -10,8 +10,10 @@ tags:
 date: 2022-04-24 11:00:11
 ---
 
-# 连不上keystone: 为部分 Pod 添加自定义域名解析
-keystone url用了域名，需要在/etc/hosts添加域名解析
+# 连不上 Keystone: 为部分 Pod 添加自定义域名解析
+Keystone url用了域名，需要在/etc/hosts添加域名解析
+
+以下仅用于举例说明如何为 Pod 添加自定义域名解析
 ![](/images/fusion-dev-env1/00f23ba4.png)
 
 如果有部分 Pod 对特定的域名解析有依赖，在不希望配置 dns 解析的情况下，可以使用 K8S 提供的 hostAliases 来为部分工作负载添加 hosts:
@@ -51,7 +53,7 @@ E0424 11:10:58.771149       1 utils.go:85] GRPC error: rpc error: code = Interna
 E0424 11:11:00.768432       1 utils.go:85] GRPC error: rpc error: code = Internal desc = [NodeGetInfo] unable to retrieve instance id of node error fetching http://169.254.169.254/openstack/latest/meta_data.json: Get "http://169.254.169.254/openstack/latest/meta_data.json": dial tcp 169.254.169.254:80: connect: connection refused
 E0424 11:11:13.787632       1 utils.go:85] GRPC error: rpc error: code = Internal desc = [NodeGetInfo] unable to retrieve instance id of node error fetching http://169.254.169.254/openstack/latest/meta_data.json: Get "http://169.254.169.254/openstack/latest/meta_data.json": dial tcp 169.254.169.254:80: connect: connection refused
 ```
-metadata服务没起来
+# metadata服务没起来
 > https://github.com/kubernetes/cloud-provider-openstack/issues/1127
 
 # devstack重启后，cinder创建卷报错
