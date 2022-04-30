@@ -1,12 +1,18 @@
 ---
-title: fusion-dev-env1
-date: 2022-04-24 11:00:11
-categories:
+title: 部署 cinder-csi-plugin 遇到的几个问题
+categories: 云原生
 tags:
+  - cinder-csi-plugin
+  - minikube
+  - cinder
+  - Openstack
+  - Kubernetes
+date: 2022-04-24 11:00:11
 ---
 
-# 为部分 Pod 添加自定义域名解析
-![](.fusion-dev-env1_images/00f23ba4.png)
+# 连不上keystone: 为部分 Pod 添加自定义域名解析
+keystone url用了域名，需要在/etc/hosts添加域名解析
+![](/images/fusion-dev-env1/00f23ba4.png)
 
 如果有部分 Pod 对特定的域名解析有依赖，在不希望配置 dns 解析的情况下，可以使用 K8S 提供的 hostAliases 来为部分工作负载添加 hosts:
 
