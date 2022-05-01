@@ -9,6 +9,8 @@ tags:
   - Kubernetes
 date: 2022-04-24 11:00:11
 ---
+Kubernetes集群的Pod使用Openstack Cinder作为后端存储，需要部署cinder-csi-plugin
+> https://github.com/kubernetes/cloud-provider-openstack
 
 # 连不上 Keystone: 为部分 Pod 添加自定义域名解析
 Keystone url用了域名，需要在/etc/hosts添加域名解析
