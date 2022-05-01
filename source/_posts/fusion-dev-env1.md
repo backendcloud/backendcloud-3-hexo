@@ -32,6 +32,8 @@ Keystone url用了域名，需要在/etc/hosts添加域名解析
     # Entries added by HostAliases.
     10.10.10.10	harboar.example.com
 
+# metadata服务没起来
+
 ```bash
 [developer@localhost ~]$ kubectl logs csi-cinder-nodeplugin-t8hcx -nkube-system -c cinder-csi-plugin
 I0424 11:10:56.531843       1 driver.go:73] Driver: cinder.csi.openstack.org
@@ -55,7 +57,7 @@ E0424 11:10:58.771149       1 utils.go:85] GRPC error: rpc error: code = Interna
 E0424 11:11:00.768432       1 utils.go:85] GRPC error: rpc error: code = Internal desc = [NodeGetInfo] unable to retrieve instance id of node error fetching http://169.254.169.254/openstack/latest/meta_data.json: Get "http://169.254.169.254/openstack/latest/meta_data.json": dial tcp 169.254.169.254:80: connect: connection refused
 E0424 11:11:13.787632       1 utils.go:85] GRPC error: rpc error: code = Internal desc = [NodeGetInfo] unable to retrieve instance id of node error fetching http://169.254.169.254/openstack/latest/meta_data.json: Get "http://169.254.169.254/openstack/latest/meta_data.json": dial tcp 169.254.169.254:80: connect: connection refused
 ```
-# metadata服务没起来
+
 > https://github.com/kubernetes/cloud-provider-openstack/issues/1127
 
 # devstack重启后，cinder创建卷报错
