@@ -1,12 +1,12 @@
 ---
 title: docker hello-world 项目
 date: 2022-05-02 10:13:44
-categories:
+categories: 云原生
 tags:
+- docker
+- 公共镜像仓库
+- 制作镜像
 ---
-
-
-
 
 docker hello-world 项目是一个最基础的 docker hello-world，包括：（以安卓开发做对比）
 * 制作镜像一个简单的利用redis中间件的java项目 - 如同开发一个安卓应用并打包
@@ -61,18 +61,16 @@ redis:latest  redis-server /etc/redis/redis.conf
 # java docker-hello 项目
 
 ## pom.xml
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-data-redis</artifactId>
-</dependency>
-```
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
 
 ## application.properties
-```
-spring.redis.host=192.168.159.132
-spring.redis.password=666666
-```
+
+    spring.redis.host=192.168.159.132
+    spring.redis.password=666666
 
 ## CounterController.java
 ```java
@@ -97,7 +95,7 @@ public class CounterController {
     }
 }
 ```
-![](.docker-java-demo_images/c4ecf7e9.png)
+![](/images/docker-java-demo/c4ecf7e9.png)
 
 # 给 docker-hello 项目制作镜像
 ```bash
@@ -184,8 +182,8 @@ CONTAINER ID   IMAGE                                COMMAND                  CRE
 root@311a62f58693:/# 
 ```
 
-![](.docker-java-demo_images/4003a8cb.png)
-![](.docker-java-demo_images/11d94787.png)
+![](/images/docker-java-demo/4003a8cb.png)
+![](/images/docker-java-demo/11d94787.png)
 ```bash
 [root@localhost tt]# docker logs 311a62f58693
 
