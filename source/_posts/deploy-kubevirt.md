@@ -719,11 +719,23 @@ controlplane $ kubectl -n kubevirt patch kubevirt kubevirt --type=merge --patch 
 kubevirt.kubevirt.io/kubevirt patched
 
 controlplane $ kubectl get pods -n kubevirt
-NAME                             READY   STATUS    RESTARTS   AGE
-virt-api-8959bd8d6-9wjbd         1/1     Running   0          25s
-virt-api-8959bd8d6-wcmpz         1/1     Running   0          25s
-virt-operator-5c74687999-gbw7v   1/1     Running   0          68s
-virt-operator-5c74687999-hnhsv   1/1     Running   0          68s
+NAME                               READY   STATUS              RESTARTS   AGE
+virt-api-8959bd8d6-h4wgf           1/1     Running             0          49s
+virt-api-8959bd8d6-kq5gm           1/1     Running             0          50s
+virt-controller-6fc6b9b7cf-4ftfc   0/1     ContainerCreating   0          19s
+virt-controller-6fc6b9b7cf-8t8fw   0/1     Running             0          19s
+virt-handler-2t4zb                 0/1     Init:0/1            0          19s
+virt-operator-5c74687999-8769q     1/1     Running             0          2m9s
+virt-operator-5c74687999-wp24r     1/1     Running             0          2m9s
+controlplane $ kubectl get pods -n kubevirt
+NAME                               READY   STATUS    RESTARTS   AGE
+virt-api-8959bd8d6-h4wgf           1/1     Running   0          3m3s
+virt-api-8959bd8d6-kq5gm           1/1     Running   0          3m4s
+virt-controller-6fc6b9b7cf-4ftfc   1/1     Running   0          2m33s
+virt-controller-6fc6b9b7cf-8t8fw   1/1     Running   0          2m33s
+virt-handler-2t4zb                 1/1     Running   0          2m33s
+virt-operator-5c74687999-8769q     1/1     Running   0          4m23s
+virt-operator-5c74687999-wp24r     1/1     Running   0          4m23s
 
 # 安装 virtctl
 controlplane $ wget -O virtctl https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_VERSION}/virtctl-${KUBEVIRT_VERSION}-linux-amd64
@@ -751,9 +763,9 @@ go  virtctl
 # KubeVirt 基本使用
 
 KubeVirt目的是让虚拟机运行在容器中，下面就用下KubeVirt的几个基本操作：
-* create & start vm
-* vnc登录vm
-  * stop & delete vm
+* create & start 虚拟机
+* vnc 登录 虚拟机
+* stop & delete 虚拟机
 
 ```bash
 # vm.yaml: 定义一个虚拟机
