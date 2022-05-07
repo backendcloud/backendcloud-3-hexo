@@ -7,6 +7,7 @@ tags:
 - KubeVirt
 ---
 
+KubeVirt项目可以让虚拟机如同容器一样被Kubernetes管理起来。
 
 # deploy Kubernetes
 
