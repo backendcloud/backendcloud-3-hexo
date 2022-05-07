@@ -10,7 +10,7 @@ tags:
 - Openstack
 - Cinder
 ---
-使用开源项目 go-client 调用 Kubernetes API，是现在go项目的开发中调用Kubernetes的主流方案。下面给几个简单的例子：
+使用开源项目 client-go 调用 Kubernetes API，是现在go项目的开发中调用Kubernetes的主流方案。下面给几个简单的例子：
 * 创建 KubernetesClient
 * 创建 KubernetesDynamicClient - 动态客户端数据结构更灵活，但是好像支持的kind有限
 * KubernetesClient 获取deployment列表，获取storageclass列表，获取pvc列表，获取pod列表，创建pod。
