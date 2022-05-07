@@ -16,7 +16,7 @@ tags:
 * KubernetesClient 获取deployment列表，获取storageclass列表，获取pvc列表，获取pod列表，创建pod。
 * 通用数据结构 使用NewKubernetesDynamicClient创建pod
 * yaml文件 使用NewKubernetesDynamicClient创建pod
-* 使用KubernetesClient创建、更新、删除secret。为了更新Openstack的keystone信息，比如Openstack的租户变了，用户变了，密码变了，可以通过client-go更新Kubernetes中的secret，借助Openstack的CSI插件：cinder-csi-plugin，可以让Kubernetes继续使用Cinder存储。
+* 使用KubernetesClient创建、更新、删除secret。为了更新Openstack的keystone信息，比如Openstack的租户变了，用户变了，密码变了，可以通过client-go更新Kubernetes中的secret，借助Kubernetes的Openstack CSI插件：cinder-csi-plugin，可以让Kubernetes继续使用keystone变更后的Cinder存储。
 
 创建 KubernetesClient 和 KubernetesDynamicClient
 ```go
@@ -181,7 +181,7 @@ KubernetesClient 获取deployment列表，获取storageclass列表，获取pvc�
 	fmt.Println(utd)
 ```
 
-secret好像动态客户端创建不了，所以使用KubernetesClient创建、更新、删除secret。为了更新Openstack的keystone信息，比如Openstack的租户变了，用户变了，密码变了，可以通过client-go更新Kubernetes中的secret，借助Openstack的CSI插件：cinder-csi-plugin，可以让Kubernetes继续使用Cinder存储。
+secret好像动态客户端创建不了，所以使用KubernetesClient创建、更新、删除secret。为了更新Openstack的keystone信息，比如Openstack的租户变了，用户变了，密码变了，可以通过client-go更新Kubernetes中的secret，借助Kubernetes的Openstack CSI插件：cinder-csi-plugin，可以让Kubernetes继续使用keystone变更后的Cinder存储。
 ```go
 func (service *ClusterSCService) TT() error {
 
