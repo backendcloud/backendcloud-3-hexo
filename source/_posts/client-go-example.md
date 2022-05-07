@@ -19,61 +19,60 @@ tags:
 * 使用KubernetesClient创建、更新、删除secret。为了更新Openstack的keystone信息，比如Openstack的租户变了，用户变了，密码变了，可以通过client-go更新Kubernetes中的secret，借助Kubernetes的Openstack CSI插件：cinder-csi-plugin，可以让Kubernetes继续使用keystone变更后的Cinder存储。
 
 创建 KubernetesClient 和 KubernetesDynamicClient
-```go
-type Config struct {
-	Hosts []string
-	Token string
-}
 
-func NewKubernetesClient(c *Config) (*kubernetes.Clientset, error) {
-	var aliveHost string
-	aliveHost, err := SelectAliveHost(c.Hosts)
-	if err != nil {
-		return nil, err
-	}
-	if !strings.Contains(aliveHost, ":") {
-		aliveHost = fmt.Sprintf("%s:%d", aliveHost, constant.ClusterApiServerPort)
-	}
-	kubeConf := &rest.Config{
-		Host:        string(aliveHost),
-		BearerToken: c.Token,
-		TLSClientConfig: rest.TLSClientConfig{
-			Insecure: true,
-		},
-	}
-	client, err := kubernetes.NewForConfig(kubeConf)
-	if err != nil {
-		return client, errors.Wrap(err, fmt.Sprintf("new kubernetes client with config failed: %v", err))
-	}
-	return client, nil
-}
-
-func NewKubernetesDynamicClient(c *Config) (dynamic.Interface, error) {
-	var aliveHost string
-	aliveHost, err := SelectAliveHost(c.Hosts)
-	if err != nil {
-		return nil, err
-	}
-	if !strings.Contains(aliveHost, ":") {
-		aliveHost = fmt.Sprintf("%s:%d", aliveHost, constant.ClusterApiServerPort)
-	}
-	kubeConf := &rest.Config{
-		Host:        string(aliveHost),
-		BearerToken: c.Token,
-		TLSClientConfig: rest.TLSClientConfig{
-			Insecure: true,
-		},
-	}
-	client, err := dynamic.NewForConfig(kubeConf)
-	if err != nil {
-		return client, errors.Wrap(err, fmt.Sprintf("new kubernetes client with config failed: %v", err))
-	}
-	return client, nil
-}
-```
+    type Config struct {
+        Hosts []string
+        Token string
+    }
+    
+    func NewKubernetesClient(c *Config) (*kubernetes.Clientset, error) {
+        var aliveHost string
+        aliveHost, err := SelectAliveHost(c.Hosts)
+        if err != nil {
+            return nil, err
+        }
+        if !strings.Contains(aliveHost, ":") {
+            aliveHost = fmt.Sprintf("%s:%d", aliveHost, constant.ClusterApiServerPort)
+        }
+        kubeConf := &rest.Config{
+            Host:        string(aliveHost),
+            BearerToken: c.Token,
+            TLSClientConfig: rest.TLSClientConfig{
+                Insecure: true,
+            },
+        }
+        client, err := kubernetes.NewForConfig(kubeConf)
+        if err != nil {
+            return client, errors.Wrap(err, fmt.Sprintf("new kubernetes client with config failed: %v", err))
+        }
+        return client, nil
+    }
+    
+    func NewKubernetesDynamicClient(c *Config) (dynamic.Interface, error) {
+        var aliveHost string
+        aliveHost, err := SelectAliveHost(c.Hosts)
+        if err != nil {
+            return nil, err
+        }
+        if !strings.Contains(aliveHost, ":") {
+            aliveHost = fmt.Sprintf("%s:%d", aliveHost, constant.ClusterApiServerPort)
+        }
+        kubeConf := &rest.Config{
+            Host:        string(aliveHost),
+            BearerToken: c.Token,
+            TLSClientConfig: rest.TLSClientConfig{
+                Insecure: true,
+            },
+        }
+        client, err := dynamic.NewForConfig(kubeConf)
+        if err != nil {
+            return client, errors.Wrap(err, fmt.Sprintf("new kubernetes client with config failed: %v", err))
+        }
+        return client, nil
+    }
 
 KubernetesClient 获取deployment列表，获取storageclass列表，获取pvc列表，获取pod列表，创建pod。
-```go
+
     config := kubeutil.Config{
 		Hosts: service.hosts,
 		Token: service.token,
@@ -123,10 +122,9 @@ KubernetesClient 获取deployment列表，获取storageclass列表，获取pvc�
 		Containers: containerList,
 	}
 	podClient.Create(context.TODO(), &pod, metav1.CreateOptions{})
-```
 
 使用NewKubernetesDynamicClient创建pod，和上面的例子对比明显感受到动态客户端的数据的灵活性。接下来的例子更灵活，直接用了yaml文件。
-```go
+
     client, err := kubeutil.NewKubernetesDynamicClient(&config)
 	podRes := schema.GroupVersionResource{Group: "", Version: "v1", Resource: "pods"}
 	dynamicPod := &unstructured.Unstructured{
@@ -160,80 +158,77 @@ KubernetesClient 获取deployment列表，获取storageclass列表，获取pvc�
 		return err
 	}
 	fmt.Printf("Created deployment %q.\n", createrResult.GetName())
-```
 
 使用NewKubernetesDynamicClient创建pod，该例子和上面的例子明显感受到动态客户端的数据的灵活性
-```go
+
     client, err := kubeutil.NewKubernetesDynamicClient(&config)
-	gvr := schema.GroupVersionResource{Group: "", Version: "v1", Resource: "pods"}
-	decoder := yaml.NewDecodingSerializer(unstructured.UnstructuredJSONScheme)
-	obj := &unstructured.Unstructured{}
-	var gvk schema.GroupVersionKind
-	yamlData, err := ioutil.ReadFile("resources/simple.yaml")
-	if _, _, err := decoder.Decode(yamlData, &gvk, obj); err != nil {
-		return err
-	}
-	utd, err := client.Resource(gvr).Namespace(apiv1.NamespaceDefault).Create(context.TODO(), obj, metav1.CreateOptions{})
-	if err != nil {
-		return err
-	}
-	fmt.Println("utd")
-	fmt.Println(utd)
-```
+    gvr := schema.GroupVersionResource{Group: "", Version: "v1", Resource: "pods"}
+    decoder := yaml.NewDecodingSerializer(unstructured.UnstructuredJSONScheme)
+    obj := &unstructured.Unstructured{}
+    var gvk schema.GroupVersionKind
+    yamlData, err := ioutil.ReadFile("resources/simple.yaml")
+    if _, _, err := decoder.Decode(yamlData, &gvk, obj); err != nil {
+        return err
+    }
+    utd, err := client.Resource(gvr).Namespace(apiv1.NamespaceDefault).Create(context.TODO(), obj, metav1.CreateOptions{})
+    if err != nil {
+        return err
+    }
+    fmt.Println("utd")
+    fmt.Println(utd)
 
 secret好像动态客户端创建不了，所以使用KubernetesClient创建、更新、删除secret。为了更新Openstack的keystone信息，比如Openstack的租户变了，用户变了，密码变了，可以通过client-go更新Kubernetes中的secret，借助Kubernetes的Openstack CSI插件：cinder-csi-plugin，可以让Kubernetes继续使用keystone变更后的Cinder存储。
-```go
-func (service *ClusterSCService) TT() error {
 
-	config := kubeutil.Config{
-		Hosts: service.hosts,
-		Token: service.token,
-	}
-	clientset, err := kubeutil.NewKubernetesClient(&config)
-	if err != nil {
-		logger.Log.Errorf("get clientset error:%+v, host:%s", err, strings.Join(service.hosts, ","))
-		return err
-	}
-
-	secretClient := clientset.CoreV1().Secrets("kube-system")
-	secretList, _ := secretClient.List(context.TODO(), metav1.ListOptions{})
-	for _, d := range secretList.Items {
-		fmt.Printf(" * secret: %v %v\n", d.Name, d.Type)
-	}
-
-	var secret apiv1.Secret
-	secret.Kind = "Secret"
-	secret.APIVersion = "v1"
-	secret.ObjectMeta = metav1.ObjectMeta{
-		Name:      "cloud-config",
-		Namespace: "kube-system",
-	}
-	dataMap := make(map[string][]byte)
-	dataMap["cloud.conf"] = []byte("W0dsb2JhbF0KdXNlcm5hbWUgPSBhZG1pbgpwYXNzd29yZCA9IEFkbWluX1BXRF84NjQ4NjczNTFxc2Myd2R2M2VmYjRyZ24KdGVuYW50LWlkID0gOWEyY2I0MDlmMGRhNDhlMzg1ODY4ZjI3ZmM5YzhjOWIKZG9tYWluLW5hbWUgPSBEZWZhdWx0CmF1dGgtdXJsID0gaHR0cDovL29wZW5zdGFjay1rZXlzdG9uZS12aXA6MzUzNTcvdjMKcmVnaW9uID0gcmVnaW9ub25lCg==")
-	secret.Data = dataMap
-	fmt.Println(secret)
-	result, err := secretClient.Create(context.TODO(), &secret, metav1.CreateOptions{})
-	if err != nil {
-		fmt.Printf("err ... %v", err)
-		return err
-	}
-	fmt.Printf(" * secret create: %v\n", result)
-
-	result.Data["cloud.conf"] = []byte("hhh")
-	fmt.Printf(" * new secret: %v\n", result)
-	result, err = secretClient.Update(context.TODO(), result, metav1.UpdateOptions{})
-	if err != nil {
-		fmt.Printf("err ... %v", err)
-		return err
-	}
-	fmt.Printf(" * secret update: %v\n", result)
-
-	err = secretClient.Delete(context.TODO(), "cloud-config", metav1.DeleteOptions{})
-	if err != nil {
-		fmt.Printf("err ... %v", err)
-		return err
-	}
-
-	return nil
-}
-```
+    func (service *ClusterSCService) TT() error {
+    
+        config := kubeutil.Config{
+            Hosts: service.hosts,
+            Token: service.token,
+        }
+        clientset, err := kubeutil.NewKubernetesClient(&config)
+        if err != nil {
+            logger.Log.Errorf("get clientset error:%+v, host:%s", err, strings.Join(service.hosts, ","))
+            return err
+        }
+    
+        secretClient := clientset.CoreV1().Secrets("kube-system")
+        secretList, _ := secretClient.List(context.TODO(), metav1.ListOptions{})
+        for _, d := range secretList.Items {
+            fmt.Printf(" * secret: %v %v\n", d.Name, d.Type)
+        }
+    
+        var secret apiv1.Secret
+        secret.Kind = "Secret"
+        secret.APIVersion = "v1"
+        secret.ObjectMeta = metav1.ObjectMeta{
+            Name:      "cloud-config",
+            Namespace: "kube-system",
+        }
+        dataMap := make(map[string][]byte)
+        dataMap["cloud.conf"] = []byte("W0dsb2JhbF0KdXNlcm5hbWUgPSBhZG1pbgpwYXNzd29yZCA9IEFkbWluX1BXRF84NjQ4NjczNTFxc2Myd2R2M2VmYjRyZ24KdGVuYW50LWlkID0gOWEyY2I0MDlmMGRhNDhlMzg1ODY4ZjI3ZmM5YzhjOWIKZG9tYWluLW5hbWUgPSBEZWZhdWx0CmF1dGgtdXJsID0gaHR0cDovL29wZW5zdGFjay1rZXlzdG9uZS12aXA6MzUzNTcvdjMKcmVnaW9uID0gcmVnaW9ub25lCg==")
+        secret.Data = dataMap
+        fmt.Println(secret)
+        result, err := secretClient.Create(context.TODO(), &secret, metav1.CreateOptions{})
+        if err != nil {
+            fmt.Printf("err ... %v", err)
+            return err
+        }
+        fmt.Printf(" * secret create: %v\n", result)
+    
+        result.Data["cloud.conf"] = []byte("hhh")
+        fmt.Printf(" * new secret: %v\n", result)
+        result, err = secretClient.Update(context.TODO(), result, metav1.UpdateOptions{})
+        if err != nil {
+            fmt.Printf("err ... %v", err)
+            return err
+        }
+        fmt.Printf(" * secret update: %v\n", result)
+    
+        err = secretClient.Delete(context.TODO(), "cloud-config", metav1.DeleteOptions{})
+        if err != nil {
+            fmt.Printf("err ... %v", err)
+            return err
+        }
+    
+        return nil
+    }
