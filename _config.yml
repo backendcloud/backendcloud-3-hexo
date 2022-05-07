@@ -115,6 +115,14 @@ theme: hexo-theme-3-hexo-master
 # baidu analytics
 baidu_analytics: 2858b2d509d28416712739c9a6a31204
 
+readmore:
+  enable: true
+  blogId: '48072-1211879175079-403'
+  name: '后端云'
+  keyword: 'cloud'
+  qrcode: 'https://www.backendcloud.cn/img/wechat-dingyuehao.jpg'
+  random: 1
+
 # google_analytics: UA-90951221-1
 
 # Deployment

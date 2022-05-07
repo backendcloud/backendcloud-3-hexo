@@ -45,6 +45,7 @@ jobs:
         run: |
           npm i -g hexo-cli
           npm i
+          npm install hexo-readmore --save
           npm install hexo-deployer-git --save
       - name: Deploy hexo
         env:
