@@ -1,5 +1,6 @@
 title: Collectd 和 InfluxDB 的部署和使用
 date: 2017-06-15 06:47:53
+readmore: false
 categories:
 - Collectd
 tags:

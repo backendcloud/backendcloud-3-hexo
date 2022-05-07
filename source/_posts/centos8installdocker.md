@@ -1,5 +1,6 @@
 title: "CentOS 8.0 安装docker 报错：Problem: package docker-ce-3:19.03.8-3.el7.x86_64 requires containerd.io >= 1.2.2-3"
 date: 2020-03-16 16:04:21
+readmore: false
 categories: 云原生
 tags:
 - docker

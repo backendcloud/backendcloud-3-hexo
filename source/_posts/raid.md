@@ -1,5 +1,6 @@
 title: RAID
 date: 2017-08-01 08:42:40
+readmore: false
 categories: 基础篇
 tags:
 - RAID

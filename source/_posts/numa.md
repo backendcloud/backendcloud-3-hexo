@@ -1,5 +1,6 @@
 title: NUMA 非一致性内存访问
 date: 2017-07-20 17:47:16
+readmore: false
 categories: NFV
 tags:
 - NUMA

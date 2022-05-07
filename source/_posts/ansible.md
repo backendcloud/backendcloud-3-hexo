@@ -1,5 +1,6 @@
 title: ansible简单使用
 date: 2017-05-03 07:55:42
+readmore: false
 categories: 自动化
 tags:
 - ansible

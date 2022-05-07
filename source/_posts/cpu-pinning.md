@@ -1,5 +1,6 @@
 title: cpu-pinning CPU绑定
 date: 2017-07-20 18:30:18
+readmore: false
 categories: NFV
 tags:
 - cpu-pinning

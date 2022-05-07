@@ -1,5 +1,6 @@
 title: k8s常用操作
 date: 2020-05-27 17:32:08
+readmore: false
 categories: 云原生
 tags:
 - k8s

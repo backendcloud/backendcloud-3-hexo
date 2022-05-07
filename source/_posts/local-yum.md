@@ -1,5 +1,6 @@
 title: Openstack Pike本地yum源搭建
 date: 2017-12-28 22:20:40
+readmore: false
 categories:
 - Openstack_op
 tags:

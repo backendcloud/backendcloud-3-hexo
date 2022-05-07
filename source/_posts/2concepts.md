@@ -1,5 +1,6 @@
 title: Openstack两组容易混淆的概念
 date: 2018-08-16 15:08:05
+readmore: false
 categories:
 - Openstack_op
 tags:

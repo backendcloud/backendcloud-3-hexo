@@ -1,5 +1,6 @@
 title: cyborg agent
 date: 2017-05-01 17:49:47
+readmore: false
 categories:
 - 智能云
 tags:

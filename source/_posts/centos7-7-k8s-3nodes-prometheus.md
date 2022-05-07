@@ -1,5 +1,6 @@
 title: CentOS7.7部署k8s + Prometheus（1 master + 2 node）
 date: 2020-04-16 13:46:34
+readmore: false
 categories: 云原生
 tags:
 - CentOS7.7

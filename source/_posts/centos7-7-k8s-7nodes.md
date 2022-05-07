@@ -1,5 +1,6 @@
 title: CentOS7.7部署k8s（3 master + 3 node + 1 client）
 date: 2020-04-13 13:46:34
+readmore: false
 categories: 云原生
 tags:
 - CentOS7.7

@@ -1,6 +1,7 @@
 ---
 title: Go 1.18 新特性 - 工作区
 date: 2022-04-13 20:17:47
+readmore: false
 categories: Tools
 tags:
 - Go

@@ -1,5 +1,6 @@
 title: Openstack中的虚拟机的cpu绑定
 date: 2018-07-13 20:09:41
+readmore: false
 categories:
 - Openstack_dev
 tags:

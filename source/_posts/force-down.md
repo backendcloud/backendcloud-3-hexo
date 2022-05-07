@@ -1,5 +1,6 @@
 title: 新增OpenStack NOVA API用于强制计算节点nova-compute服务down
 date: 2017-06-08 20:11:17
+readmore: false
 categories: Openstack_dev
 tags:
 - Nova
