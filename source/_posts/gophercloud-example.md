@@ -8,9 +8,10 @@ tags:
 - gophercloud
 ---
 
-使用开源项目 gophercloud 调用 Openstack API，是现在go项目的开发中调用Openstack的主流做法。下面给几个简单的例子：
+使用开源项目 gophercloud 调用 Openstack API，是现在go项目的开发中调用Openstack的主流方案。下面给几个简单的例子：
 * 创建 openstackclient
-* 创建虚拟机，查询虚拟机列表 - 等同于 nova list
+* 创建虚拟机 - 等同于 nova boot --image imageID --flavor flavorID --nic net-id=nicID serverName
+* 查询虚拟机列表 - 等同于 nova list
 * 查询flavor列表 - 等同于 nova flavor-list
 
 openstack/openstackclient.go

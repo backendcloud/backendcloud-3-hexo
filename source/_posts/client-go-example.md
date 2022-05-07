@@ -1,12 +1,24 @@
 ---
-title: client-go 静态和动态
-date: 2022-04-26 22:57:01
+title: Go 调用 Kubernetes API 的 几个简单的 example
+date: 2022-05-07 10:17:15
 categories: 云原生
 tags:
-- Golang
+- Go
+- Kubernetes API
+- Client-Go
+- cinder-csi-plugin
+- Openstack
+- Cinder
 ---
-https://www.cnblogs.com/bolingcavalry/p/15245354.html
+使用开源项目 go-client 调用 Kubernetes API，是现在go项目的开发中调用Kubernetes的主流方案。下面给几个简单的例子：
+* 创建 KubernetesClient
+* 创建 KubernetesDynamicClient - 动态客户端数据结构更灵活，但是好像支持的kind有限
+* KubernetesClient 获取deployment列表，获取storageclass列表，获取pvc列表，获取pod列表，创建pod。
+* 通用数据结构 使用NewKubernetesDynamicClient创建pod
+* yaml文件 使用NewKubernetesDynamicClient创建pod
+* 使用KubernetesClient创建、更新、删除secret。为了更新Openstack的keystone信息，比如Openstack的租户变了，用户变了，密码变了，可以通过client-go更新Kubernetes中的secret，借助Openstack的CSI插件：cinder-csi-plugin，可以让Kubernetes继续使用Cinder存储。
 
+创建 KubernetesClient 和 KubernetesDynamicClient
 ```go
 type Config struct {
 	Hosts []string
@@ -60,6 +72,7 @@ func NewKubernetesDynamicClient(c *Config) (dynamic.Interface, error) {
 }
 ```
 
+KubernetesClient 获取deployment列表，获取storageclass列表，获取pvc列表，获取pod列表，创建pod。
 ```go
     config := kubeutil.Config{
 		Hosts: service.hosts,
@@ -112,6 +125,7 @@ func NewKubernetesDynamicClient(c *Config) (dynamic.Interface, error) {
 	podClient.Create(context.TODO(), &pod, metav1.CreateOptions{})
 ```
 
+使用NewKubernetesDynamicClient创建pod，和上面的例子对比明显感受到动态客户端的数据的灵活性。接下来的例子更灵活，直接用了yaml文件。
 ```go
     client, err := kubeutil.NewKubernetesDynamicClient(&config)
 	podRes := schema.GroupVersionResource{Group: "", Version: "v1", Resource: "pods"}
@@ -148,6 +162,7 @@ func NewKubernetesDynamicClient(c *Config) (dynamic.Interface, error) {
 	fmt.Printf("Created deployment %q.\n", createrResult.GetName())
 ```
 
+使用NewKubernetesDynamicClient创建pod，该例子和上面的例子明显感受到动态客户端的数据的灵活性
 ```go
     client, err := kubeutil.NewKubernetesDynamicClient(&config)
 	gvr := schema.GroupVersionResource{Group: "", Version: "v1", Resource: "pods"}
@@ -166,6 +181,7 @@ func NewKubernetesDynamicClient(c *Config) (dynamic.Interface, error) {
 	fmt.Println(utd)
 ```
 
+secret好像动态客户端创建不了，所以使用KubernetesClient创建、更新、删除secret。为了更新Openstack的keystone信息，比如Openstack的租户变了，用户变了，密码变了，可以通过client-go更新Kubernetes中的secret，借助Openstack的CSI插件：cinder-csi-plugin，可以让Kubernetes继续使用Cinder存储。
 ```go
 func (service *ClusterSCService) TT() error {
 
