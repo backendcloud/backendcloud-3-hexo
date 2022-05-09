@@ -1,3 +1,4 @@
+![Lines of code](https://img.shields.io/tokei/lines/github/backendcloud/backendcloud-3-hexo)
 # backendcloud-3-hexo
 https://github.com/backendcloud/backendcloud-3-hexo 是 https://www.backendcloud.cn/ 的hexo项目仓库。该仓库下的./public/文件不一定更新，只有用到下面的Github Action CICD流程的情况下会自动更新。
 ```yaml
