@@ -1,7 +1,7 @@
 ---
 title: Github Releases 和 Github Badges
 readmore: true
-date: 2022-05-09 15:39:30
+date: 2022-05-09 18:29:30
 categories: Tools
 tags:
 - goreleaser
@@ -180,7 +180,7 @@ C:.
 ```
 
 # 添加代码仓库的跟踪统计
-![](.github-profile_images/679dbcf1.png)
+![](/images/github-profile/679dbcf1.png)
 一般的开源项目都有类似上面的统计标签，这些是怎么做的？很多种方式，其中一种是用下面的网站生成markdown，复制到自己代码仓库的README.md文件中：
 
 > 参考： https://shields.io/
@@ -219,7 +219,7 @@ with:
   base: header, repositories
   plugin_lines: yes
 ```
-![](.github-profile_images/ce1f0572.png)
+![](/images/github-profile/ce1f0572.png)
 
 ```yaml
 name: Metrics
@@ -245,4 +245,4 @@ jobs:
           plugin_achievements: yes
           plugin_achievements_only: polyglot, contributor, inspirer, maintainer, developer, influencer, deployer
 ```
-![](.github-profile_images/fef239d6.png)
+![](/images/github-profile/fef239d6.png)
