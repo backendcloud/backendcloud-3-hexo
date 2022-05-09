@@ -1,0 +1,248 @@
+---
+title: Github Releases 和 Github Badges
+readmore: true
+date: 2022-05-09 15:39:30
+categories: Tools
+tags:
+- goreleaser
+- Github
+- Metrics
+- Profile
+- Badges
+---
+
+# goreleaser - 一键多平台打包工具
+
+https://github.com/goreleaser/goreleaser/releases 下载`goreleaser`
+
+创建一个go hello项目，仅包含一个go文件
+```go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("hello world")
+}
+```
+
+初始化配置
+```bash
+PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> C:\Users\hanwei\Downloads\goreleaser_Windows_x86_64\goreleaser.exe init
+   • Generating .goreleaser.yaml file
+   • config created; please edit accordingly to your needs file=.goreleaser.yaml
+```
+
+执行上面的命令会生成 `.goreleaser.yaml`， goos和goarch是乘积关系。
+
+goos：目标系统
+
+goarch：目标CPU架构
+
+```yaml
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+```
+
+执行命令 goreleaser --snapshot --skip-publish --rm-dist 生成各种版本的发布
+```shell
+PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> C:\Users\hanwei\Downloads\goreleaser_Windows_x86_64\goreleaser.exe --snapshot --skip-publish --rm-dist
+   • releasing...     
+   • loading config file       file=.goreleaser.yaml
+   • loading environment variables
+   • getting and validating git state
+      • ignoring errors because this is a snapshot error=git doesn't contain any tags. Either add a tag or use --snapshot
+      • building...               commit=eb8d1cf69c8f6027c96918500d79e0913488a17d latest tag=v0.0.0
+      • pipe skipped              error=disabled during snapshot mode
+   • parsing tag
+   • running before hooks
+      • running                   hook=go mod tidy
+      • running                   hook=go generate ./...
+   • setting defaults 
+   • snapshotting     
+      • building snapshot...      version=0.0.1-next
+   • checking distribution directory
+   • loading go mod information
+   • build prerequisites
+   • writing effective config file
+      • writing                   config=dist\config.yaml
+   • building binaries
+      • building                  binary=dist\example_darwin_amd64_v1\example
+   • calculating checksums
+   • storing release metadata
+      • writing                   file=dist\artifacts.json
+      • writing                   file=dist\metadata.json
+   • release succeeded after 7.80s
+PS C:\Users\hanwei\Documents\GitHub\example\goreleaser>
+```
+
+```shell
+C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree 
+卷 Windows  的文件夹 PATH 列表
+卷序列号为 52A1-EF1F
+C:.
+└─dist
+    ├─example_darwin_amd64_v1
+    ├─example_linux_amd64_v1
+    ├─example_linux_arm_6
+    ├─example_windows_amd64_v1
+    └─example_windows_arm_6
+
+C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree .
+卷 Windows  的文件夹 PATH 列表
+卷序列号为 000000F2 52A1:EF1F
+C:\USERS\HANWEI\DOCUMENTS\GITHUB\EXAMPLE\GORELEASER
+└─dist
+    ├─example_darwin_amd64_v1
+    ├─example_linux_amd64_v1
+    ├─example_linux_arm_6
+    ├─example_windows_amd64_v1
+    └─example_windows_arm_6
+
+C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree /A
+卷 Windows  的文件夹 PATH 列表
+卷序列号为 52A1-EF1F
+C:.
+\---dist
+    +---example_darwin_amd64_v1
+    +---example_linux_amd64_v1
+    +---example_linux_arm_6
+    +---example_windows_amd64_v1
+    \---example_windows_arm_6
+
+C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree /F
+卷 Windows  的文件夹 PATH 列表
+卷序列号为 52A1-EF1F
+C:.
+│  .gitignore
+│  .goreleaser.yaml
+│  demo1.go
+│  go.mod
+│
+└─dist
+    │  artifacts.json
+    │  checksums.txt
+    │  config.yaml
+    │  example_0.0.1-next_Darwin_x86_64.tar.gz
+    │  example_0.0.1-next_Linux_armv6.tar.gz
+    │  example_0.0.1-next_Linux_x86_64.tar.gz
+    │  example_0.0.1-next_Windows_armv6.tar.gz
+    │  example_0.0.1-next_Windows_x86_64.tar.gz
+    │  metadata.json
+    │
+    ├─example_darwin_amd64_v1
+    │      example
+    │
+    ├─example_linux_amd64_v1
+    │      example
+    │
+    ├─example_linux_arm_6
+    │      example
+    │
+    ├─example_windows_amd64_v1
+    │      example.exe
+    │
+    └─example_windows_arm_6
+            example.exe
+```
+
+# 添加代码仓库的跟踪统计
+![](.github-profile_images/679dbcf1.png)
+一般的开源项目都有类似上面的统计标签，这些是怎么做的？很多种方式，其中一种是用下面的网站生成markdown，复制到自己代码仓库的README.md文件中：
+
+> 参考： https://shields.io/
+
+例如：
+https://github.com/backendcloud/example 下的README.md文件添加：
+
+```markdown
+![GitHub language count](https://img.shields.io/github/languages/count/backendcloud/example) ![Lines of code](https://img.shields.io/tokei/lines/github/backendcloud/example)
+```
+
+# 手动添加github的profile
+
+> 和Github用户名同名的仓库的README.md可以同时作为自己的Github的profile。换成大白话就是，同名仓库 是一个特殊的仓库，你可以通过添加一个 README.md 显示在你的Github个人主页。
+
+>  参考： https://github.com/anuraghazra/github-readme-stats
+
+统计自己github的基本情况，比如提交，start数等；统计自己github代码的语言种类的比重。（将username换成自己github的用户名）
+```markdown
+<img align="middle" src="https://github-readme-stats.vercel.app/api?username=backendcloud&show_icons=true&icon_color=CE1D2D&text_color=718096&bg_color=ffffff&hide_title=true" />
+
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=backendcloud&langs_count=10&layout=compact)](https://github.com/anuraghazra/github-readme-stats)
+```
+
+
+# Github Action自动添加github的profile
+
+在和Github用户名同名的仓库添加Github Actions
+
+```yaml
+name: Example
+uses: lowlighter/metrics@latest
+with:
+  filename: metrics.classic.svg
+  token: ${{ secrets.METRICS_TOKEN }}
+  base: header, repositories
+  plugin_lines: yes
+```
+![](.github-profile_images/ce1f0572.png)
+
+```yaml
+name: Metrics
+on:
+  # Schedule updates (each hour)
+  schedule: [{cron: "30 3 * * *"}]
+  # Lines below let you run workflow manually and on each commit (optional)
+  workflow_dispatch:
+  push: {branches: ["master", "main"]}
+jobs:
+  github-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      # See action.yml for all options
+      - uses: lowlighter/metrics@latest
+        with:
+          # Your GitHub token
+          token: ${{ secrets.METRICS_TOKEN }}
+          plugin_habits: yes
+          plugin_languages: yes
+          plugin_lines: yes
+          plugin_notable: yes
+          plugin_achievements: yes
+          plugin_achievements_only: polyglot, contributor, inspirer, maintainer, developer, influencer, deployer
+```
+![](.github-profile_images/fef239d6.png)
