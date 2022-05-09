@@ -1,6 +1,6 @@
 ---
 title: Github Releases 和 Github Badges
-readmore: true
+readmore: false
 date: 2022-05-09 18:29:30
 categories: Tools
 tags:
