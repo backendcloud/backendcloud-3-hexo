@@ -142,6 +142,61 @@ C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree /F
             example.exe
 ```
 
+上面的命令会在本机生成各种平台的版本发布。也可以执行`goreleaser.exe --rm-dist`发布到github release页面，执行发布到github release页面前，需要先打tag和设置GITHUB_TOKEN
+```bash
+PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> git tag -a v0.3.0 -m "release v0.3.0"
+PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> git push origin v0.3.0
+
+#下面是powshell设置环境变量，mac平台export
+PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> $env:GITHUB_TOKEN='xxx'
+PS C:\Users\hanwei\Documents\GitHub\example\goreleaser>  C:\go\bin\goreleaser.exe --rm-dist                         
+   • releasing...     
+   • loading config file       file=.goreleaser.yaml
+   • loading environment variables
+   • getting and validating git state
+      • building...               commit=bf2d26ef3ada8efdbc38e6635d6f42a5e2f9bd2d latest tag=v0.3.0
+   • parsing tag      
+   • setting defaults
+   • checking distribution directory
+      • --rm-dist is set, cleaning it up
+   • loading go mod information
+   • build prerequisites
+   • writing effective config file
+      • writing                   config=dist\config.yaml
+   • generating changelog
+      • writing                   changelog=dist\CHANGELOG.md
+   • building binaries
+      • building                  binary=dist\example_linux_amd64_v1\example
+      • building                  binary=dist\example_linux_arm_6\example
+      • building                  binary=dist\example_darwin_amd64_v1\example
+      • building                  binary=dist\example_windows_arm_6\example.exe
+      • building                  binary=dist\example_windows_amd64_v1\example.exe
+   • archives         
+      • creating                  archive=dist\example_0.3.0_Darwin_x86_64.tar.gz
+      • creating                  archive=dist\example_0.3.0_Windows_armv6.tar.gz
+      • creating                  archive=dist\example_0.3.0_Linux_armv6.tar.gz
+      • creating                  archive=dist\example_0.3.0_Linux_x86_64.tar.gz
+      • creating                  archive=dist\example_0.3.0_Windows_x86_64.tar.gz
+   • calculating checksums
+   • storing release metadata
+      • writing                   file=dist\artifacts.json
+      • writing                   file=dist\metadata.json
+   • publishing
+      • scm releases
+         • creating or updating release repo=backendcloud/example tag=v0.3.0
+         • uploading to release      file=dist\checksums.txt name=checksums.txt
+         • uploading to release      file=dist\example_0.3.0_Windows_armv6.tar.gz name=example_0.3.0_Windows_armv6.tar.gz
+         • uploading to release      file=dist\example_0.3.0_Linux_x86_64.tar.gz name=example_0.3.0_Linux_x86_64.tar.gz
+         • uploading to release      file=dist\example_0.3.0_Windows_x86_64.tar.gz name=example_0.3.0_Windows_x86_64.tar.gz
+         • uploading to release      file=dist\example_0.3.0_Darwin_x86_64.tar.gz name=example_0.3.0_Darwin_x86_64.tar.gz
+         • uploading to release      file=dist\example_0.3.0_Linux_armv6.tar.gz name=example_0.3.0_Linux_armv6.tar.gz
+   • announcing       
+   • release succeeded after 7.47s
+PS C:\Users\hanwei\Documents\GitHub\example\goreleaser>
+```
+![](/images/github-profile/3121d5cc.png)
+![](/images/github-profile/a0cf8876.png)
+
 > goreleaser demo项目源码放在： https://github.com/backendcloud/example/tree/master/goreleaser
 
 # 添加代码仓库的跟踪统计
