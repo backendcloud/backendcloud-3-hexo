@@ -15,7 +15,7 @@ tags:
 
 https://github.com/goreleaser/goreleaser/releases 下载`goreleaser`
 
-创建一个go hello项目，仅包含一个go文件
+创建一个go hello项目，仅包含一个main文件
 ```go
 package main
 
@@ -33,12 +33,8 @@ PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> C:\Users\hanwei\Download
    • config created; please edit accordingly to your needs file=.goreleaser.yaml
 ```
 
-执行上面的命令会生成 `.goreleaser.yaml`， goos和goarch是乘积关系。
 
-goos：目标系统
-
-goarch：目标CPU架构
-
+执行上面的命令会生成 `.goreleaser.yaml`
 ```yaml
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
@@ -76,6 +72,8 @@ changelog:
       - '^docs:'
       - '^test:'
 ```
+goos和goarch是乘积关系。goos：目标系统。goarch：目标CPU架构。
+
 
 执行命令 goreleaser --snapshot --skip-publish --rm-dist 生成各种版本的发布
 ```shell
@@ -110,43 +108,8 @@ PS C:\Users\hanwei\Documents\GitHub\example\goreleaser>
 ```
 
 ```shell
-C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree 
-卷 Windows  的文件夹 PATH 列表
-卷序列号为 52A1-EF1F
-C:.
-└─dist
-    ├─example_darwin_amd64_v1
-    ├─example_linux_amd64_v1
-    ├─example_linux_arm_6
-    ├─example_windows_amd64_v1
-    └─example_windows_arm_6
-
-C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree .
-卷 Windows  的文件夹 PATH 列表
-卷序列号为 000000F2 52A1:EF1F
-C:\USERS\HANWEI\DOCUMENTS\GITHUB\EXAMPLE\GORELEASER
-└─dist
-    ├─example_darwin_amd64_v1
-    ├─example_linux_amd64_v1
-    ├─example_linux_arm_6
-    ├─example_windows_amd64_v1
-    └─example_windows_arm_6
-
-C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree /A
-卷 Windows  的文件夹 PATH 列表
-卷序列号为 52A1-EF1F
-C:.
-\---dist
-    +---example_darwin_amd64_v1
-    +---example_linux_amd64_v1
-    +---example_linux_arm_6
-    +---example_windows_amd64_v1
-    \---example_windows_arm_6
-
 C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree /F
-卷 Windows  的文件夹 PATH 列表
-卷序列号为 52A1-EF1F
-C:.
+.
 │  .gitignore
 │  .goreleaser.yaml
 │  demo1.go
@@ -179,9 +142,11 @@ C:.
             example.exe
 ```
 
+> goreleaser demo项目源码放在： https://github.com/backendcloud/example/tree/master/goreleaser
+
 # 添加代码仓库的跟踪统计
 ![](/images/github-profile/679dbcf1.png)
-一般的开源项目都有类似上面的统计标签，这些是怎么做的？很多种方式，其中一种是用下面的网站生成markdown，复制到自己代码仓库的README.md文件中：
+一般的开源项目都有类似上面的统计标签，实现起来有很多种方式，其中一种是用下面的网站生成markdown，复制到自己代码仓库的README.md文件中：
 
 > 参考： https://shields.io/
 
@@ -208,8 +173,7 @@ https://github.com/backendcloud/example 下的README.md文件添加：
 
 # Github Action自动添加github的profile
 
-在和Github用户名同名的仓库添加Github Actions
-
+在和Github用户名同名的仓库添加Github Actions。在push自己的profile的时候更新，或者每天更新一次，比如设置夜里03:30更新下自己的Github Metrics。
 ```yaml
 name: Example
 uses: lowlighter/metrics@latest
