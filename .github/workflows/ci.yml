@@ -57,7 +57,7 @@ jobs:
         run: |
           hexo clean && hexo generate
           mkdir -p ./public/.github/workflows
-          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows/ci.yml
+          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows/cd.yml
           hexo deploy
 #          rsync --delete -avz ./public/ ${SSH_HOST_PRI}:/usr/share/nginx/html/backendcloud/www/
 
