@@ -2,8 +2,9 @@
 
 后端云网站是一份可以在线修改的文档，如果你发现有什么可以改进或重写的，欢迎提供帮助！如果你有什么原创文章要发表，欢迎投稿！方式如下：
 
-**`fork`** [后端云仓库](https://github.com/backendcloud/backendcloud-3-hexo)，新建一个分支,文章目录在仓库的 **`source/posts`** 路径下，修改文章直接修改对应url的markdown文件。有原创文章要发表若本地装了hexo，不用多说。若没有hexo也不想装，新建一个markdown文件，参考其他markdown文件的开头复制修改下，文章完成后，提交`pr`。
+**`fork`** [后端云仓库](https://github.com/backendcloud/backendcloud-3-hexo)，新建一个分支,文章目录在仓库的 **`source/posts`** 路径下，修改文章直接修改对应url的markdown文件。有原创文章要发表若本地装了hexo，不用多说。若没有hexo也不想装，新建一个markdown文件，参考其他markdown文件的开头复制修改下，文章完成后，提交 **`pr`**。
 
+公开讨论请提到 **[https://github.com/backendcloud/backendcloud-3-hexo/issues](https://github.com/backendcloud/backendcloud-3-hexo/issues)**
 
 
 # 后端云网站快捷键使用说明
@@ -22,9 +23,9 @@
 | gg/GG | 到最顶端 |
 | shift+G/g | 到最下端 |
 
-* **`w/W | 打开/关闭文章目录`** 最有用
-* **`w/W | 打开/关闭文章目录`** 最有用
-* **`w/W | 打开/关闭文章目录`** 最有用
+* **`w/W | 打开/关闭文章目录`** 最实用，浏览文章的时候
+* **`w/W | 打开/关闭文章目录`** 最有用，浏览文章的时候
+* **`w/W | 打开/关闭文章目录`** 最有用，浏览文章的时候
 
 ## 搜索框
 
@@ -38,10 +39,8 @@
 
 
 
-<hr>
-
-* 公开讨论请提在[这里](https://github.com/backendcloud/backendcloud-3-hexo/issues)
-* ✉ **[backendcloud@gmail.com](mailto:backendcloud@gmail.com)**
+# 联系方式
+✉ **[backendcloud@gmail.com](mailto:backendcloud@gmail.com)**
 
 
 <hr>
