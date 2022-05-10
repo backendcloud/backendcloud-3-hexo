@@ -1,8 +1,7 @@
 title: 后端云站全部采用https连接
 date: 2017-05-06 11:03:57
 readmore: false
-categories:
-- 动态
+categories: 网站里程碑
 tags:
 - https
 ---

@@ -2,7 +2,7 @@
 title: Github Action 升级后端云网站 CICD 流程
 date: 2022-04-03 00:17:47
 readmore: false
-categories: Tools
+categories: 网站里程碑
 tags: 
 - Github Action
 - Hexo
