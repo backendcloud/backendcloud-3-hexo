@@ -34,7 +34,7 @@ PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> C:\Users\hanwei\Download
 ```
 
 
-执行上面的命令会生成 `.goreleaser.yaml`
+执行上面的命令会生成 `.goreleaser.yaml`，可以稍微编辑下goos：目标系统，goarch：目标CPU架构。goos和goarch是乘积关系。
 ```yaml
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
@@ -72,8 +72,6 @@ changelog:
       - '^docs:'
       - '^test:'
 ```
-goos和goarch是乘积关系。goos：目标系统。goarch：目标CPU架构。
-
 
 执行命令 goreleaser --snapshot --skip-publish --rm-dist 生成各种版本的发布
 ```shell
@@ -147,7 +145,7 @@ C:\Users\hanwei\Documents\GitHub\example\goreleaser>tree /F
 PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> git tag -a v0.3.0 -m "release v0.3.0"
 PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> git push origin v0.3.0
 
-#下面是powshell设置环境变量，mac平台export
+#下面是windows平台设置环境变量方法，mac和linux平台用export
 PS C:\Users\hanwei\Documents\GitHub\example\goreleaser> $env:GITHUB_TOKEN='xxx'
 PS C:\Users\hanwei\Documents\GitHub\example\goreleaser>  C:\go\bin\goreleaser.exe --rm-dist                         
    • releasing...     
