@@ -6,6 +6,10 @@ on:
   push:
     branches:
       - master # 只在master上push触发部署
+  pull_request:
+    # branches:
+    #   - master # 只在master上merge触发部署
+
 #    paths: # 有个坑。只能 - 'source/_posts/**' 形式， - './source/_posts/**' 就不可以
 #      - 'source/_posts/**'
 #      - 'source/images/**'
@@ -53,7 +57,7 @@ jobs:
         run: |
           hexo clean && hexo generate
           mkdir -p ./public/.github/workflows
-          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows/ci.yml
+          cp ./backendcloud.github.io.ci.yml ./public/.github/workflows/cd.yml
           hexo deploy
 #          rsync --delete -avz ./public/ ${SSH_HOST_PRI}:/usr/share/nginx/html/backendcloud/www/
 
