@@ -39,5 +39,6 @@ Jetbrains 家的产品有一个很良心的地方，他会允许你试用 30 天
 ![](/images/jetbrains-mac-m1/3.jpg)
 ![](/images/jetbrains-mac-m1/4.jpg)
 
-# 更新最新版 2022.1 正式版 破解方法
-> https://puffy-secure-2a8.notion.site/jetbrains-2022-1-windows-64-mac-m1-6dda5f1f079d41609eac7a467d7c19d4
+
+
+> [更新最新版 2022.1 正式版 破解方法](https://puffy-secure-2a8.notion.site/jetbrains-2022-1-windows-64-mac-m1-6dda5f1f079d41609eac7a467d7c19d4)
