@@ -1,6 +1,6 @@
 # 协作邀请
 
-若你发现有什么可以或改进或重写或新写的，欢迎提供帮助！欢迎[讨论](https://github.com/backendcloud/backendcloud-3-hexo/discussions)。编辑后端云网站方法如下：
+若你发现有什么可以或改进或重写或新写的，欢迎提供帮助！欢迎[这里讨论](https://github.com/backendcloud/backendcloud-3-hexo/discussions)。编辑后端云网站方法如下：
 
 * step1 **`fork`** [后端云文档仓库 https://github.com/backendcloud/backendcloud-3-hexo](https://github.com/backendcloud/backendcloud-3-hexo)，新建一个分支。
 * step2 修改文章修改 **`source/_posts`** 路径下对应url的markdown文件。有原创文章要发表若本地装了hexo，不用多说。若没有hexo也不想装，新建一个markdown文件，参考其他markdown文件的开头复制修改下。修改和新增文章内容。

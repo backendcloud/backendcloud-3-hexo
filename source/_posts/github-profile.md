@@ -199,7 +199,7 @@ PS C:\Users\hanwei\Documents\GitHub\example\goreleaser>
 
 # 添加代码仓库的跟踪统计
 ![](/images/github-profile/679dbcf1.png)
-一般的开源项目都有类似上面的统计标签，实现起来有很多种方式，其中一种是用下面的网站生成markdown，复制到自己代码仓库的README.md文件中：
+一般的开源项目都有类似上面的统计标签，实现起来有很多种方式，比如travis网站可以生成ci的状态，coveralls网站可以生成覆盖率情况，下面的网站可以生成大量类型的标签，复制对应的markdown，复制到自己代码仓库的README.md文件中：
 
 > 参考： https://shields.io/
 
