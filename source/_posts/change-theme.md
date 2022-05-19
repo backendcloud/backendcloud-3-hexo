@@ -14,5 +14,5 @@ tags:
 
 因为上述原因，虽然 NexT 风格很喜欢非常干净，但还是 换成了现在的新theme 3-hexo。
 
-> Next theme
-> ![](change-theme/ae3afab5.png)
+> Next theme:
+> ![](/images/change-theme/ae3afab5.png)
