@@ -1,5 +1,5 @@
 ---
-title: minikube config set vm-driver kvm2
+title: minikube config set driver kvm2
 readmore: true
 date: 2022-05-18 21:46:32
 categories: 云原生
