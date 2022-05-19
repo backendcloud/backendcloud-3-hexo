@@ -1,3 +1,4 @@
+![](.indexs_images/29fa8cc3.png)
 # 协作邀请
 
 若你发现有什么可以或改进或重写或新写的，欢迎提供帮助！欢迎[这里讨论](https://github.com/backendcloud/backendcloud-3-hexo/discussions)。编辑后端云网站方法如下：
