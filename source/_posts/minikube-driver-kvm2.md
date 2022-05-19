@@ -70,7 +70,7 @@ options kvm_intel nested=1
 [developer@localhost ~]$ sudo yum install qemu-kvm libvirt libvirt-python libguestfs-tools virt-install^C
 ```
 
-# Exiting due to PR_KVM_USER_PERMISSION: libvirt group membership check failed
+## Exiting due to PR_KVM_USER_PERMISSION: libvirt group membership check failed
 ```bash
 [developer@localhost ~]$ minikube start --memory 4096
 😄  minikube v1.25.2 on Centos 7.9.2009
@@ -150,7 +150,7 @@ ResultActive=yes
 service libvirtd restart
 ```
 
-## minikube with vm-driver kvm2 启动成功
+# minikube with vm-driver kvm2 启动成功
 ```bash
 [developer@localhost ~]$ minikube start --memory 4096
 😄  minikube v1.25.2 on Centos 7.9.2009
