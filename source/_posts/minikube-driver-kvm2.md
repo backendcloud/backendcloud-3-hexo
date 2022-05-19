@@ -8,11 +8,11 @@ tags:
 - kvm2
 ---
 
-> https://minikube.sigs.k8s.io/docs/drivers/kvm2/
+> 参考： https://minikube.sigs.k8s.io/docs/drivers/kvm2/
 
-minikube的driver使用kvm2遇到的问题 
+# 记录下 minikube的driver切换成kvm2遇到的问题 
 
-# PROVIDER_KVM2_NOT_FOUND: The 'kvm2' provider was not found: exec: "virsh": executable file not found in $PATH
+## PROVIDER_KVM2_NOT_FOUND: The 'kvm2' provider was not found: exec: "virsh": executable file not found in $PATH
 ```bash
 developer@localhost ~]$ minikube config set vm-driver kvm2
 ❗  These changes will take effect upon a minikube delete and then a minikube start
@@ -89,7 +89,7 @@ user is not a member of the appropriate libvirt group
 [developer@localhost ~]$ sudo usermod -a -G libvirt4minikube $USER
 ```
 
-# Failed to connect socket to '/var/run/libvirt/libvirt-sock': No such file or directory
+## Failed to connect socket to '/var/run/libvirt/libvirt-sock': No such file or directory
 ```bash
 [developer@localhost ~]$ minikube start --memory 4096
 😄  minikube v1.25.2 on Centos 7.9.2009
@@ -106,7 +106,7 @@ exit status 1
 [developer@localhost ~]$ sudo systemctl enable libvirtd
 ```
 
-# authentication unavailable: no polkit agent available to authenticate action 'org.libvirt.unix.manage'
+## authentication unavailable: no polkit agent available to authenticate action 'org.libvirt.unix.manage'
 ```bash
 [developer@localhost ~]$ minikube start --memory 4096
 😄  minikube v1.25.2 on Centos 7.9.2009
@@ -150,7 +150,7 @@ ResultActive=yes
 service libvirtd restart
 ```
 
-# minikube with vm-driver kvm2 启动成功
+## minikube with vm-driver kvm2 启动成功
 ```bash
 [developer@localhost ~]$ minikube start --memory 4096
 😄  minikube v1.25.2 on Centos 7.9.2009
@@ -238,3 +238,10 @@ To make kvm2 the default driver:
 
     minikube config set driver kvm2
 
+# Special features
+The minikube start command supports 5 additional KVM specific flags:
+* --gpu: Enable experimental NVIDIA GPU support in minikube
+* --hidden: Hide the hypervisor signature from the guest in minikube
+* --kvm-network: The KVM default network name
+* --network: The dedicated KVM private network name
+* --kvm-qemu-uri: The KVM qemu uri, defaults to qemu:///system
