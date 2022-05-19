@@ -33,7 +33,7 @@ N
 [developer@localhost ~]$ lsmod|grep kvm_intel
 kvm_intel             188740  0 
 kvm                   637289  1 kvm_intel
-# 上面有了kvm说明host bois打开了intel vmx，vmware也打开了intel vmx（该机器是vmware虚拟机）
+# 上面有了kvm说明host bois打开了intel vmx，vmware也打开了intel vmx（该机器是vmware虚拟机），再确认下是否打开了嵌套虚拟化
 [developer@localhost ~]$ logout
 [root@localhost ~]# modprobe -r kvm_intel^C
 [root@localhost ~]# lsmod|grep kvm_intel
@@ -148,6 +148,56 @@ ResultActive=yes
 
 5、重启服务
 service libvirtd restart
+```
+## error creating VM: virError(Code=1, Domain=10, Message='internal error: qemu unexpectedly closed the monitor: Cannot set up guest memory 'pc.ram': Cannot allocate memory')
+```bash
+[developer@localhost ~]$ minikube delete
+🔥  Deleting "minikube" in kvm2 ...
+💀  Removed all traces of the "minikube" cluster.
+[developer@localhost ~]$ minikube start --memory 4096
+😄  minikube v1.25.2 on Centos 7.9.2009
+✨  Using the kvm2 driver based on user configuration
+👍  Starting control plane node minikube in cluster minikube
+🔥  Creating kvm2 VM (CPUs=2, Memory=4096MB, Disk=20000MB) ...
+🔥  Deleting "minikube" in kvm2 ...
+🤦  StartHost failed, but will try again: creating host: create: Error creating machine: Error in driver during machine creation: error creating VM: virError(Code=1, Domain=10, Message='internal error: qemu unexpectedly closed the monitor: Cannot set up guest memory 'pc.ram': Cannot allocate memory')
+🔥  Creating kvm2 VM (CPUs=2, Memory=4096MB, Disk=20000MB) ...
+😿  Failed to start kvm2 VM. Running "minikube delete" may fix it: creating host: create: Error creating machine: Error in driver during machine creation: error creating VM: virError(Code=1, Domain=10, Message='internal error: process exited while connecting to monitor: Cannot set up guest memory 'pc.ram': Cannot allocate memory')
+
+❌  Exiting due to GUEST_PROVISION: Failed to start host: creating host: create: Error creating machine: Error in driver during machine creation: error creating VM: virError(Code=1, Domain=10, Message='internal error: process exited while connecting to monitor: Cannot set up guest memory 'pc.ram': Cannot allocate memory')
+
+╭───────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                           │
+│    😿  If the above advice does not help, please let us know:                             │
+│    👉  https://github.com/kubernetes/minikube/issues/new/choose                           │
+│                                                                                           │
+│    Please run `minikube logs --file=logs.txt` and attach logs.txt to the GitHub issue.    │
+│                                                                                           │
+╰───────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+> 参考： https://github.com/kubernetes/minikube/issues/3634
+
+memory不足，free查看memory使用情况后，调低内存
+```bash
+[developer@localhost ~]$ free
+              total        used        free      shared  buff/cache   available
+Mem:        7990064     3911652      490180       12216     3588232     3777588
+Swap:             0           0           0
+[developer@localhost ~]$ minikube start --memory 2048
+😄  minikube v1.25.2 on Centos 7.9.2009
+✨  Using the kvm2 driver based on user configuration
+👍  Starting control plane node minikube in cluster minikube
+🔥  Creating kvm2 VM (CPUs=2, Memory=2048MB, Disk=20000MB) ...
+🐳  Preparing Kubernetes v1.23.3 on Docker 20.10.12 ...
+    ▪ kubelet.housekeeping-interval=5m
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
 ```
 
 # minikube with vm-driver kvm2 启动成功
