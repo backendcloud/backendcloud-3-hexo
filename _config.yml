@@ -4,9 +4,9 @@
 
 # Site
 title: 后端云
-subtitle: 云计算技术的分享和交流平台
-description: penstack linux kernel NFV OPNFV MANO OPEN-O 虚拟机 容器 裸机 微服务 lambda计算 kubernetes 异构计算 人工智能
-keywords: penstack linux kernel NFV OPNFV MANO OPEN-O 虚拟机 容器 裸机 微服务 lambda计算 kubernetes 异构计算 人工智能
+subtitle: 专注云原生融合技术：容器虚拟机融合，多云融合（混合云，分布式云，边缘云），高性能网络，融合监控
+description: kubevirt openstack linux 虚拟机 容器 裸机 微服务 函数计算 kubernetes 异构计算 人工智能
+keywords: kubevirt openstack linux  虚拟机 容器 裸机 微服务 函数计算 kubernetes 异构计算 人工智能
 author: 后端云
 language: zh-CN
 timezone: ''
