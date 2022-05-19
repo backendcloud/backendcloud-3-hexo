@@ -178,7 +178,11 @@ service libvirtd restart
 
 > 参考： https://github.com/kubernetes/minikube/issues/3634
 
-memory不足，free查看memory使用情况后，调低内存
+> 该错误在Openstack Nova内存不够时中也会出现，这个时候需要调整内存超分或调低vm的flavor：
+> nova-conductor.log 报错：
+> ERROR nova.scheduler.utils [req-9880cb62-7a70-41aa-b6c0-db4ec5333e98 53a1cf0ad2924532aa4b7b0750dec282 0ab2dbde4f754b699e22461426cd0774 - - -] [instance: 36bb1220-f295-4205-ba2e-6e41f8b134b9] Error from last host: xiandian (node xiandian): [u'Traceback (most recent call last):\n', u'  File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 1926, in _do_build_and_run_instance\n    filter_properties)\n', u'  File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 2116, in _build_and_run_instance\n    instance_uuid=instance.uuid, reason=six.text_type(e))\n', u"RescheduledException: Build of instance 36bb1220-f295-4205-ba2e-6e41f8b134b9 was re-scheduled: internal error: process exited while connecting to monitor: 2019-05-20T17:38:19.473598Z qemu-kvm: cannot set up guest memory 'pc.ram': Cannot allocate memory\n\n"]
+
+报错原因：memory不足，free查看memory使用情况后，调低内存
 ```bash
 [developer@localhost ~]$ free
               total        used        free      shared  buff/cache   available
