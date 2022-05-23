@@ -1,4 +1,4 @@
-title: 后端云网站主题 Next -> 3-hexo
+title: 后端云网站主题 NexT -> 3-hexo
 date: 2020-01-01 21:13:25
 readmore: false
 categories: 网站里程碑
@@ -14,5 +14,5 @@ tags:
 
 因为上述原因，虽然 NexT 风格很喜欢非常干净，但还是 换成了现在的新theme 3-hexo。
 
-> Next theme:
+> 过往的 Next theme:
 > ![](/images/change-theme/ae3afab5.png)
