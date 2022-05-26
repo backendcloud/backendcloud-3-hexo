@@ -14,9 +14,9 @@ tags:
 virt-launcher pod 和 虚拟机一一对应，在pod中运行一台虚拟机， virt-launcher pod负责提供运行虚拟机必要的组件。本篇文章是介绍网络相关的组件。下图是KubeVirt的网络。图中的Kubetnets的CNI网络插件部分不是本篇涉及内容。
 ![](/images/virt-lancher-nw_images/a0f12de2.png)
 
-\kubevirt\pkg\virt-launcher\virtwrap\manager.go 中的 func (l *LibvirtDomainManager) preStartHook(vm *v1.VirtualMachine, domain *api.Domain) (*api.Domain, error) 调用 SetupPodNetwork 方法给虚拟机准备网络。
+`\kubevirt\pkg\virt-launcher\virtwrap\manager.go` 中的 `func (l *LibvirtDomainManager) preStartHook(vm *v1.VirtualMachine, domain *api.Domain) (*api.Domain, error)` 调用 `SetupPodNetwork` 方法给虚拟机准备网络。
 
-\kubevirt\pkg\virt-launcher\virtwrap\network\network.go SetupPodNetwork → SetupDefaultPodNetwork 该方法做了三件事，对应下面三个方法
+`\kubevirt\pkg\virt-launcher\virtwrap\network\network.go` `SetupPodNetwork → SetupDefaultPodNetwork` 该方法做了三件事，对应下面三个方法
 * discoverPodNetworkInterface
 * preparePodNetworkInterface 
 * StartDHCP
@@ -172,3 +172,5 @@ func (h *NetworkUtilsHandler) StartDHCP(nic *VIF, serverAddr *netlink.Addr) {
 	}
 }
 ```
+
+> 上面的源码是KubeVirt 0.4.1版本的，以后再对最新的代码的 KubeVirt virt-lancher 网络网络部分做一次分析。
