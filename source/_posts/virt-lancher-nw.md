@@ -1,5 +1,5 @@
 ---
-title: KubeVirt virt-lancher 网络
+title: KubeVirt网络源码分析
 readmore: true
 date: 2022-05-26 16:19:20
 categories: KubeVirt
@@ -22,7 +22,7 @@ virt-launcher pod 和 虚拟机一一对应，在pod中运行一台虚拟机， 
 * StartDHCP
 
 ## discoverPodNetworkInterface
-This function gathers the following information about the pod interface:
+该方法收集pod interface如下信息：
 * IP地址
 * 路由
 * 网关地址
@@ -74,7 +74,7 @@ func discoverPodNetworkInterface(nic *VIF) (netlink.Link, error) {
 ```
 
 ## preparePodNetworkInterfaces
-因容器的IP和MAC地址都将来会通过DHCP传给容器里的虚拟机，所以需要对原容器的网路做如下操作：
+因容器的IP和MAC地址都将来会通过DHCP传给容器里的虚拟机，所以要用`preparePodNetworkInterfaces`方法对原容器的网路做如下操作：
 * 删除POD的的interface的IP地址
 * 将POD的interface down
 * 修改POD的interface mac地址，换一个MAC任意的MAC地址，只要和原来的MAC不一样，因为原来的MAC地址要给虚拟机，同一个网桥的不同端口的MAC地址不能一样
@@ -145,7 +145,7 @@ func preparePodNetworkInterfaces(nic *VIF, nicLink netlink.Link) error {
 ```
 
 ## StartDHCP → DHCPServer → SingleClientDHCPServer
-DHCP服务只能给DHCP客户端（将来创建的虚拟机）提供1个IP地址，除了IP，网关信息，路由信息都会提供。
+DHCP服务只能给DHCP客户端（将来创建的虚拟机）提供1个IP地址，除了IP，网关信息，路由信息都会提供。`SingleClientDHCPServer`该方法启动一个只提供一个DHCP Client的DHCP服务端。
 ```go
 func (h *NetworkUtilsHandler) StartDHCP(nic *VIF, serverAddr *netlink.Addr) {
 	nameservers, searchDomains, err := getResolvConfDetailsFromPod()
@@ -173,4 +173,4 @@ func (h *NetworkUtilsHandler) StartDHCP(nic *VIF, serverAddr *netlink.Addr) {
 }
 ```
 
-> 上面的源码是KubeVirt 0.4.1版本的，以后再对最新的代码的 KubeVirt virt-lancher 网络网络部分做一次分析。
+> 上面的源码是KubeVirt 0.4.1版本的，以后再对最新的代码的 KubeVirt virt-lancher 网络部分做一次分析。
