@@ -194,6 +194,7 @@ brctl addif br0 tap0
 # 启动虚拟机, 虚拟机连接 tap0、tap0 连接 br0
 qemu-system-x86_64 -enable-kvm -name ubuntutest -m 2048 -hda ubuntutest.qcow2 -vnc :19 -net nic,model=virtio -nettap,ifname=tap0,script=no,downscript=no# ifconfig br0 192.168.57.1/24
 ifconfig br0 192.168.57.1/24# VNC 连上虚拟机，给网卡设置地址，重启虚拟机，可 ping 通 br0# 要想访问外网，在 Host 上设置 NAT，并且 enable ip forwarding，可以 ping 通外网网关。# sysctl -p
-net.ipv4.ip_forward = 1sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+net.ipv4.ip_forward = 1
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 # 如果 DNS 没配错，可以进行 apt-get update
 ```
