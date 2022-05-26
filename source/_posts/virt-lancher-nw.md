@@ -13,6 +13,9 @@ tags:
 # virt-launcher virtwrap 准备虚拟机的网络
 virt-launcher pod 和 虚拟机一一对应，在pod中运行一台虚拟机， virt-launcher pod负责提供运行虚拟机必要的组件。本篇文章是介绍网络相关的组件。下图是KubeVirt的网络。图中的Kubetnets的CNI网络插件部分不是本篇涉及内容。
 ![](/images/virt-lancher-nw_images/a0f12de2.png)
+> 三个包含关系的实线框，从外到里分别是：Kubernetes工作节点、工作节点上的POD、POD里运行的VM虚拟机
+> 三个并列的虚线框，从下到上分别是：Kubernetes网络（Kubernetes CNI负责配置），libvirt网络，虚拟机网络
+> 本篇不涉及Kubernetes网络，只涉及libvirt网络，虚拟机网络
 
 `\kubevirt\pkg\virt-launcher\virtwrap\manager.go` 中的 `func (l *LibvirtDomainManager) preStartHook(vm *v1.VirtualMachine, domain *api.Domain) (*api.Domain, error)` 调用 `SetupPodNetwork` 方法给虚拟机准备网络。
 
@@ -174,3 +177,23 @@ func (h *NetworkUtilsHandler) StartDHCP(nic *VIF, serverAddr *netlink.Addr) {
 ```
 
 > 上面的源码是KubeVirt 0.4.1版本的，以后再对最新的代码的 KubeVirt virt-lancher 网络部分做一次分析。
+
+# 参考 - qemu 创建传统虚拟机以及虚拟机网络流程
+```bash
+# 创建一个虚拟机镜像，大小为 8G，其中 qcow2 格式为动态分配，raw 格式为固定大小
+qemu-img create -f qcow2 ubuntutest.img 8G# 创建虚拟机（可能与下面的启动虚拟机操作重复）
+qemu-system-x86_64 -enable-kvm -name ubuntutest -m 2048 -hda ubuntutest.img -cdrom ubuntu-14.04-server-amd64.iso -boot d -vnc :19# 在 Host 机器上创建 bridge br0
+brctl addbr br0
+# 将 br0 设为 up
+ip link set br0 up
+# 创建 tap device
+tunctl -b# 将 tap0 设为 up
+ip link set tap0 up
+# 将 tap0 加入到 br0 上
+brctl addif br0 tap0
+# 启动虚拟机, 虚拟机连接 tap0、tap0 连接 br0
+qemu-system-x86_64 -enable-kvm -name ubuntutest -m 2048 -hda ubuntutest.qcow2 -vnc :19 -net nic,model=virtio -nettap,ifname=tap0,script=no,downscript=no# ifconfig br0 192.168.57.1/24
+ifconfig br0 192.168.57.1/24# VNC 连上虚拟机，给网卡设置地址，重启虚拟机，可 ping 通 br0# 要想访问外网，在 Host 上设置 NAT，并且 enable ip forwarding，可以 ping 通外网网关。# sysctl -p
+net.ipv4.ip_forward = 1sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+# 如果 DNS 没配错，可以进行 apt-get update
+```
