@@ -11,7 +11,21 @@ tags:
 
 对上篇分析的是老版本的KubeVirt的网络源码，这篇继续上篇，对目前的最新版本v0.53再做一次源码分析，作为对上篇的补充。
 
-和上篇一样，bridge绑定模式也是有`DiscoverPodNetworkInterface`和`PreparePodNetworkInterface`方法。做的事情大体一样，多了一个创建dummy网口的流程。
+Bridge binding mechanism
+```yaml
+kind: VM
+spec:
+  domain:
+    devices:
+      interfaces:
+        - name: default
+          bridge: {}
+  networks:
+  - name: default
+    pod: {} # Stock pod network
+```
+
+和上篇一样，bridge绑定模式也是有`DiscoverPodNetworkInterface`和`PreparePodNetworkInterface`方法。做的事情大体一样，最大的不同多了一个创建dummy网口的流程。其他的小的迭代功能还有支持vmi crd给虚拟机网口配置的mac地址。
 
 ```go
 func (b *BridgePodNetworkConfigurator) DiscoverPodNetworkInterface(podIfaceName string) error {
@@ -91,8 +105,8 @@ func (b *BridgePodNetworkConfigurator) switchPodInterfaceWithDummy() error {
 ```
 
 上面的代码中的方法`switchPodInterfaceWithDummy`做了下面几件事：
-1. 更名pod的网口，原来的名称加了后缀“-nic”
-2. 创建dummy网口，上一步更名前的名称
+1. 更名pod的网口，原来的名称加后缀“-nic”
+2. 创建dummy网口，使用上一步更名前的名称
 3. 将最早前的ip加到dummy网口上
 
 就会发生下面的效果：
@@ -138,62 +152,36 @@ launcher Pod的网口：
 
 然而KubeVirt在bridge绑定模式的时候，会将pod的ip移给VM，这样pod就没有ip，会被Kubernetes当成pod状态异常，移除pod。这不是想要的结果，所以需要通过创建一个有预期ip的且不会影响KubeVirt网络的dummy网口来fool Kubernetes一下。
 
+本篇分析的版本相对上篇分析的版本还有一个不同是，上篇版本网络部分都在virt-lancher中处理，本篇对应版本从virt-lancher中拿出来，分成`phase#1`和`phase#2`。
+
+`phase#1`包含`DiscoverPodNetworkInterface`和`PreparePodNetworkInterface`两个方法方法。`phase#1`是privileged networking configuration: occurs in the virt-handler process。
+
+`phase#2`是unprivileged networking configuration: occurs in the virt-launcher process。`phase#1`会创建VMI所需的the domain xml网络部分。分两部创建。第一步，创建一个大概的interface of the vm的domxml，目的是为了连接pod中的bridge，像这样：
+
+     <interface type='bridge'>
+        <source bridge='k6t-eth0'/>
+        <model type='virtio'/>
+     </interface>
+
+第二步，获取存储的MTU和MAC信息，充实domxml，像这样：
+
+    <interface type='bridge'>
+      <mac address='8e:61:55:c2:4a:bd'/>
+      <source bridge='k6t-eth0'/>
+      <target dev='vnet0'/>
+      <model type='virtio'/>
+      <mtu size='1440'/>
+      <alias name='ua-bridge'/>
+      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+    </interface>
+
+KubeVirt v0.53目前支持如下绑定方法，本篇仅分析了bridge，以后再分析其他绑定方法。
 ```go
-func (b *BridgePodNetworkConfigurator) PreparePodNetworkInterface() error {
-	// Set interface link to down to change its MAC address
-	if err := b.handler.LinkSetDown(b.podNicLink); err != nil {
-		log.Log.Reason(err).Errorf("failed to bring link down for interface: %s", b.podNicLink.Attrs().Name)
-		return err
-	}
-
-	if b.ipamEnabled {
-		// Remove IP from POD interface
-		err := b.handler.AddrDel(b.podNicLink, &b.podIfaceIP)
-
-		if err != nil {
-			log.Log.Reason(err).Errorf("failed to delete address for interface: %s", b.podNicLink.Attrs().Name)
-			return err
-		}
-
-		if err := b.switchPodInterfaceWithDummy(); err != nil {
-			log.Log.Reason(err).Error("failed to switch pod interface with a dummy")
-			return err
-		}
-
-		// Set arp_ignore=1 to avoid
-		// the dummy interface being seen by Duplicate Address Detection (DAD).
-		// Without this, some VMs will lose their ip address after a few
-		// minutes.
-		if err := b.handler.ConfigureIpv4ArpIgnore(); err != nil {
-			log.Log.Reason(err).Errorf("failed to set arp_ignore=1")
-			return err
-		}
-	}
-
-	if err := b.createBridge(); err != nil {
-		return err
-	}
-
-	tapOwner := netdriver.LibvirtUserAndGroupId
-	if util.IsNonRootVMI(b.vmi) {
-		tapOwner = strconv.Itoa(util.NonRootUID)
-	}
-	err := createAndBindTapToBridge(b.handler, b.tapDeviceName, b.bridgeInterfaceName, b.launcherPID, b.podNicLink.Attrs().MTU, tapOwner, b.vmi)
-	if err != nil {
-		log.Log.Reason(err).Errorf("failed to create tap device named %s", b.tapDeviceName)
-		return err
-	}
-
-	if err := b.handler.LinkSetUp(b.podNicLink); err != nil {
-		log.Log.Reason(err).Errorf("failed to bring link up for interface: %s", b.podNicLink.Attrs().Name)
-		return err
-	}
-
-	if err := b.handler.LinkSetLearningOff(b.podNicLink); err != nil {
-		log.Log.Reason(err).Errorf("failed to disable mac learning for interface: %s", b.podNicLink.Attrs().Name)
-		return err
-	}
-
-	return nil
+type InterfaceBindingMethod struct {
+	Bridge     *InterfaceBridge     `json:"bridge,omitempty"`
+	Slirp      *InterfaceSlirp      `json:"slirp,omitempty"`
+	Masquerade *InterfaceMasquerade `json:"masquerade,omitempty"`
+	SRIOV      *InterfaceSRIOV      `json:"sriov,omitempty"`
+	Macvtap    *InterfaceMacvtap    `json:"macvtap,omitempty"`
 }
 ```
