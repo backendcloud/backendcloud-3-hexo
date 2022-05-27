@@ -150,20 +150,13 @@ launcher Pod的网口：
 
 那么为什么要这么麻烦，创建一个dummy网口，原来是不这样做，当kubelet重启后，会检查所有的pod的网络，若pod的IP不是预期的，会移除pod。这个是Kubernetes的kubelet的运行机制决定的。
 
-然而KubeVirt在bridge绑定模式的时候，会将pod的ip移给VM，这样pod就没有ip，会被Kubernetes当成pod状态异常，移除pod。这不是想要的结果，所以需要通过创建一个有预期ip的且不会影响KubeVirt网络的dummy网口来fool Kubernetes一下。
+然而KubeVirt在bridge绑定模式的时候，会将pod的ip移给VM，这样pod就没有ip，会被Kubernetes当成pod状态异常，移除pod。这不是想要的结果，所以需要通过创建一个有预期ip的且不会影响KubeVirt网络的dummy网口来愚弄Kubernetes一下。
 
 本篇分析的版本相对上篇分析的版本还有一个不同是，上篇版本网络部分都在virt-lancher中处理，本篇对应版本从virt-lancher中拿出来，分成`phase#1`和`phase#2`。
 
-`phase#1`包含`DiscoverPodNetworkInterface`和`PreparePodNetworkInterface`两个方法方法。`phase#1`是privileged networking configuration: occurs in the virt-handler process。
+`phase#1`包含`DiscoverPodNetworkInterface`和`PreparePodNetworkInterface`两个方法方法。`phase#1`会创建一个大概的interface of the vm的domxml。
 
-`phase#2`是unprivileged networking configuration: occurs in the virt-launcher process。`phase#1`会创建VMI所需的the domain xml网络部分。分两部创建。第一步，创建一个大概的interface of the vm的domxml，目的是为了连接pod中的bridge，像这样：
-
-     <interface type='bridge'>
-        <source bridge='k6t-eth0'/>
-        <model type='virtio'/>
-     </interface>
-
-第二步，获取存储的MTU和MAC信息，充实domxml，像这样：
+`phase#2`获取存储的MTU和MAC信息，充实domxml，像这样：
 
     <interface type='bridge'>
       <mac address='8e:61:55:c2:4a:bd'/>
@@ -174,6 +167,14 @@ launcher Pod的网口：
       <alias name='ua-bridge'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </interface>
+
+virt-lancher wrap manager.go中的preStartHook方法`func (l *LibvirtDomainManager) preStartHook(vmi *v1.VirtualMachineInstance, domain *api.Domain, generateEmptyIsos bool) (*api.Domain, error)`会做下面几件事情：
+- storage prep
+- network prep
+- cloud-init
+- sysprep
+
+在`network prep`会调用`phase#1` plugin和 `phase#2` plugin。
 
 KubeVirt v0.53目前支持如下绑定方法，本篇仅分析了bridge，以后再分析其他绑定方法。
 ```go
