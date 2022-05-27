@@ -1,5 +1,5 @@
 ---
-title: KubeVirt网络源码分析
+title: KubeVirt网络源码分析（1）
 readmore: true
 date: 2022-05-26 16:19:20
 categories: KubeVirt
@@ -9,6 +9,9 @@ tags:
 - 网络
 ---
 
+在解释Kubevirt如何执行VM网络配置之前，先将POD网络配置和VM网络配置概念分开。POD网络配置本篇不涉及。Kubernetes负责通过CNI根据其配置来设置POD网络，之后POD可以连通外面的世界。
+
+Kubevirt的网络部分是VM网络配置，一般称为绑定。
 
 # virt-launcher virtwrap 准备虚拟机的网络
 virt-launcher pod 和 虚拟机一一对应，在pod中运行一台虚拟机， virt-launcher pod负责提供运行虚拟机必要的组件。本篇文章是介绍网络相关的组件。下图是KubeVirt的网络。图中的Kubetnets的CNI网络插件部分不是本篇涉及内容。
