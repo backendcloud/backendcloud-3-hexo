@@ -1,5 +1,5 @@
 ---
-title: KubeVirt网络源码分析（2）
+title: wip - KubeVirt网络源码分析（2）
 readmore: true
 date: 2022-05-27 17:43:21
 categories: KubeVirt
@@ -9,6 +9,9 @@ tags:
 - 网络
 ---
 
+对上篇分析的是老版本的KubeVirt的网络源码，这篇继续上篇，对目前的最新版本v0.53再做一次源码分析，作为对上篇的补充。
+
+和上篇一样，bridge绑定模式也是有`DiscoverPodNetworkInterface`和`PreparePodNetworkInterface`方法。做的事情大体一样，多了一个创建dummy网口的流程。
 
 ```go
 func (b *BridgePodNetworkConfigurator) DiscoverPodNetworkInterface(podIfaceName string) error {
