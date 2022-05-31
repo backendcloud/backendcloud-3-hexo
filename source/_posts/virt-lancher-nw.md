@@ -9,6 +9,8 @@ tags:
 - 网络
 ---
 
+kubevirt 以 CRD 形式将 VM 管理接口接入到kubernetes，通过一个pod去使用libvirtd管理VM方式，实现pod与VM的一对一对应，做到如同容器一般去管理虚拟机，并且做到与容器一样的资源管理、调度规划。
+
 在解释Kubevirt如何执行VM网络配置之前，先将POD网络配置和VM网络配置概念分开。POD网络配置本篇不涉及。Kubernetes负责通过CNI根据其配置来设置POD网络，之后POD可以连通外面的世界。
 
 Kubevirt的网络部分是VM网络配置，一般称为绑定。
