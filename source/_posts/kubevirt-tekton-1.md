@@ -172,7 +172,7 @@ Events:
 the server could not find the requested resource (post virtualmachines.kubevirt.io)
 [developer@localhost taskruns]$ 
 ```
-> 忘记部署KubeVirt，部署KubeVirt参考[这里](https://www.backendcloud.cn/2022/05/06/deploy-kubevirt/#deploy-KubeVirt?_blank)<a href="https://www.backendcloud.cn/2022/05/06/deploy-kubevirt/#deploy-KubeVirt" target="_blank">这里</a>
+> 忘记部署KubeVirt，部署KubeVirt参考<a href="https://www.backendcloud.cn/2022/05/06/deploy-kubevirt/#deploy-KubeVirt" target="_blank">这里</a>
 ```bash
 [developer@localhost taskruns]$ kubectl get pods -n kubevirt
 NAME                               READY   STATUS    RESTARTS   AGE
