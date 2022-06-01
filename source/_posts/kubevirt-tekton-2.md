@@ -1,7 +1,7 @@
 ---
-title: KubeVirt CICD Tekton (2) - 各种task run
+title: workinprocess - KubeVirt CICD Tekton (2) - 各种task run
 readmore: true
-date: 2022-06-01 18:53:07
+date: 2022-06-01 20:13:07
 categories: 云原生
 tags:
 - CICD
