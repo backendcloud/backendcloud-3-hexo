@@ -107,7 +107,53 @@ Error from server (BadRequest): container "step-echo" in pod "hello-task-run-pod
 NAME                 READY   STATUS     RESTARTS   AGE
 hello-task-run-pod   0/1     Init:0/3   0          41s
 #等待 gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1 镜像拉取完成
-[developer@localhost tekton-hello]$ 
+vents:
+  Type     Reason     Age              From               Message
+  ----     ------     ----             ----               -------
+  Normal   Scheduled  8h               default-scheduler  Successfully assigned default/hello-task-run-pod to minikube
+  Warning  Failed     8h               kubelet            Failed to pull image "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d": rpc error: code = Unknown desc = error pulling image configuration: Get "https://gcr.io/v2/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint/blobs/sha256:17e1278505574391f7a58602fabadd837aded266a298a2a58f3d7e646a84491e": net/http: TLS handshake timeout
+  Normal   Pulling    8h (x4 over 8h)  kubelet            Pulling image "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d"
+  Warning  Failed     8h (x3 over 8h)  kubelet            Failed to pull image "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d": rpc error: code = Unknown desc = context canceled
+  Warning  Failed     8h (x4 over 8h)  kubelet            Error: ErrImagePull
+  Warning  Failed     8h (x7 over 8h)  kubelet            Error: ImagePullBackOff
+  Normal   BackOff    8h (x8 over 8h)  kubelet            Back-off pulling image "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d"
+# 镜像太大了，竟然下载失败了，可能网络不稳定导致超时，可以手动拉取镜像
+[developer@localhost tekton-hello]$ minikube ssh
+                         _             _            
+            _         _ ( )           ( )           
+  ___ ___  (_)  ___  (_)| |/')  _   _ | |_      __  
+/' _ ` _ `\| |/' _ `\| || , <  ( ) ( )| '_`\  /'__`\
+| ( ) ( ) || || ( ) || || |\`\ | (_) || |_) )(  ___/
+(_) (_) (_)(_)(_) (_)(_)(_) (_)`\___/'(_,__/'`\____)
+
+$ docker images
+REPOSITORY                                                           TAG       IMAGE ID       CREATED         SIZE
+k8s.gcr.io/kube-apiserver                                            v1.23.3   f40be0088a83   4 months ago    135MB
+k8s.gcr.io/kube-controller-manager                                   v1.23.3   b07520cd7ab7   4 months ago    125MB
+k8s.gcr.io/kube-scheduler                                            v1.23.3   99a3486be4f2   4 months ago    53.5MB
+k8s.gcr.io/kube-proxy                                                v1.23.3   9b7cc9982109   4 months ago    112MB
+k8s.gcr.io/etcd                                                      3.5.1-0   25f8c7f3da61   7 months ago    293MB
+k8s.gcr.io/coredns/coredns                                           v1.8.6    a4ca41631cc7   7 months ago    46.8MB
+k8s.gcr.io/pause                                                     3.6       6270bb605e12   9 months ago    683kB
+kubernetesui/dashboard                                               v2.3.1    e1482a24335a   11 months ago   220MB
+kubernetesui/metrics-scraper                                         v1.0.7    7801cfc6d5c0   11 months ago   34.4MB
+gcr.io/k8s-minikube/storage-provisioner                              v5        6e38f40d628d   14 months ago   31.5MB
+registry                                                             <none>    678dfa38fcfa   17 months ago   26.2MB
+gcr.io/google_containers/kube-registry-proxy                         <none>    60dc18151daf   5 years ago     188MB
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/webhook      <none>    fc324a2913a5   52 years ago    76.8MB
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint   <none>    17e127850557   52 years ago    64.7MB
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller   <none>    721d8b7d2eaf   52 years ago    86.1MB
+$ docker pull gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d: Pulling from tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint
+Digest: sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d
+Status: Image is up to date for gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d
+# 发现镜像成功拉取了，应该仅仅是下载时间太长了，超时了，过了一会，pod：hello-task-run-pod 执行完成。状态为Completed
+[developer@localhost tekton-hello]$ kubectl get pod
+NAME                 READY   STATUS      RESTARTS   AGE
+hello-task-run-pod   0/1     Completed   0          22m
+[developer@localhost tekton-hello]$ kubectl logs --selector=tekton.dev/taskRun=hello-task-run
+Hello World
 ```
 
 # pipeline
