@@ -1,5 +1,5 @@
 ---
-title: workinprocess - KubeVirt CICD Tekton
+title: KubeVirt CICD Tekton (1)
 readmore: false
 date: 2022-06-01 19:44:23
 categories: 云原生
@@ -41,8 +41,6 @@ clusterrole.rbac.authorization.k8s.io/wait-for-vmi-status-task created
 serviceaccount/wait-for-vmi-status-task created
 rolebinding.rbac.authorization.k8s.io/wait-for-vmi-status-task created
 ```
-
-
 
 ```bash
 [developer@localhost taskruns]$ kubectl get pod
@@ -138,15 +136,132 @@ minikube   Ready    control-plane,master   4h41m   v1.23.3
 🔥  Creating kvm2 VM (CPUs=2, Memory=10240MB, Disk=20000MB) ...
 🐳  Preparing Kubernetes v1.22.9 on Docker 20.10.12 ...
     ▪ kubelet.housekeeping-interval=5m
-    > kubeadm.sha256: 64 B / 64 B [--------------------------] 100.00% ? p/s 0s
-    > kubelet.sha256: 64 B / 64 B [--------------------------] 100.00% ? p/s 0s
-    > kubeadm: 43.73 MiB / 43.73 MiB [--------------] 100.00% 8.16 MiB p/s 5.6s
-    > kubelet: 115.64 MiB / 115.64 MiB [-------------] 100.00% 8.76 MiB p/s 13s
-
-❌  Exiting due to INET_RESET_BY_PEER: updating control plane: downloading binaries: downloading kubectl: download failed: https://storage.googleapis.com/kubernetes-release/release/v1.22.9/bin/linux/amd64/kubectl?checksum=file:https://storage.googleapis.com/kubernetes-release/release/v1.22.9/bin/linux/amd64/kubectl.sha256: getter: &{Ctx:context.Background Src:https://storage.googleapis.com/kubernetes-release/release/v1.22.9/bin/linux/amd64/kubectl?checksum=file:https://storage.googleapis.com/kubernetes-release/release/v1.22.9/bin/linux/amd64/kubectl.sha256 Dst:/home/developer/.minikube/cache/linux/amd64/v1.22.9/kubectl.download Pwd: Mode:2 Umask:---------- Detectors:[0x36f58f8 0x36f58f8 0x36f58f8 0x36f58f8 0x36f58f8 0x36f58f8 0x36f58f8] Decompressors:map[bz2:0x36f58f8 gz:0x36f58f8 tar:0x36f58f8 tar.bz2:0x36f58f8 tar.gz:0x36f58f8 tar.xz:0x36f58f8 tar.zst:0x36f58f8 tbz2:0x36f58f8 tgz:0x36f58f8 txz:0x36f58f8 tzst:0x36f58f8 xz:0x36f58f8 zip:0x36f58f8 zst:0x36f58f8] Getters:map[file:0xc000ba5330 http:0xc000ba88c0 https:0xc000ba88e0] Dir:false ProgressListener:0x36b4cc0 Insecure:false Options:[0x19449a0]}: invalid checksum: Error downloading checksum file: Get "https://storage.googleapis.com/kubernetes-release/release/v1.22.9/bin/linux/amd64/kubectl.sha256": read tcp 192.168.137.10:53364->172.217.160.80:443: read: connection reset by peer
-💡  Suggestion: A firewall is likely blocking minikube from reaching the internet. You may need to configure minikube to use a proxy.
-📘  Documentation: https://minikube.sigs.k8s.io/docs/handbook/vpn_and_proxy/
-🍿  Related issue: https://github.com/kubernetes/minikube/issues/3909
-
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: default-storageclass, storage-provisioner
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+[developer@localhost taskruns]$ kubectl get node -o wide
+NAME       STATUS     ROLES                  AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE              KERNEL-VERSION   CONTAINER-RUNTIME
+minikube   NotReady   control-plane,master   13s   v1.22.9   192.168.50.26   <none>        Buildroot 2021.02.4   4.19.202         docker://20.10.12
 [developer@localhost taskruns]$ 
+```
+> 将Kubernete版本从1.23.3降级到1.22.9果然没有之前的bug
+```bash
+[developer@localhost taskruns]$ kubectl get pod
+NAME                                  READY   STATUS   RESTARTS   AGE
+create-vm-from-manifest-taskrun-pod   0/1     Error    0          77s
+[developer@localhost taskruns]$ kubectl describe pod create-vm-from-manifest-taskrun-pod
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  8h    default-scheduler  Successfully assigned default/create-vm-from-manifest-taskrun-pod to minikube
+  Normal  Pulled     8h    kubelet            Container image "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d" already present on machine
+  Normal  Created    8h    kubelet            Created container place-tools
+  Normal  Started    8h    kubelet            Started container place-tools
+  Normal  Pulled     8h    kubelet            Container image "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1@sha256:4fc8631a27bdd1b4c149a08b7db0465a706559ccddd979d0b9dbc93ef676105d" already present on machine
+  Normal  Created    8h    kubelet            Created container step-init
+  Normal  Started    8h    kubelet            Started container step-init
+  Normal  Pulling    8h    kubelet            Pulling image "quay.io/kubevirt/tekton-task-create-vm:v0.9.2"
+  Normal  Pulled     8h    kubelet            Successfully pulled image "quay.io/kubevirt/tekton-task-create-vm:v0.9.2" in 20.884952016s
+  Normal  Created    8h    kubelet            Created container step-createvm
+  Normal  Started    8h    kubelet            Started container step-createvm
+[developer@localhost taskruns]$ kubectl logs create-vm-from-manifest-taskrun-pod
+the server could not find the requested resource (post virtualmachines.kubevirt.io)
+[developer@localhost taskruns]$ 
+```
+> 忘记部署KubeVirt，部署KubeVirt参考[这里](https://www.backendcloud.cn/2022/05/06/deploy-kubevirt/#deploy-KubeVirt)
+```bash
+[developer@localhost taskruns]$ kubectl get pods -n kubevirt
+NAME                               READY   STATUS    RESTARTS   AGE
+virt-api-b9fc66c44-ndp2p           1/1     Running   0          11m
+virt-api-b9fc66c44-pxq4n           1/1     Running   0          11m
+virt-controller-7556586574-9pkv7   1/1     Running   0          9m13s
+virt-controller-7556586574-q6lnv   1/1     Running   0          9m13s
+virt-handler-x224j                 1/1     Running   0          9m13s
+virt-operator-7c67945b69-4gcpf     1/1     Running   0          12m
+virt-operator-7c67945b69-qdgsb     1/1     Running   0          12m
+[developer@localhost taskruns]$ cat create-vm-from-manifest-taskrun.yaml 
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: create-vm-from-manifest-taskrun
+spec:
+  serviceAccountName: create-vm-from-manifest-task
+  taskRef:
+    kind: ClusterTask
+    name: create-vm-from-manifest
+  params:
+  - name: manifest
+    value: |
+      apiVersion: kubevirt.io/v1
+      kind: VirtualMachine
+      metadata:
+        labels:
+          kubevirt.io/vm: vm-cirros
+        generateName: vm-cirros-
+      spec:
+        running: false
+        template:
+          metadata:
+            labels:
+              kubevirt.io/vm: vm-cirros
+          spec:
+            domain:
+              devices:
+                disks:
+                - disk:
+                    bus: virtio
+                  name: containerdisk
+                - disk:
+                    bus: virtio
+                  name: cloudinitdisk
+              machine:
+                type: ""
+              resources:
+                requests:
+                  memory: 64M
+            terminationGracePeriodSeconds: 0
+            volumes:
+            - containerDisk:
+                image: kubevirt/cirros-container-disk-demo
+              name: containerdisk
+            - cloudInitNoCloud:
+                userData: |
+                  #!/bin/sh
+                  echo 'printed from cloud-init userdata'
+              name: cloudinitdisk
+[developer@localhost taskruns]$ kubectl apply -f create-vm-from-manifest-taskrun.yaml 
+taskrun.tekton.dev/create-vm-from-manifest-taskrun created
+[developer@localhost taskruns]$ kubectl get pod
+NAME                                  READY   STATUS      RESTARTS   AGE
+create-vm-from-manifest-taskrun-pod   0/1     Completed   0          52s
+[developer@localhost taskruns]$ kubectl delete -f create-vm-from-manifest-taskrun.yaml
+[developer@localhost taskruns]$ kubectl apply -f create-vm-from-manifest-taskrun.yaml
+[developer@localhost taskruns]$ kubectl delete -f create-vm-from-manifest-taskrun.yaml
+[developer@localhost taskruns]$ kubectl apply -f create-vm-from-manifest-taskrun.yaml
+```
+
+```bash
+[developer@localhost ~]$ kubectl get vm --watch
+NAME              AGE    STATUS    READY
+vm-cirros-vj8wb   3m4s   Stopped   False
+vm-cirros-5r9f6   0s               
+vm-cirros-5r9f6   0s               
+vm-cirros-5r9f6   0s               
+vm-cirros-5r9f6   0s     Stopped   False
+vm-cirros-l2n94   0s               
+vm-cirros-l2n94   0s               
+vm-cirros-l2n94   0s     Stopped   False
+vm-cirros-l2n94   0s     Stopped   False
+^C[developer@localhost ~]$ kubectl get vm 
+NAME              AGE     STATUS    READY
+vm-cirros-5r9f6   2m46s   Stopped   False
+vm-cirros-l2n94   32s     Stopped   False
+vm-cirros-vj8wb   6m19s   Stopped   False
+[developer@localhost ~]$ kubectl get vmi
+No resources found in default namespace.
 ```
