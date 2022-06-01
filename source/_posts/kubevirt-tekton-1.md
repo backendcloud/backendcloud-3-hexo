@@ -1,5 +1,5 @@
 ---
-title: KubeVirt CICD Tekton (1)
+title: KubeVirt CICD Tekton (1) - 准备环境&
 readmore: false
 date: 2022-06-01 19:44:23
 categories: 云原生
@@ -183,6 +183,118 @@ virt-controller-7556586574-q6lnv   1/1     Running   0          9m13s
 virt-handler-x224j                 1/1     Running   0          9m13s
 virt-operator-7c67945b69-4gcpf     1/1     Running   0          12m
 virt-operator-7c67945b69-qdgsb     1/1     Running   0          12m
+
+[developer@localhost ~]$ kubectl get clustertask
+NAME                              AGE
+cleanup-vm                        43m
+create-datavolume-from-manifest   43m
+create-vm-from-manifest           43m
+disk-virt-customize               43m
+disk-virt-sysprep                 43m
+execute-in-vm                     43m
+generate-ssh-keys                 43m
+wait-for-vmi-status               43m
+[developer@localhost ~]$ kubectl get clustertask create-vm-from-manifest -o yaml
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  annotations:
+    dataVolumes.params.task.kubevirt.io/apiVersion: cdi.kubevirt.io/v1beta1
+    dataVolumes.params.task.kubevirt.io/kind: DataVolume
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"tekton.dev/v1beta1","kind":"ClusterTask","metadata":{"annotations":{"dataVolumes.params.task.kubevirt.io/apiVersion":"cdi.kubevirt.io/v1beta1","dataVolumes.params.task.kubevirt.io/kind":"DataVolume","manifest.params.task.kubevirt.io/apiVersion":"kubevirt.io/v1","manifest.params.task.kubevirt.io/kind":"VirtualMachine","manifest.params.task.kubevirt.io/type":"resource-yaml","namespace.params.task.kubevirt.io/type":"namespace","ownDataVolumes.params.task.kubevirt.io/apiVersion":"cdi.kubevirt.io/v1beta1","ownDataVolumes.params.task.kubevirt.io/kind":"DataVolume","ownPersistentVolumeClaims.params.task.kubevirt.io/apiVersion":"v1","ownPersistentVolumeClaims.params.task.kubevirt.io/kind":"PersistentVolumeClaim","persistentVolumeClaims.params.task.kubevirt.io/apiVersion":"v1","persistentVolumeClaims.params.task.kubevirt.io/kind":"PersistentVolumeClaim","startVM.params.task.kubevirt.io/type":"boolean","task.kubevirt.io/associatedServiceAccount":"create-vm-from-manifest-task"},"labels":{"task.kubevirt.io/category":"create-vm","task.kubevirt.io/type":"create-vm-from-manifest"},"name":"create-vm-from-manifest"},"spec":{"params":[{"description":"YAML manifest of a VirtualMachine resource to be created.","name":"manifest","type":"string"},{"default":"","description":"Namespace where to create the VM. (defaults to manifest namespace or active namespace)","name":"namespace","type":"string"},{"default":"","description":"Set to true or false to start / not start vm after creation. In case of runStrategy is set to Always, startVM flag is ignored.","name":"startVM","type":"string"},{"default":"","description":"Set runStrategy to VM. If runStrategy is set, vm.spec.running attribute is set to nil.","name":"runStrategy","type":"string"},{"default":[],"description":"Add DVs to VM Volumes. Replaces a particular volume if in VOLUME_NAME:DV_NAME format. Eg. [\"rootdisk:my-dv\", \"my-dv2\"]","name":"dataVolumes","type":"array"},{"default":[],"description":"Add DVs to VM Volumes and add VM to DV ownerReferences. These DataVolumes will be deleted once the created VM gets deleted. Replaces a particular volume if in VOLUME_NAME:DV_NAME format. Eg. [\"rootdisk:my-dv\", \"my-dv2\"]","name":"ownDataVolumes","type":"array"},{"default":[],"description":"Add PVCs to VM Volumes. Replaces a particular volume if in VOLUME_NAME:PVC_NAME format. Eg. [\"rootdisk:my-pvc\", \"my-pvc2\"]","name":"persistentVolumeClaims","type":"array"},{"default":[],"description":"Add PVCs to VM Volumes and add VM to PVC ownerReferences. These PVCs will be deleted once the created VM gets deleted. Replaces a particular volume if in VOLUME_NAME:PVC_NAME format. Eg. [\"rootdisk:my-pvc\", \"my-pvc2\"]","name":"ownPersistentVolumeClaims","type":"array"}],"results":[{"description":"The name of a VM that was created.","name":"name"},{"description":"The namespace of a VM that was created.","name":"namespace"}],"steps":[{"args":["--output=yaml","--dvs","$(params.dataVolumes)","--own-dvs","$(params.ownDataVolumes)","--pvcs","$(params.persistentVolumeClaims)","--own-pvcs","$(params.ownPersistentVolumeClaims)"],"command":["create-vm"],"env":[{"name":"VM_MANIFEST","value":"$(params.manifest)"},{"name":"VM_NAMESPACE","value":"$(params.namespace)"},{"name":"START_VM","value":"$(params.startVM)"},{"name":"RUN_STRATEGY","value":"$(params.runStrategy)"}],"image":"quay.io/kubevirt/tekton-task-create-vm:v0.9.2","name":"createvm"}]}}
+    manifest.params.task.kubevirt.io/apiVersion: kubevirt.io/v1
+    manifest.params.task.kubevirt.io/kind: VirtualMachine
+    manifest.params.task.kubevirt.io/type: resource-yaml
+    namespace.params.task.kubevirt.io/type: namespace
+    ownDataVolumes.params.task.kubevirt.io/apiVersion: cdi.kubevirt.io/v1beta1
+    ownDataVolumes.params.task.kubevirt.io/kind: DataVolume
+    ownPersistentVolumeClaims.params.task.kubevirt.io/apiVersion: v1
+    ownPersistentVolumeClaims.params.task.kubevirt.io/kind: PersistentVolumeClaim
+    persistentVolumeClaims.params.task.kubevirt.io/apiVersion: v1
+    persistentVolumeClaims.params.task.kubevirt.io/kind: PersistentVolumeClaim
+    startVM.params.task.kubevirt.io/type: boolean
+    task.kubevirt.io/associatedServiceAccount: create-vm-from-manifest-task
+  creationTimestamp: "2022-06-01T07:42:50Z"
+  generation: 1
+  labels:
+    task.kubevirt.io/category: create-vm
+    task.kubevirt.io/type: create-vm-from-manifest
+  name: create-vm-from-manifest
+  resourceVersion: "1322"
+  uid: 23a21441-8bee-4627-81eb-429c642fd999
+spec:
+  params:
+  - description: YAML manifest of a VirtualMachine resource to be created.
+    name: manifest
+    type: string
+  - default: ""
+    description: Namespace where to create the VM. (defaults to manifest namespace
+      or active namespace)
+    name: namespace
+    type: string
+  - default: ""
+    description: Set to true or false to start / not start vm after creation. In case
+      of runStrategy is set to Always, startVM flag is ignored.
+    name: startVM
+    type: string
+  - default: ""
+    description: Set runStrategy to VM. If runStrategy is set, vm.spec.running attribute
+      is set to nil.
+    name: runStrategy
+    type: string
+  - default: []
+    description: Add DVs to VM Volumes. Replaces a particular volume if in VOLUME_NAME:DV_NAME
+      format. Eg. ["rootdisk:my-dv", "my-dv2"]
+    name: dataVolumes
+    type: array
+  - default: []
+    description: Add DVs to VM Volumes and add VM to DV ownerReferences. These DataVolumes
+      will be deleted once the created VM gets deleted. Replaces a particular volume
+      if in VOLUME_NAME:DV_NAME format. Eg. ["rootdisk:my-dv", "my-dv2"]
+    name: ownDataVolumes
+    type: array
+  - default: []
+    description: Add PVCs to VM Volumes. Replaces a particular volume if in VOLUME_NAME:PVC_NAME
+      format. Eg. ["rootdisk:my-pvc", "my-pvc2"]
+    name: persistentVolumeClaims
+    type: array
+  - default: []
+    description: Add PVCs to VM Volumes and add VM to PVC ownerReferences. These PVCs
+      will be deleted once the created VM gets deleted. Replaces a particular volume
+      if in VOLUME_NAME:PVC_NAME format. Eg. ["rootdisk:my-pvc", "my-pvc2"]
+    name: ownPersistentVolumeClaims
+    type: array
+  results:
+  - description: The name of a VM that was created.
+    name: name
+  - description: The namespace of a VM that was created.
+    name: namespace
+  steps:
+  - args:
+    - --output=yaml
+    - --dvs
+    - $(params.dataVolumes)
+    - --own-dvs
+    - $(params.ownDataVolumes)
+    - --pvcs
+    - $(params.persistentVolumeClaims)
+    - --own-pvcs
+    - $(params.ownPersistentVolumeClaims)
+    command:
+    - create-vm
+    env:
+    - name: VM_MANIFEST
+      value: $(params.manifest)
+    - name: VM_NAMESPACE
+      value: $(params.namespace)
+    - name: START_VM
+      value: $(params.startVM)
+    - name: RUN_STRATEGY
+      value: $(params.runStrategy)
+    image: quay.io/kubevirt/tekton-task-create-vm:v0.9.2
+    name: createvm
+    resources: {}
 [developer@localhost taskruns]$ cat create-vm-from-manifest-taskrun.yaml 
 ---
 apiVersion: tekton.dev/v1beta1
@@ -234,6 +346,94 @@ spec:
                   #!/bin/sh
                   echo 'printed from cloud-init userdata'
               name: cloudinitdisk
+```
+
+    apiVersion: tekton.dev/v1beta1
+    kind: ClusterTask
+    metadata:
+      annotations:
+        task.kubevirt.io/associatedServiceAccount: create-vm-from-manifest-task
+        manifest.params.task.kubevirt.io/type: resource-yaml
+        manifest.params.task.kubevirt.io/kind: VirtualMachine
+        manifest.params.task.kubevirt.io/apiVersion: kubevirt.io/v1
+        namespace.params.task.kubevirt.io/type: namespace
+        dataVolumes.params.task.kubevirt.io/kind: DataVolume
+        dataVolumes.params.task.kubevirt.io/apiVersion: cdi.kubevirt.io/v1beta1
+        ownDataVolumes.params.task.kubevirt.io/kind: DataVolume
+        ownDataVolumes.params.task.kubevirt.io/apiVersion: cdi.kubevirt.io/v1beta1
+        persistentVolumeClaims.params.task.kubevirt.io/kind: PersistentVolumeClaim
+        persistentVolumeClaims.params.task.kubevirt.io/apiVersion: v1
+        ownPersistentVolumeClaims.params.task.kubevirt.io/kind: PersistentVolumeClaim
+        ownPersistentVolumeClaims.params.task.kubevirt.io/apiVersion: v1
+        startVM.params.task.kubevirt.io/type: boolean
+      labels:
+        task.kubevirt.io/type: create-vm-from-manifest
+        task.kubevirt.io/category: create-vm
+      name: create-vm-from-manifest
+    spec:
+      params:
+        - name: manifest
+          description: YAML manifest of a VirtualMachine resource to be created.
+          type: string
+        - name: namespace
+          description: Namespace where to create the VM. (defaults to manifest namespace or active namespace)
+          default: ""
+          type: string
+        - name: startVM
+          description: Set to true or false to start / not start vm after creation. In case of runStrategy is set to Always, startVM flag is ignored.
+          default: ""
+          type: string
+        - name: runStrategy
+          description: Set runStrategy to VM. If runStrategy is set, vm.spec.running attribute is set to nil.
+          default: ""
+          type: string
+        - name: dataVolumes
+          description: Add DVs to VM Volumes. Replaces a particular volume if in VOLUME_NAME:DV_NAME format. Eg. ["rootdisk:my-dv", "my-dv2"]
+          default: []
+          type: array
+        - name: ownDataVolumes
+          description: Add DVs to VM Volumes and add VM to DV ownerReferences. These DataVolumes will be deleted once the created VM gets deleted. Replaces a particular volume if in VOLUME_NAME:DV_NAME format. Eg. ["rootdisk:my-dv", "my-dv2"]
+          default: []
+          type: array
+        - name: persistentVolumeClaims
+          description: Add PVCs to VM Volumes. Replaces a particular volume if in VOLUME_NAME:PVC_NAME format. Eg. ["rootdisk:my-pvc", "my-pvc2"]
+          default: []
+          type: array
+        - name: ownPersistentVolumeClaims
+          description: Add PVCs to VM Volumes and add VM to PVC ownerReferences. These PVCs will be deleted once the created VM gets deleted. Replaces a particular volume if in VOLUME_NAME:PVC_NAME format. Eg. ["rootdisk:my-pvc", "my-pvc2"]
+          default: []
+          type: array
+      results:
+        - name: name
+          description: The name of a VM that was created.
+        - name: namespace
+          description: The namespace of a VM that was created.
+      steps:
+        - name: createvm
+          image: "quay.io/kubevirt/tekton-task-create-vm:v0.9.2"
+          command:
+            - create-vm
+          args:
+            - "--output=yaml"
+            - '--dvs'
+            - $(params.dataVolumes)
+            - '--own-dvs'
+            - $(params.ownDataVolumes)
+            - '--pvcs'
+            - $(params.persistentVolumeClaims)
+            - '--own-pvcs'
+            - $(params.ownPersistentVolumeClaims)
+          env:
+            - name: VM_MANIFEST
+              value: $(params.manifest)
+            - name: VM_NAMESPACE
+              value: $(params.namespace)
+            - name: START_VM
+              value: $(params.startVM)
+            - name: RUN_STRATEGY
+              value: $(params.runStrategy)
+
+```bash
 [developer@localhost taskruns]$ kubectl apply -f create-vm-from-manifest-taskrun.yaml 
 taskrun.tekton.dev/create-vm-from-manifest-taskrun created
 [developer@localhost taskruns]$ kubectl get pod
