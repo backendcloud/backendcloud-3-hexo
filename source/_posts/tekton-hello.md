@@ -1,5 +1,5 @@
 ---
-title: workinprocess - Kubernetes原生CICD:Tekton hello-world
+title: Kubernetes原生CICD:Tekton hello-world
 readmore: false
 date: 2022-06-01 18:43:26
 categories: 云原生
@@ -187,5 +187,39 @@ spec:
         - hello
       taskRef:
         name: goodbye
-[developer@localhost tekton-hello]$ 
+[developer@localhost tekton-hello]$ kubectl apply --filename hello-goodbye-pipeline.yaml
+pipeline.tekton.dev/hello-goodbye configured
+[developer@localhost tekton-hello]$ kubectl get task
+NAME      AGE
+goodbye   25m
+hello     49m
+[developer@localhost tekton-hello]$ kubectl get task -A
+NAMESPACE   NAME      AGE
+default     goodbye   25m
+default     hello     49m
+[developer@localhost tekton-hello]$ cat hello-goodbye-pipeline-run.yaml
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: hello-goodbye-run
+spec:
+  pipelineRef:
+    name: hello-goodbye
+[developer@localhost tekton-hello]$ kubectl apply --filename hello-goodbye-pipeline-run.yaml
+pipelinerun.tekton.dev/hello-goodbye-run created
+[developer@localhost tekton-hello]$ tkn
+-bash: tkn: command not found
+[developer@localhost tekton-hello]$ rpm -ivh https://github.com/tektoncd/cli/releases/download/v0.23.1/tektoncd-cli-0.23.1_Linux-64bit.rpm
+Retrieving https://github.com/tektoncd/cli/releases/download/v0.23.1/tektoncd-cli-0.23.1_Linux-64bit.rpm
+error: can't create transaction lock on /var/lib/rpm/.rpm.lock (Permission denied)
+[developer@localhost tekton-hello]$ sudo rpm -ivh https://github.com/tektoncd/cli/releases/download/v0.23.1/tektoncd-cli-0.23.1_Linux-64bit.rpm
+Retrieving https://github.com/tektoncd/cli/releases/download/v0.23.1/tektoncd-cli-0.23.1_Linux-64bit.rpm
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:cli-0:0.23.1-1                   ################################# [100%]
+[developer@localhost tekton-hello]$ tkn pipelinerun logs hello-goodbye-run -f -n default
+[hello : echo] Hello World
+
+[goodbye : goodbye] Goodbye World!
+  
 ```
