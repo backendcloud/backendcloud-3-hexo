@@ -8,7 +8,7 @@ tags:
 - Tekton
 - KubeVirt
 ---
-
+![](/images/kubevirt-tekton-1/1.png)
 ```bash
 [developer@localhost ~]$ VERSION=v0.9.2
 [developer@localhost ~]$ echo $VERSION
