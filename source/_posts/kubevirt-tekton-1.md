@@ -295,58 +295,9 @@ spec:
     image: quay.io/kubevirt/tekton-task-create-vm:v0.9.2
     name: createvm
     resources: {}
-[developer@localhost taskruns]$ cat create-vm-from-manifest-taskrun.yaml 
----
-apiVersion: tekton.dev/v1beta1
-kind: TaskRun
-metadata:
-  name: create-vm-from-manifest-taskrun
-spec:
-  serviceAccountName: create-vm-from-manifest-task
-  taskRef:
-    kind: ClusterTask
-    name: create-vm-from-manifest
-  params:
-  - name: manifest
-    value: |
-      apiVersion: kubevirt.io/v1
-      kind: VirtualMachine
-      metadata:
-        labels:
-          kubevirt.io/vm: vm-cirros
-        generateName: vm-cirros-
-      spec:
-        running: false
-        template:
-          metadata:
-            labels:
-              kubevirt.io/vm: vm-cirros
-          spec:
-            domain:
-              devices:
-                disks:
-                - disk:
-                    bus: virtio
-                  name: containerdisk
-                - disk:
-                    bus: virtio
-                  name: cloudinitdisk
-              machine:
-                type: ""
-              resources:
-                requests:
-                  memory: 64M
-            terminationGracePeriodSeconds: 0
-            volumes:
-            - containerDisk:
-                image: kubevirt/cirros-container-disk-demo
-              name: containerdisk
-            - cloudInitNoCloud:
-                userData: |
-                  #!/bin/sh
-                  echo 'printed from cloud-init userdata'
-              name: cloudinitdisk
 ```
+
+> yaml:ClusterTask:create-vm-from-manifest
 
     apiVersion: tekton.dev/v1beta1
     kind: ClusterTask
@@ -434,6 +385,57 @@ spec:
               value: $(params.runStrategy)
 
 ```bash
+[developer@localhost taskruns]$ cat create-vm-from-manifest-taskrun.yaml 
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: create-vm-from-manifest-taskrun
+spec:
+  serviceAccountName: create-vm-from-manifest-task
+  taskRef:
+    kind: ClusterTask
+    name: create-vm-from-manifest
+  params:
+  - name: manifest
+    value: |
+      apiVersion: kubevirt.io/v1
+      kind: VirtualMachine
+      metadata:
+        labels:
+          kubevirt.io/vm: vm-cirros
+        generateName: vm-cirros-
+      spec:
+        running: false
+        template:
+          metadata:
+            labels:
+              kubevirt.io/vm: vm-cirros
+          spec:
+            domain:
+              devices:
+                disks:
+                - disk:
+                    bus: virtio
+                  name: containerdisk
+                - disk:
+                    bus: virtio
+                  name: cloudinitdisk
+              machine:
+                type: ""
+              resources:
+                requests:
+                  memory: 64M
+            terminationGracePeriodSeconds: 0
+            volumes:
+            - containerDisk:
+                image: kubevirt/cirros-container-disk-demo
+              name: containerdisk
+            - cloudInitNoCloud:
+                userData: |
+                  #!/bin/sh
+                  echo 'printed from cloud-init userdata'
+              name: cloudinitdisk
 [developer@localhost taskruns]$ kubectl apply -f create-vm-from-manifest-taskrun.yaml 
 taskrun.tekton.dev/create-vm-from-manifest-taskrun created
 [developer@localhost taskruns]$ kubectl get pod
