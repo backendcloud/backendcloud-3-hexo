@@ -1,7 +1,7 @@
 ---
-title: workinprocess - Tekton hello-world
+title: workinprocess - Kubernetes原生CICD:Tekton hello-world
 readmore: false
-date: 2022-06-01 13:43:26
+date: 2022-06-01 18:43:26
 categories: 云原生
 tags:
 - CICD
@@ -72,6 +72,7 @@ tekton-pipelines-controller-795d77dbd6-x2dkt   1/1     Running   0          11m
 tekton-pipelines-webhook-579c8dc94c-82cbn      1/1     Running   0          3m52s
 ```
 
+# task
 ```bash
 [developer@localhost ~]$ cat hello-world.yaml
 apiVersion: tekton.dev/v1beta1
@@ -106,5 +107,39 @@ Error from server (BadRequest): container "step-echo" in pod "hello-task-run-pod
 NAME                 READY   STATUS     RESTARTS   AGE
 hello-task-run-pod   0/1     Init:0/3   0          41s
 #等待 gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.35.1 镜像拉取完成
+[developer@localhost tekton-hello]$ 
+```
+
+# pipeline
+```bash
+[developer@localhost tekton-hello]$ cat goodbye-world.yaml 
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: goodbye
+spec:
+  steps:
+    - name: goodbye
+      image: ubuntu
+      script: |
+        #!/bin/bash
+        echo "Goodbye World!"     
+[developer@localhost tekton-hello]$ kubectl apply -f goodbye-world.yaml
+task.tekton.dev/goodbye created
+[developer@localhost tekton-hello]$ cat hello-goodbye-pipeline.yaml
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: hello-goodbye
+spec:
+  tasks:
+    - name: hello
+      taskRef:
+        name: hello
+    - name: goodbye
+      runAfter:
+        - hello
+      taskRef:
+        name: goodbye
 [developer@localhost tekton-hello]$ 
 ```
