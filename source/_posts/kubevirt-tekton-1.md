@@ -1,5 +1,5 @@
 ---
-title: KubeVirt CICD Tekton (1) - 准备环境&run task:create-vm
+title: KubeVirt CICD Tekton (1) - 准备环境 以及 run task:create-vm
 readmore: false
 date: 2022-06-01 19:44:23
 categories: 云原生
@@ -12,7 +12,6 @@ tags:
 
 ```bash
 [developer@localhost taskruns]$ cat create-vm-from-manifest-taskrun.yaml 
----
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
@@ -85,7 +84,7 @@ vm-cirros-l2n94   0s
 vm-cirros-l2n94   0s               
 vm-cirros-l2n94   0s     Stopped   False
 vm-cirros-l2n94   0s     Stopped   False
-^C[developer@localhost ~]$ kubectl get vm 
+[developer@localhost ~]$ kubectl get vm 
 NAME              AGE     STATUS    READY
 vm-cirros-5r9f6   2m46s   Stopped   False
 vm-cirros-l2n94   32s     Stopped   False
@@ -95,4 +94,4 @@ No resources found in default namespace.
 ```
 > 可以看到经过3次Tekton task创建的vm
 
-该文章为付费文章，要查看全文可在公众号上查看[文章](https://mp.weixin.qq.com/s/b1FJMrhxJAQybf8sdqJhvQ)
+该文章为付费文章，要查看全文可在公众号上查看[文章](https://mp.weixin.qq.com/s/8D6hwB01stF8VWN0tTHjzQ)
