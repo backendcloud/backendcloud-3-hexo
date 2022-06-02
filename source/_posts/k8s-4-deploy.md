@@ -46,7 +46,7 @@ minikube可以直接对Kubernetes的版本进行升级，但是不支持降级�
 ```
 > minikube 最新版只支持到Kubernetes v1.23.4-rc.0，还不支持v1.23.6
 
-> 只能换到 v1.22.9 试试，minekube只支持Kubernetes升级不支持降级，只能重建Kubetnetes集群
+> minekube只支持Kubernetes升级不支持降级，只能重建Kubetnetes集群
 ```bash
 [developer@localhost taskruns]$ minikube stop
 ✋  Stopping node "minikube"  ...
@@ -185,6 +185,6 @@ Gather minimal facts -----------------------------------------------------------
 # 总结
 以上四种部署方式，
 * kind是耗时最短，适合CI测试环境
-* minikube适合搭建开发环境，多种plugin可选，部署也很快，也可以随意指定节点的资源配置，节点数量，不用如后两种部署方式，几个节点要准备几个节点的虚拟资源或物理资源。
+* minikube适合搭建开发环境，多种plugin可选，部署也很快，也可以随意指定节点的资源配置，节点数量，不用后两种部署方式那样，几个节点要准备几个节点的虚拟资源或物理资源。
 * kubeadmin偏手动些，前期后期还有些要额外操作才能完成完整的部署。很多自动化部署工具也是调用的kubeadmin。
-* KubeSpray用的ansible自动化部署，整个部署过程太太太慢了，但是配置灵活，且适合生产环境。
+* KubeSpray用的ansible自动化部署，整个部署过程较慢，不太适合反复创建删除集群，但是配置灵活，且适合生产环境。
