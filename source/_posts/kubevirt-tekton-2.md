@@ -1,5 +1,5 @@
 ---
-title: workinprocess - KubeVirt CICD Tekton (2) - task run:datavolume & ssh-key
+title: KubeVirt CICD Tekton (2) - task run:datavolume & ssh-key
 readmore: false
 date: 2022-06-02 18:13:07
 categories: 云原生

@@ -348,7 +348,9 @@ spec:
 service/windows created
 ```
 
+用vnc登录
 ![](/images/k8s-vnc-win10/5475ed45.png)
+发现连不上，查了之后才知道，上面部署的vnc服务提供的是提供的所有kubevirt 虚拟机的vnc服务，这个ip+port不是某一个vm的vnc，而是web界面，列出所有虚拟机的nvc入口链接。如下：
 ![](/images/k8s-vnc-win10/ffdb87c4.png)
 ![](/images/k8s-vnc-win10/c1815ef6.png)
 ![](/images/k8s-vnc-win10/4219fdb9.png)
