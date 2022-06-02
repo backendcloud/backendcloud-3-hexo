@@ -108,6 +108,16 @@ cp -rfp inventory/sample inventory/mycluster
 declare -a IPS=(10.10.1.3 10.10.1.4 10.10.1.5)
 yum install -y epel-release python3-pip
 pip3 install -U pip
+pip3 install -r requirements.txt
+# 可能python3 pip ansible 版本过低报错，可用下面的 requirements.txt 执行 pip3 install -r requirements.txt
+[root@node1 kubespray]# cat requirements.txt 
+ansible==2.9.18
+cryptography==2.8
+jinja2==2.11.3
+netaddr==0.7.19
+pbr==5.4.4
+jmespath==0.9.5
+ruamel.yaml==0.16.10
 CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 DEBUG: Adding group all
 DEBUG: Adding group kube_control_plane
