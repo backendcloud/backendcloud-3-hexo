@@ -90,10 +90,6 @@ minikube可以直接对Kubernetes的版本进行升级，但是不支持降级�
     ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
 🌟  Enabled addons: default-storageclass, storage-provisioner
 🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
-[developer@localhost taskruns]$ kubectl get node -o wide
-NAME       STATUS     ROLES                  AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE              KERNEL-VERSION   CONTAINER-RUNTIME
-minikube   NotReady   control-plane,master   13s   v1.22.9   192.168.50.26   <none>        Buildroot 2021.02.4   4.19.202         docker://20.10.12
-[developer@localhost taskruns]$ 
 ```
 
 # KubeAdmin
