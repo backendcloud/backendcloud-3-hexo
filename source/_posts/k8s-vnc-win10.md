@@ -202,7 +202,7 @@ Status:
   Printable Status:        ErrorUnschedulable
   Volume Snapshot Statuses:
   Type    Reason            Age   From                       Message
-# 将win10虚拟机内存16G改小到6G
+# 因为跑k8s的wmware虚拟机内存16G，win10虚拟机配置了16G内存，所以无法调度，将win10虚拟机内存16G改小到6G再次创建win10虚拟机
 [root@k8s ~]# kubectl create -f win10.yaml 
 virtualmachine.kubevirt.io/win10 created
 [root@k8s ~]# kubectl get vm
@@ -231,7 +231,7 @@ NAME    AGE     STATUS    READY
 win10   2m13s   Running   True
 ```
 
-配置vnc服务
+配置kubevirt vnc服务
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -324,9 +324,9 @@ spec:
           timeoutSeconds: 5
 ```
 
-kubectl get svc -A 查看vnc service nodeport的端口是32041，用vnc登录
+kubectl get svc -A 查看vnc service nodeport的端口是32041，用vnc客户端登录
 ![](/images/k8s-vnc-win10/5475ed45.png)
-发现连不上，查了之后才知道，上面部署的vnc服务提供的是提供的所有kubevirt 虚拟机的vnc服务，这个ip+port不是某一个vm的vnc，而是web界面，列出所有虚拟机的nvc入口链接。如下：
+发现连不上，查了之后才知道，上面部署的vnc服务提供的这个ip+port不是某一个vm的vnc的端口，而是web界面，web上展示所有虚拟机的nvc入口链接。如下：
 ![](/images/k8s-vnc-win10/ffdb87c4.png)
 登录win10虚拟机的vnc界面
 ![](/images/k8s-vnc-win10/c1815ef6.png)
