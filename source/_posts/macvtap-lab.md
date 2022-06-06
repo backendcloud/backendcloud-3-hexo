@@ -20,8 +20,6 @@ MACVTAP 的实现基于传统的 MACVLAN。该实验中会起两个libvirt容器
 5. 登录容器，删除容器的ip和路由信息
 6. 验证可以ssh登录虚拟机，虚拟机可以连接公网
 
-虽然本篇干的事情是Kubernets+KubeVirt干的事情，但是因为是手动实验，不需要借助Kubernets+KubeVirt自动化，所以本篇的环境准备只需要准备一个docker环境即可。
-
 # 实验环境准备
 centos 7.9 最小安装后部署docker
 ```bash
@@ -30,6 +28,7 @@ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce
 yum install -y docker-ce-20.10.7 docker-ce-cli-20.10.7  containerd.io-1.4.6
 systemctl start docker && systemctl enable docker && systemctl status docker
 ```
+> 虽然本篇干的事情是Kubernets+KubeVirt干的事情，但是因为是手动实验，不需要借助Kubernets+KubeVirt自动化，所以本篇的环境准备只需要准备一个docker环境即可。
 
 # 创建包含虚拟化工具的容器
 ```bash
