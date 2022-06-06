@@ -9,6 +9,16 @@ tags:
 - 网络
 ---
 
+MACVTAP 的实现基于传统的 MACVLAN。我们会起两个libvirt容器，一个作为客户端去测试连接虚拟机，也就是左边这个。 右边会在容器中起虚拟机，容器的eth0做一个macvtap给虚拟机用，macvtap0会把收到的包都发给虚拟机的eth0
+![](/images/macvtap-lab/1.png)
+
+整个手动实验的流程大致为：
+1. 创建有虚拟化工具的容器
+2. 在容器中下载Openstack的常用云镜像
+3. 用上一步下载的镜像在容器中启动带macvtap网口的虚拟机
+4. vnc登录虚拟机检查macvtap网口的mac地址是否一致，添加容器的ip和路由信息给虚拟机
+5. 登录容器，删除容器的ip和路由信息
+6. 验证可以ssh登录虚拟机，虚拟机可以连接公网
 
 ```bash
 # 可以自己制作镜像，下面的Dockerfile的内容：
@@ -101,6 +111,7 @@ bash-4.2# ip addr
     link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
     inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
        valid_lft forever preferred_lft forever
+# 配置正确镜像地址，interface的地方是macvtap相关的配置       
 bash-4.2# cat vm3.xml 
 <domain type='kvm'>
   <name>vm3</name>
