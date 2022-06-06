@@ -13,13 +13,25 @@ MACVTAP 的实现基于传统的 MACVLAN。该实验中会起两个libvirt容器
 ![](/images/macvtap-lab/1.png)
 
 整个手动实验的流程大致为：
-1. 创建有虚拟化工具的容器
+1. 创建包含虚拟化工具的容器
 2. 在容器中下载Openstack的常用云镜像
 3. 用上一步下载的镜像在容器中启动带macvtap网口的虚拟机
 4. vnc登录虚拟机检查macvtap网口的mac地址是否一致，添加容器的ip和路由信息给虚拟机
 5. 登录容器，删除容器的ip和路由信息
 6. 验证可以ssh登录虚拟机，虚拟机可以连接公网
 
+虽然本篇干的事情是Kubernets+KubeVirt干的事情，但是因为是手动实验，不需要借助Kubernets+KubeVirt自动化，所以本篇的环境准备只需要准备一个docker环境即可。
+
+# 实验环境准备
+centos 7.9 最小安装后部署docker
+```bash
+yum install -y yum-utils
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum install -y docker-ce-20.10.7 docker-ce-cli-20.10.7  containerd.io-1.4.6
+systemctl start docker && systemctl enable docker && systemctl status docker
+```
+
+# 创建包含虚拟化工具的容器
 ```bash
 # 可以自己制作镜像，下面的Dockerfile的内容：
 FROM centos:7.6.1810
@@ -54,6 +66,10 @@ anaconda-post.log  bin  dev  etc  home  lib  lib64  media  mnt  opt  proc  root 
 bash-4.2# cd
 bash-4.2# pwd
 /root
+```
+
+# 在容器中下载Openstack的常用云镜像
+```bash
 bash-4.2# wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1905.qcow2
 --2022-06-06 07:08:19--  http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1905.qcow2
 Resolving cloud.centos.org (cloud.centos.org)... 3.137.219.52
@@ -66,6 +82,7 @@ Saving to: 'CentOS-7-x86_64-GenericCloud-1905.qcow2'
 # 等待下载完成
 ```
 
+# 用上一步下载的镜像在容器中启动带macvtap网口的虚拟机
 ```bash
 bash-4.2# virt-customize -a CentOS-7-x86_64-GenericCloud-1905.qcow2 \
 >      --root-password password:coolpass
@@ -155,7 +172,10 @@ bash-4.2# virsh list
  Id    Name                           State
 ----------------------------------------------------
  4     vm3                            running
+```
 
+# vnc登录虚拟机检查macvtap网口的mac地址是否一致，添加容器的ip和路由信息给虚拟机
+```bash
 bash-4.2# virsh console vm3
 Connected to domain vm3
 Escape character is ^]
@@ -373,6 +393,10 @@ nameserver 114.114.114.114
 ssh: connect to host 172.17.0.2 port 22: Connection refused
 [root@eafdef6e7d92 /]# 
 # 会发现不通, 这是因为容器里的eth0和虚拟机里的eth0都配置了相同的地址导致，只需要把容器里的eth0地址删掉即可
+```
+
+# 登录容器，删除容器的ip和路由信息
+```bash
 [root@localhost ~]# docker exec -it qemu-vm bash
 bash-4.2# ip a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
@@ -450,14 +474,15 @@ Last login: Mon Jun  6 08:06:25 2022
 3. macvtap0@eth0是可以理解成挂在网桥端口上的，这样就把包发给macvtap0@eth0了（因为mac地址一样,不一样就不会发给macvtap0@eth0了）
 4. macvtap0@eth0就把包丢给qemu应用进程（最终到虚拟机eth0）
 
-支持完成macvtap实验，容器可以登录虚拟机，宿主机可以登录虚拟机
+# 验证可以ssh登录虚拟机，虚拟机可以连接公网
+至此，完成了macvtap实验。容器可以登录虚拟机，宿主机可以登录虚拟机
 
     [root@localhost ~]# ssh root@172.17.0.2
     root@172.17.0.2's password:
     Last login: Mon Jun  6 08:35:36 2022 from gateway
     [root@localhost ~]#
 
-虚拟机可以访问公网
+并且虚拟机可以访问公网
 
     [root@localhost ~]# curl www.backendcloud.cn
     <html>
@@ -469,9 +494,9 @@ Last login: Mon Jun  6 08:06:25 2022
     </html>
     [root@localhost ~]# 
 
-> 该容器就是KubeVirt中的virt-lancher容器，该实验将KubeVirt的网站的虚拟机创建流程手动走了一遍。
+> 该容器就是KubeVirt中的virt-lancher容器，该实验将KubeVirt的的macvtap虚拟机创建流程手动走了一遍。
 
-裸用qemu
+# 裸用qemu
 
 以上是通过libvirt进行使用的，这样屏蔽了很多底层的细节，如果是直接使用qemu命令需要如下操作：
 
