@@ -2,9 +2,12 @@
 # 后端云网站专注领域
 
 基于Kubernetes的云原生技术：
-* 超融合：容器和虚拟机融合，Openstack和Kubernetes的融合
-* 高性能网络：OVS-DPDK，VPP-DPDK，SRIOV
+* 容器和虚拟机融合：Openstack特别是虚拟机和Kubernetes的融合
+* 多集群管理：公有云私有云边缘云等多云管理，分布式应用在分布式云上的管理
+* 高性能网络：OVS-DPDK（兼容老的迁移虚拟机，且OVS具有更高的管理灵活性，SDN场景），VPP-DPDK（拥有最高性能，NFV场景），SRIOV（在南北流量中拥有较高性能）
 * 自动化流水线：CICD，bash、golang脚本工具
+
+[//]: # (This may be the most platform independent comment)
 
 # 后端云网站快捷键使用说明
 

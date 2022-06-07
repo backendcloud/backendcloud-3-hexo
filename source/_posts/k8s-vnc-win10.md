@@ -4,6 +4,7 @@ readmore: true
 date: 2022-06-02 18:36:39
 categories: 云原生
 tags:
+- KubeVirt
 - vnc
 - win10
 ---
