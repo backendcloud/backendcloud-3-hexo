@@ -267,6 +267,13 @@ Allocated resources:
 ```
 
 # cluster-network-addons-operator 部署多个网络插件
+
+> 上面是通过手动一个个部署cni网络插件，也可以通过cluster-network-addons-operator批量部署cni。
+
+> 下面再做些不同cni的实验。KubeVirt将虚拟机连接到网络，分成两个部分前端和后端，后端只有pod（默认Kubernetes网络）和multus两种网络，前端目前支持bridge，masquerade，sriov，slirp，macvtap五种。
+
+> 可以将后端理解成pod的网络或者Kubernetes提供给虚拟机的网络资源，前端是绑定方式。 
+
 ```bash
 # 部署以下网络插件
 [root@localhost ~]# curl https://github.com/kubevirt/cluster-network-addons-operator/releases/download/v0.77.0/network-addons-config-example.cr.yaml
@@ -372,7 +379,7 @@ NAME           AGE
 ovs-vlan-100   2m38s
 ```
 
-# 安装 ovs cni
+# 安装 ovs
 ```bash
 #安装依赖：
 [root@ovs02 ~]# yum install wget openssl-devel  python-sphinx gcc make python-devel openssl-devel kernel-devel graphviz kernel-debug-devel autoconf automake rpm-build redhat-rpm-config libtool python-twisted-core python-zope-interface PyQt4 desktop-file-utils libcap-ng-devel groff checkpolicy selinux-policy-devel gcc-c++ python-six unbound unbound-devel -y
