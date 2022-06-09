@@ -11,7 +11,14 @@ tags:
 ---
 
 继续上篇 <a href="https://www.backendcloud.cn/2022/06/06/macvtap-lab/" target="_blank">https://www.backendcloud.cn/2022/06/06/macvtap-lab/</a>
-上篇是纯手动，这篇是借助Kubernetes+KuberVirt自动。
+上篇是纯手动，这篇是借助Kubernetes+KubeVirt自动。
+
+# 部署Kubernetes+KubeVirt
+> 部署Kubernetes参考： <a href="https://www.backendcloud.cn/2022/06/02/k8s-4-deploy/#KubeSpray" target="_blank">https://www.backendcloud.cn/2022/06/02/k8s-4-deploy/#KubeSpray</a>
+
+> 用kubepray部署前可以修改配置文件打开multus cni选项
+
+> 部署KubeVirt参考：<a href="https://www.backendcloud.cn/2022/05/06/deploy-kubevirt/#deploy-KubeVirt" target="_blank">https://www.backendcloud.cn/2022/05/06/deploy-kubevirt/#deploy-KubeVirt</a>
 
 # 部署multus cni，macvtap cni，创建macvtap interface vm
 ```bash
@@ -197,9 +204,9 @@ macvtap-pod-with-mac   1/1     Running   0          13s
 / # exit
 [root@node1 ~]# 
 ```
-登录容器执行ip a后发现net1@if2的mac地址和macvtap-pod-with-mac.yaml一致。
+> 登录容器执行ip a后发现net1@if2的mac地址和macvtap-pod-with-mac.yaml一致。
 
-查看node的macvtap资源
+查看node的macvtap资源：
 ```bash
 [root@node1 ~]# kubectl describe node
 Capacity:
@@ -674,3 +681,24 @@ rtt min/avg/max/mdev = 0.118/0.258/0.398/0.140 ms
 </html>
 ```
 > 虚拟出来的网卡和原网卡一样，都可以ping通网关，也都可以上外网。感觉就是原网卡的多个分身且每个分身都有不同的mac地址和ip地址。
+
+外界要和ns1的网卡192.168.159.138和ns2的192.168.159.139通信，都会经过host网卡192.168.159.137，所以host网卡要开启混杂模式，不然就会丢掉138和139的ip包。
+
+> 混杂模式是指一台机器的网卡能够接收所有经过它的数据流，而不论其目的地址是否是它。
+
+![](/images/macvtap-auto/eb212f1f.png)
+
+MACVLAN 会根据收到包的目的 MAC 地址判断这个包需要交给哪个虚拟网卡。配合 network namespace 使用，可以构建这样的网络：
+
+![](/images/macvtap-auto/511a32bc.png)
+
+由于 macvlan 与 eth0 处于不同的 namespace，拥有不同的 network stack，这样使用可以不需要建立 bridge 在 virtual namespace 里面使用网络。
+
+MACVTAP 是对 MACVLAN的改进，把 MACVLAN 与 TAP 设备的特点综合一下，使用 MACVLAN 的方式收发数据包，但是收到的包不交给 network stack 处理，而是生成一个 /dev/tapX 文件，交给这个文件：
+
+![](/images/macvtap-auto/e236b0cd.png)
+
+由于 MACVLAN 是工作在 MAC 层的，所以 MACVTAP 也只能工作在 MAC 层，不会有 MACVTUN 这样的设备。TAP 设备与 TUN 设备工作方式完全相同，区别在于：
+
+* TUN 设备的 /dev/tunX 文件收发的是 IP 层数据包，只能工作在 IP 层，无法与物理网卡做 bridge，但是可以通过三层交换（如 ip_forward）与物理网卡连通。
+* TAP 设备的 /dev/tapX 文件收发的是 MAC 层数据包，拥有 MAC 层功能，可以与物理网卡做 bridge，支持 MAC 层广播。
