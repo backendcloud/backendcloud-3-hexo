@@ -698,6 +698,18 @@ MACVTAP 是对 MACVLAN的改进，把 MACVLAN 与 TAP 设备的特点综合一�
 * TAP 设备的 /dev/tapX 文件收发的是 MAC 层数据包，拥有 MAC 层功能，可以与物理网卡做 bridge，支持 MAC 层广播。
 
 # 参考： macvlan 用于 Docker 网络
+
+## 相同 macvlan 网络之间的通信
+
+> 图中的mac1不是上一个实验的绑定物理网卡的macvlan网口，而是docker的mac1网络，该网络可以有很多macvlan网口绑定在网络对应的物理网卡上，一个容器对应一个macvlan网口。所以一个物理网卡可以有多个macvlan网口，但只能有1个macvlan网络，这里是mac1。
+
+> 若要一个物理网卡上绑定多个docker macvlan网络，也是可以实现的，就是下面一个实验，通过VLAN 技术将一个网口划分出多个子网口，这样就可以基于子网口来创建 macvlan 网络了 
+
+这次实验有四步：
+1. 首先使用 docker network create 分别在两台主机上创建两个 macvlan 网络
+2. 在 host1 运行容器 c1，并指定使用 macvlan 网络
+3. 在 host2 运行容器 c2，并指定使用 macvlan 网络
+4. 在host2 c2中ping host1 c1
 ```bash
 [root@host1 ~]# docker network ls
 NETWORK ID     NAME      DRIVER    SCOPE
@@ -755,3 +767,39 @@ CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAME
 / # exit
 [root@host1 ~]# 
 ```
+
+在host2中执行host1中相同的操作：
+```bash
+[root@host2 ~]# docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+9ab8f059639f   bridge    bridge    local
+bbf0967ea029   host      host      local
+8f4fd0997900   none      null      local
+[root@host2 ~]# docker network create -d macvlan --subnet=172.16.10.0/24 --gateway=172.16.10.1 -o parent=ens33 mac1
+0b5992abca3398f23e3ae55c023d3139a6b3063c85f22d5fc1625fb3076fdb0d
+[root@host2 ~]# docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+9ab8f059639f   bridge    bridge    local
+bbf0967ea029   host      host      local
+0b5992abca33   mac1      macvlan   local
+8f4fd0997900   none      null      local
+[root@host2 ~]# docker run -itd --name c2 --ip=172.16.10.3 --network mac1 busybox
+Unable to find image 'busybox:latest' locally
+latest: Pulling from library/busybox
+19d511225f94: Pull complete 
+Digest: sha256:3614ca5eacf0a3a1bcc361c939202a974b4902b9334ff36eb29ffe9011aaad83
+Status: Downloaded newer image for busybox:latest
+882da145b5e133f34bca3087a85e2e37740ab15a7287460dddee166c022946a0
+[root@host2 ~]# docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAMES
+882da145b5e1   busybox   "sh"      7 seconds ago   Up 6 seconds             c2
+[root@host2 ~]# docker exec c2 ping -c 2 172.16.10.2
+PING 172.16.10.2 (172.16.10.2): 56 data bytes
+64 bytes from 172.16.10.2: seq=0 ttl=64 time=1.440 ms
+64 bytes from 172.16.10.2: seq=1 ttl=64 time=0.365 ms
+
+--- 172.16.10.2 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.365/0.902/1.440 ms
+```
+> 注意：以上的实验都需要物理网卡 ens33 开启混杂模式，内核加载macvlan模块，不然会 ping 不通。
