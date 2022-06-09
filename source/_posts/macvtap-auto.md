@@ -1,5 +1,5 @@
 ---
-title: KubeVirt macvtap虚拟机创建过程 自动实验
+title: [workinprocess]KubeVirt macvtap虚拟机创建过程 自动实验
 readmore: true
 date: 2022-06-09 18:33:57
 categories: 云原生
@@ -270,9 +270,9 @@ Allocated resources:
 
 > 上面是通过手动一个个部署cni网络插件，也可以通过cluster-network-addons-operator批量部署cni。
 
-> 下面再做些不同cni的实验。KubeVirt将虚拟机连接到网络，分成两个部分前端和后端，后端只有pod（默认Kubernetes网络）和multus两种网络，前端目前支持bridge，masquerade，sriov，slirp，macvtap五种。
+> 下面再做些不同cni的实验。KubeVirt将虚拟机连接到网络，分成两个部分，分别是前端和后端，后端只有pod（默认Kubernetes网络）和multus两种网络，前端目前支持bridge，masquerade，sriov，slirp，macvtap五种。
 
-> 可以将后端理解成pod的网络或者Kubernetes提供给虚拟机的网络资源，前端是绑定方式。 
+> 可以将后端理解成虚拟所在的 lanch pod 的网络或者 Kubernetes 提供给虚拟机的网络资源，前端是绑定方式。 
 
 ```bash
 # 部署以下网络插件
@@ -359,26 +359,6 @@ kubevirt                 virt-operator-7d9c58f7cf-8b5ms                       1/
 kubevirt                 virt-operator-7d9c58f7cf-p5b5t                       1/1     Running   0          174m
 ```
 
-```bash
-[root@localhost ~]# kubectl apply -f nad-ovs.yaml 
-networkattachmentdefinition.k8s.cni.cncf.io/ovs-vlan-100 created
-[root@localhost ~]# cat nad-ovs.yaml 
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition
-metadata:
-  name: ovs-vlan-100
-spec:
-  config: '{
-      "cniVersion": "0.3.1",
-      "type": "ovs",
-      "bridge": "br1",
-      "vlan": 100
-    }'
-[root@localhost ~]# kubectl get networkattachmentdefinition.k8s.cni.cncf.io 
-NAME           AGE
-ovs-vlan-100   2m38s
-```
-
 # 安装 ovs
 ```bash
 #安装依赖：
@@ -404,11 +384,13 @@ ovs-vsctl (Open vSwitch) 2.11.0
 DB Schema 7.16.1
 ```
 
-# 后端 ovs
+# 后端使用 multus + ovs
 ```bash
 #创建网桥
-ovs-vsctl add-br br1
+[root@localhost ~]# ovs-vsctl add-br br1
+
 #创建multus ovs-cni网络定义
+[root@localhost ~]# cat nad-ovs.yaml 
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
@@ -420,6 +402,11 @@ spec:
       "bridge": "br1",
       "vlan": 100
     }'
+[root@localhost ~]# kubectl apply -f nad-ovs.yaml 
+networkattachmentdefinition.k8s.cni.cncf.io/ovs-vlan-100 created
+[root@localhost ~]# kubectl get networkattachmentdefinition.k8s.cni.cncf.io 
+NAME           AGE
+ovs-vlan-100   2m38s
 #vm yaml前端
       interfaces:
         - name: default
@@ -435,7 +422,7 @@ spec:
       networkName: ovs-vlan-100
 ```
 
-# 后端 macvlan
+# 后端 multus + macvlan
 ```bash
 #NetworkAttachmentDefinition 
 apiVersion: "k8s.cni.cncf.io/v1"
@@ -464,7 +451,7 @@ spec:
       networkName: macvlan-test    
 ```
 
-# 前端 macvtap
+# 前端 macvtap绑定
 ```bash
 [root@node1 ~]# cat macvtap-config.yaml
 kind: ConfigMap
@@ -506,7 +493,7 @@ spec:
         name: default            
 ```
 
-# 附： macvlan实验
+# 参考： macvlan实验
 ```bash
 # 使用macvlan需要开启网卡的混杂模式
 [root@localhost ~]# yum install -y net-tools
@@ -637,7 +624,7 @@ exiting.
        valid_lft 1510sec preferred_lft 1510sec
     inet6 fe80::c4e8:2243:ac4e:cd08/64 scope link noprefixroute 
        valid_lft forever preferred_lft forever
-可以ping通
+# 可以ping通网关
 [root@localhost ~]# ping 192.168.159.2
 PING 192.168.159.2 (192.168.159.2) 56(84) bytes of data.
 64 bytes from 192.168.159.2: icmp_seq=1 ttl=128 time=0.078 ms
@@ -709,3 +696,62 @@ MACVTAP 是对 MACVLAN的改进，把 MACVLAN 与 TAP 设备的特点综合一�
 
 * TUN 设备的 /dev/tunX 文件收发的是 IP 层数据包，只能工作在 IP 层，无法与物理网卡做 bridge，但是可以通过三层交换（如 ip_forward）与物理网卡连通。
 * TAP 设备的 /dev/tapX 文件收发的是 MAC 层数据包，拥有 MAC 层功能，可以与物理网卡做 bridge，支持 MAC 层广播。
+
+# 参考： macvlan 用于 Docker 网络
+```bash
+[root@host1 ~]# docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+f8744e0d3c5a   bridge    bridge    local
+82e7f68e1904   host      host      local
+2089b08a3f7c   none      null      local
+[root@host1 ~]# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0c:29:41:89:85 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.159.137/24 brd 192.168.159.255 scope global noprefixroute dynamic ens33
+       valid_lft 1229sec preferred_lft 1229sec
+    inet6 fe80::c4e8:2243:ac4e:cd08/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:e5:a6:bc:90 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+[root@host1 ~]# docker network create -d macvlan --subnet=172.16.10.0/24 --gateway=172.16.10.1 -o parent=ens33 mac1
+eff87057bce8dc286d97e0a26e4ffcbc1b4ce66d6ea635417f7122426507a3f9
+[root@host1 ~]# docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+f8744e0d3c5a   bridge    bridge    local
+82e7f68e1904   host      host      local
+eff87057bce8   mac1      macvlan   local
+2089b08a3f7c   none      null      local
+```
+
+```bash
+[root@host1 ~]# docker run -itd --name c1 --ip=172.16.10.2 --network mac1 busybox
+Unable to find image 'busybox:latest' locally
+latest: Pulling from library/busybox
+19d511225f94: Pull complete 
+Digest: sha256:3614ca5eacf0a3a1bcc361c939202a974b4902b9334ff36eb29ffe9011aaad83
+Status: Downloaded newer image for busybox:latest
+8c8d2bb1c86019f4a923395e8f0c81ce3025379437bab2f1240dfb0567193856
+[root@host1 ~]# docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAMES
+8c8d2bb1c860   busybox   "sh"      5 seconds ago   Up 5 seconds             c1
+[root@host1 ~]# docker exec -it 8c8d2bb1c860 sh
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+4: eth0@if2: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:ac:10:0a:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.16.10.2/24 brd 172.16.10.255 scope global eth0
+       valid_lft forever preferred_lft forever
+/ # exit
+[root@host1 ~]# 
+```
