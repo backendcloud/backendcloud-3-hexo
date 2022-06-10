@@ -700,7 +700,7 @@ MACVTAP 是对 MACVLAN的改进，把 MACVLAN 与 TAP 设备的特点综合一�
 # 参考： macvlan 用于 Docker 网络
 
 ## 相同 macvlan 网络之间的通信
-
+![](/images/macvtap-auto/522e4966.png)
 > 图中的mac1不是上一个实验的绑定物理网卡的macvlan网口，而是docker的mac1网络，该网络可以有很多macvlan网口绑定在网络对应的物理网卡上，一个容器对应一个macvlan网口。所以一个物理网卡可以有多个macvlan网口，但只能有1个macvlan网络，这里是mac1。
 
 > 若要一个物理网卡上绑定多个docker macvlan网络，也是可以实现的，就是下面一个实验，通过VLAN 技术将一个网口划分出多个子网口，这样就可以基于子网口来创建 macvlan 网络了 
@@ -803,3 +803,125 @@ PING 172.16.10.2 (172.16.10.2): 56 data bytes
 round-trip min/avg/max = 0.365/0.902/1.440 ms
 ```
 > 注意：以上的实验都需要物理网卡 ens33 开启混杂模式，内核加载macvlan模块，不然会 ping 不通。
+
+## 不同 macvlan 网络之间的通信
+![](/images/macvtap-auto/d1824dec.png)
+由于 macvlan 网络会独占物理网卡，也就是说一张物理网卡只能创建一个 macvlan 网络，如果我们想创建多个 macvlan 网络就得用多张网卡，但主机的物理网卡是有限的，怎么办呢？
+
+好在 macvlan 网络也是支持 VLAN 子接口的，所以，我们可以通过 VLAN 技术将一个网口划分出多个子网口，这样就可以基于子网口来创建 macvlan 网络了，下面是具体的创建过程。
+
+```bash
+[root@host1 ~]# docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+f8744e0d3c5a   bridge    bridge    local
+82e7f68e1904   host      host      local
+2089b08a3f7c   none      null      local
+[root@host1 ~]# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0c:29:41:89:85 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.159.137/24 brd 192.168.159.255 scope global noprefixroute dynamic ens33
+       valid_lft 1402sec preferred_lft 1402sec
+    inet6 fe80::c4e8:2243:ac4e:cd08/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:e5:a6:bc:90 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+[root@host1 ~]# vconfig add ens33 100
+WARNING:  Could not open /proc/net/vlan/config.  Maybe you need to load the 8021q module, or maybe you are not using PROCFS??
+Added VLAN with VID == 100 to IF -:ens33:-
+[root@host1 ~]# vconfig add ens33 200
+Added VLAN with VID == 200 to IF -:ens33:-
+[root@host1 ~]# vconfig set_flag ens33.100 1 1
+Set flag on device -:ens33.100:- Should be visible in /proc/net/vlan/ens33.100
+[root@host1 ~]# vconfig set_flag ens33.200 1 1
+Set flag on device -:ens33.200:- Should be visible in /proc/net/vlan/ens33.200
+[root@host1 ~]# ifconfig ens33.100 up
+[root@host1 ~]# ifconfig ens33.200 up
+[root@host1 ~]# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0c:29:41:89:85 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.159.137/24 brd 192.168.159.255 scope global noprefixroute dynamic ens33
+       valid_lft 1348sec preferred_lft 1348sec
+    inet6 fe80::c4e8:2243:ac4e:cd08/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:e5:a6:bc:90 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+5: ens33.100@ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:0c:29:41:89:85 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::20c:29ff:fe41:8985/64 scope link 
+       valid_lft forever preferred_lft forever
+6: ens33.200@ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:0c:29:41:89:85 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::20c:29ff:fe41:8985/64 scope link 
+       valid_lft forever preferred_lft forever
+[root@host1 ~]# docker network create -d macvlan --subnet=172.16.10.0/24 --gateway=172.16.10.1 -o parent=ens33.100 mac10
+a7847f72406c1e5d625eea200d0afcb57b25c2f0bf5be3a6b54892ccfe8ad44d
+[root@host1 ~]# docker network create -d macvlan --subnet=172.16.20.0/24 --gateway=172.16.20.1 -o parent=ens33.200 mac20
+a8cea5034562ab7ea2c5e817864d113a296981874c7fdbd7b52c860120bb71ac
+[root@host1 ~]# docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+f8744e0d3c5a   bridge    bridge    local
+82e7f68e1904   host      host      local
+a7847f72406c   mac10     macvlan   local
+a8cea5034562   mac20     macvlan   local
+2089b08a3f7c   none      null      local
+[root@host1 ~]# 
+```
+node2上做相同的上面的操作后，分别在 host1 和 host2 上运行容器，并指定不同的 macvlan 网络。
+
+```bash
+# 分别在 host1 和 host2 上运行容器，并指定不同的 macvlan 网络。
+[root@host1 ~]# docker run -itd --name d1 --ip=172.16.10.10 --network mac10 busybox
+dc7b119997daae7b80401e829af15df8b9b700d11071b89f0c953f3bfda26e33
+[root@host1 ~]# docker run -itd --name d2 --ip=172.16.20.10 --network mac20 busybox
+0b0dec9d4888b7a6b4b6163a26fcc991c63d45d218a65a28042feea351dd1306
+[root@host2 ~]# docker run -itd --name d3 --ip=172.16.10.11 --network mac10 busybox
+da78656826054f74910fa1ea33450d44019f5d1204b4ba90f902ea87e2e7a80b
+[root@host2 ~]# docker run -itd --name d4 --ip=172.16.20.11 --network mac20 busybox
+5ae905c9bcc0bbfc33ea699a16cefb26aaf67b471e09e9829471d8ecba5c0204
+```
+
+> mac10的两个容器可以互相ping通，mac20的两个容器互通，不同macvlan网络的容器不能通。不同 macvlan 网络处于不同的网络，而且通过 VLAN 隔离，自然 ping 不了。 但这也只是在二层上通不了，重新找一台主机 host3，通过打开 ip_forward 把它改造成一台路由器用来打通两个 macvlan 网络，大概的图示如下所示： 若用vmware做的实验，可能需要按网上的改下配置：
+
+> First of all, switching to the vmxnet3 driver gave the option for VLAN tagging in the driver's advanced settings.  Just change ethernet0.virtualDev to "vmxnet3" in your VM's .vmx file. Once that was done, I discovered that you must disable "Priority & VLAN" on the HOST LAN adapter that you are bridging... otherwise it drops all of the packets that contain tags targeting the VM.
+
+![](/images/macvtap-auto/fe3e9b20.png)
+
+1. 首先对 host3 执行 sysctl -w net.ipv4.ip_forward=1 打开路由开关。
+2. 然后创建两个 VLAN 子接口，一个作为 macvlan 网络 mac10 的网关，一个作为 mac20 的网关
+```bash
+[root@localhost ~]# vconfig add ens33 100
+[root@localhost ~]# vconfig add ens33 200
+[root@localhost ~]# vconfig set_flag ens33.100 1 1
+[root@localhost ~]# vconfig set_flag ens33.200 1 1
+ 
+# 对 vlan 子接口配置网关 IP 并启用
+[root@localhost ~]# ifconfig ens33.100 172.16.10.1 netmask 255.255.255.0 up
+[root@localhost ~]# ifconfig ens33.200 172.16.20.1 netmask 255.255.255.0 up
+```
+3. 这样之后再从 4个容器间就可以互相 ping 通了。
+
+> 可能有些系统做了安全限制，可能 ping 不通，这时候可以添加以下 iptables 规则，目的是让系统能够转发不通 VLAN 的数据包。
+```bash
+iptables -t nat -A POSTROUTING -o ens33.100 -j MASQUERADE
+iptables -t nat -A POSTROUTING -ens33.200 -j MASQUERADE
+iptables -A FORWARD -i ens33.100 -o ens33.200 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i ens33.200 -o ens33.100 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i ens33.100 -o ens33.200 -j ACCEPT
+iptables -A FORWARD -i ens33.200 -o ens33.100 -j ACCEPT
+```
