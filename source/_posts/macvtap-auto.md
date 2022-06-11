@@ -1,5 +1,5 @@
 ---
-title: workinprocess - KubeVirt macvtap虚拟机创建过程 自动实验
+title: KubeVirt macvtap虚拟机创建过程 自动实验
 readmore: true
 date: 2022-06-09 18:33:57
 categories: 云原生
@@ -896,9 +896,9 @@ da78656826054f74910fa1ea33450d44019f5d1204b4ba90f902ea87e2e7a80b
 5ae905c9bcc0bbfc33ea699a16cefb26aaf67b471e09e9829471d8ecba5c0204
 ```
 
-> mac10的两个容器可以互相ping通，mac20的两个容器互通，不同macvlan网络的容器不能通。不同 macvlan 网络处于不同的网络，而且通过 VLAN 隔离，自然 ping 不了。 但这也只是在二层上通不了，重新找一台主机 host3，通过打开 ip_forward 把它改造成一台路由器用来打通两个 macvlan 网络，大概的图示如下所示： 若用vmware做的实验，可能需要按网上的改下配置：
+> mac10的两个容器可以互相ping通，mac20的两个容器互通，不同macvlan网络的容器不能通。不同 macvlan 网络处于不同的网络，而且通过 VLAN 隔离，自然 ping 不了。 但这也只是在二层上通不了，重新找一台主机 host3，通过打开 ip_forward 把它改造成一台路由器用来打通两个 macvlan 网络，大概的图示如下所示： 
 
-> First of all, switching to the vmxnet3 driver gave the option for VLAN tagging in the driver's advanced settings.  Just change ethernet0.virtualDev to "vmxnet3" in your VM's .vmx file. Once that was done, I discovered that you must disable "Priority & VLAN" on the HOST LAN adapter that you are bridging... otherwise it drops all of the packets that contain tags targeting the VM.
+> 若用vmware workstation pro做的实验，可能不同wmware虚拟机间的网络支持不了vlan，需要结合hyper-v virtmgmt.msc
 
 ![](/images/macvtap-auto/fe3e9b20.png)
 
