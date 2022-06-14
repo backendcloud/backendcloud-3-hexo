@@ -62,7 +62,7 @@ tags:
 ![](/images/win-mac_images/10d76a0c.png)
 git clone时候要加个参数`-c core.symlinks=true`
 
-  git clone -c core.symlinks=true <URL>
+    git clone -c core.symlinks=true <URL>
 
 
 
