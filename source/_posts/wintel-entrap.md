@@ -41,6 +41,6 @@ tags:
 ![](/images/wintel-entrap_images/55c71134.png)
 ![](/images/wintel-entrap_images/992792ac.png)
 
-> 目前只知道是hyper-v导致的现象，不知道根本原因是hyper-v导致的还是测试软件的问题，就是不知道开启了hyper-v性能是否真的下降了。
+> 目前只知道是hyper-v导致的现象，不知道根本原因是hyper-v导致的还是测试软件的问题，就是不知道开启了hyper-v性能是否真的下降了。多了一层Hyper-V Hypervisor，L1性能损失成这样吗？
 
-
+![](/images/wintel-entrap_images/da244eba.png)
