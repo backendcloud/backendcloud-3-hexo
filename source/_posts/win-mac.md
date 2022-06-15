@@ -16,7 +16,7 @@ tags:
 * 若是仅仅用于看看视频，上上网，手机pad的替代，mac是最好的选择。
 * 若是要全能电脑，wintel是最好选择。毕竟在软件覆盖面，人工智能和游戏需要的GPU算力方面，需要大内存的工作等领域mac还是较弱。
 
-| mac       | wintel                                                                           |
+| 角度        | mac&wintel                                                                       |
 |-----------|----------------------------------------------------------------------------------|
 | cpu性能     | 从12代酷睿开始wintel的cpu性能全面超越 m1/m1 pro/m2                                            |
 | 性价比       | mac笔记本2万元以下相对同配置的wintel略贵，2万以上的型号性价比差很多；mac studio 2万以下的和PC台式机性价比不相上下，2万以上性价比差很多 |
@@ -25,12 +25,13 @@ tags:
 | 应用领域      | mac适合手机pad的替代，图文视频创作，软件开发。wintel全能，覆盖mac的全部领域还包括需要GPU算力的游戏人工智能，大内存等工作领域          |
 | 虚拟化软硬件支持  | mac不成熟。wintel非常成熟                                                                |
 | 便携性和集成度   | mac笔记本完胜，演讲，demo，移动需要首选mac                                                       |
-| Linux原生工具 | mac支持要好于windows，因为mac操作系统就是BSD的内核（开源版的unix）                                      |
+| Linux原生工具 | mac支持要好于windows，因为mac操作系统就是BSD的内核                                                |
 
-> 我自己从事云计算开发，若仅仅软件开发上，喜欢用mac的，但是现在越来越要用到需要大内存，高性能cpu，虚拟化的本地开发环境，所以目前都是用wintel电脑开发。
+> 个人使用上，之前软件开发（后端基于web框架开发，Kubernetes调用做些云管平台开发），喜欢用mac的。但是现在越来越要用到需要大内存，高性能cpu，虚拟化的本地开发环境，所以目前都是用wintel电脑开发。
 
-# 附录： 软件开发中常用的git，git-review，ssh，cgo，gcc等等不如mac好用
+# 附： 软件开发中常用的git，git-review，ssh，cgo，gcc，shell等等不如mac好用
 主要这些工具都是linux原生的，所以移植到wintel平台不太方便也不好用。
+* shell脚本不能直接执行，借助git bash或者虚拟机里的linux执行。其中git bash是功能受限的bash。因为shell就是linux内核外包裹了一层，稍微复杂点的bash脚本还是在linux环境调试吧。
 * cgo，gcc需要装mingw。
 * ssh windows下无法直接使用，或者用终端工具或者用软件ssh包或者用linux虚拟机使用ssh。
 * git使用有个巨坑的地方：git仓库的超链接文件clone下来，本应该是链接文件的，缺变成了链接对象的复制文件。
@@ -42,8 +43,7 @@ git clone时候要加个参数`-c core.symlinks=true`
 
     git clone -c core.symlinks=true <URL>
 
-
-
-
+另外，一些老古董的项目流程要用gerrit，git-review工具也功能不全，用起来不顺畅，原因不明。正常的项目流程使用上没问题。
+![](/images/win-mac_images/5ede1477.png)
 
 
