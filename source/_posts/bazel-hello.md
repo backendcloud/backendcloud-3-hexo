@@ -1,5 +1,5 @@
 ---
-title: bazel-hello-world
+title: BUILD.bazel hello-world
 readmore: true
 date: 2022-06-16 19:25:03
 categories: Tools
@@ -7,11 +7,17 @@ tags:
 - bazel
 ---
 
-# install bazel
+# 简介
+Bazel是一个类似于类似于 Make、Maven 和 Gradle的构建和测试工具工具。使用 Java、C++、Go、Android、iOS 以及许多其他语言和平台进行构建和测试。Bazel 可在 Windows、macOS 和 Linux 上运行。
+
+Bazel近来很火，因为Bazel更容易与 Docker 和 Kubernetes 集成，其与项目的CI/CD挂钩，帮助提生产力。
+
+
+# install bazel 的两种方式
 ## bazel release 页面下载二进制文件
 > https://github.com/bazelbuild/bazel/releases
 
-## 编译
+## 自行编译成二进制文件
 ```bash
 [developer@localhost ~]$ git clone https://github.com/sub-mod/bazel-builds
 Cloning into 'bazel-builds'...
