@@ -1,14 +1,14 @@
 ---
 title: BUILD.bazel hello-world
 readmore: true
-date: 2022-06-16 19:25:03
+date: 2022-06-15 19:25:03
 categories: Tools
 tags:
 - bazel
 ---
 
 # 简介
-Bazel是一个类似于类似于 Make、Maven 和 Gradle的构建和测试工具工具。使用 Java、C++、Go、Android、iOS 以及许多其他语言和平台进行构建和测试。Bazel 可在 Windows、macOS 和 Linux 上运行。
+Bazel是一个类似于类似于 Make、Maven 和 Gradle的构建和测试工具。使用 Java、C++、Go、Android、iOS 以及许多其他语言和平台进行构建和测试。Bazel 可在 Windows、macOS 和 Linux 上运行。
 
 Bazel近来很火，因为Bazel更容易与 Docker 和 Kubernetes 集成，其与项目的CI/CD挂钩，帮助提生产力。
 
@@ -341,7 +341,9 @@ ERROR: Unable to find package for @io_bazel_rules_go//go:def.bzl: The repository
 INFO: Elapsed time: 0.064s
 INFO: 0 processes.
 FAILED: Build did NOT complete successfully (1 packages loaded)
-# 将 https://github.com/bazelbuild/rules_go#setup 的一段内容加到WORKSPACE文件中
+```
+> 报错是因为缺少bazel_rules_go，将 https://github.com/bazelbuild/rules_go#setup 的一段内容加到WORKSPACE文件中
+```bash
 [root@localhost bazel-hello-world]# ~/bazel build //go:helloWorld
 Starting local Bazel server and connecting to it...
 INFO: Analyzed target //go:helloWorld (52 packages loaded, 8563 targets configured).
