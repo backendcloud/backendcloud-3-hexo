@@ -22,6 +22,13 @@ Generating clientset for samplecontroller:v1alpha1 at k8s.io/sample-controller/p
 Generating listers for samplecontroller:v1alpha1 at k8s.io/sample-controller/pkg/generated/listers
 Generating informers for samplecontroller:v1alpha1 at k8s.io/sample-controller/pkg/generated/informers
 ```
+
+    bash "${CODEGEN_PKG}"/generate-groups.sh "deepcopy,client,informer,lister" \
+    k8s.io/sample-controller/pkg/generated k8s.io/sample-controller/pkg/apis \
+    samplecontroller:v1alpha1 \
+    --output-base "$(dirname "${BASH_SOURCE[0]}")/../../.." \
+    --go-header-file "${SCRIPT_ROOT}"/hack/boilerplate.go.txt
+
 执行完上面的脚本会生成generated文件夹和zz_generated.deepcopy.go
 ```bash
 ├── pkg
