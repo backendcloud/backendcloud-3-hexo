@@ -1,5 +1,5 @@
 ---
-title: wintel入坑记
+title: wintel DIY 入坑记
 readmore: false
 date: 2022-06-14 20:05:17
 categories: 生活
@@ -29,11 +29,16 @@ tags:
 内存用的芝奇ddr5 5600 C36-36-36-76，读写八万MB每秒。
 L3 < L2 < L1，L2 L3读写在几十万MB~一百多万MB每秒，L1缓存的速度两百万MB~四百万MB每秒。
 > 对比了下DDR4的测试数据，DDR4的延时还略优于DDR5，这。。。，但是DDR5带宽是DDR4的两倍。
+
 ![](/images/wintel-entrap_images/86dd733d.png)
+
 > https://forums.aida64.com/topic/9093-intel-12900k-l1-cache-speed/
+
 开启了hyper-v，L1缓存的速度只有原来的10%
+
 ![](/images/wintel-entrap_images/55c71134.png)
 ![](/images/wintel-entrap_images/992792ac.png)
+
 > 目前只知道是hyper-v导致的现象，不知道根本原因是hyper-v导致的还是测试软件的问题，就是不知道开启了hyper-v性能是否真的下降了。
 
 
