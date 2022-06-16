@@ -26,17 +26,16 @@ tags:
 # hyper-v 带来的L1缓存性能断崖式下降
 用测试软件测试下来电脑存储的速度和预期一致。
 
-* 硬盘用的三星980pro，读速度七千MB每秒，写速度七千MB每秒。
+* 硬盘用的三星980pro，顺序读速度七千MB每秒，顺序写速度五千MB每秒。（可以用raid0组合实现顺序读写的翻n倍，甚至可以超过ddr5的读写速度，但是硬盘好看的顺序读写数据背后是随机读写很弱，即使用raid0也不能让随机读写性能得到提升，而日常使用中很多是随机读写的场景，内存擅长的是随机读写，所以不管怎样硬盘没法取代内存。内存不够扩内存不要用硬盘来补。）
 * 内存用的芝奇ddr5 5600 C36-36-36-76，读写八万MB每秒。
 * L3 < L2 < L1，L2 L3读写在几十万MB到一百多万MB每秒，L1缓存的速度两百万MB到四百万MB每秒。
 
-> 对比了下DDR4的测试数据，DDR4的延时还略优于DDR5，这。。。，但是DDR5带宽是DDR4的两倍。
-
 ![](/images/wintel-entrap_images/86dd733d.png)
 
-> https://forums.aida64.com/topic/9093-intel-12900k-l1-cache-speed/
+> 对比了下DDR4的测试数据，DDR4的延时还略优于DDR5，这。。。，但是DDR5带宽是DDR4的两倍。
 
-开启了hyper-v，L1缓存的速度只有原来的10%
+但是一旦开启了hyper-v，L1缓存的速度断崖式下跌到只有原来的10%。我也查了测试软件的论坛，也发帖了相关问题。
+> https://forums.aida64.com/topic/9093-intel-12900k-l1-cache-speed/
 
 ![](/images/wintel-entrap_images/55c71134.png)
 ![](/images/wintel-entrap_images/992792ac.png)
