@@ -35,15 +35,18 @@ tags:
 > 对比了下DDR4的测试数据，DDR4的延时还略优于DDR5，这。。。，但是DDR5带宽是DDR4的两倍。
 
 但是一旦开启了hyper-v，L1缓存的速度断崖式下跌到只有原来的10%。我也查了测试软件的论坛，也发帖了相关问题。
+
 > https://forums.aida64.com/topic/9093-intel-12900k-l1-cache-speed/
 
 ![](/images/wintel-entrap_images/55c71134.png)
 ![](/images/wintel-entrap_images/992792ac.png)
 
 > 目前只知道是hyper-v导致的现象，不知道根本原因是hyper-v导致的还是测试软件的问题，就是不知道开启了hyper-v性能是否真的下降了。多了一层Hyper-V Hypervisor，L1性能损失成这样吗？
+
 ![](/images/wintel-entrap_images/da244eba.png)
 
 > 另外hyper-v还有一个坑，虽然网上说hyper-v和vmware可以共存，但是仅在一层虚拟化上，若涉及嵌套虚拟化，是不能共存的。只能二选一。
+ 
 ![](/images/wintel-entrap_images/55c71134.png)
 ![](/images/wintel-entrap_images/4595cde7.png)
 ![](/images/wintel-entrap_images/55c71134.png)
