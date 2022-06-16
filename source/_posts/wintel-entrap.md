@@ -29,36 +29,37 @@ tags:
 * 硬盘用的三星980pro，单根ssd顺序读速度七千MB每秒，顺序写速度五千MB每秒。（可以用raid0组合实现顺序读写的再翻n倍，甚至可以超过ddr5的读写速度，但硬盘随机读写很弱，即使用raid0也不能让随机读写性能得到提升，而日常使用中很多是随机读写的场景，内存擅长的是随机读写，所以不管怎样硬盘没法取代内存。内存不够扩内存不要用硬盘来补。）
 * 内存用的芝奇ddr5 5600 C36-36-36-76，读写八万MB每秒。
 * L3 < L2 < L1，L2 L3读写在几十万MB到一百多万MB每秒，L1缓存的速度两百万MB到四百万MB每秒。
+```bash
+Samsung SSD 980 PRO 1TB
 
-    ##    Samsung SSD 980 PRO 1TB
+[Read]
+Sequential 1MiB (Q=  8, T= 1):  6835.432 MB/s [   6518.8 IOPS] <  1225.31 us>
+Sequential 1MiB (Q=  1, T= 1):  3654.139 MB/s [   3484.9 IOPS] <   286.54 us>
+Random 4KiB (Q= 32, T=16):  4345.706 MB/s [1060963.4 IOPS] <   481.82 us>
+Random 4KiB (Q=  1, T= 1):    87.317 MB/s [  21317.6 IOPS] <    46.78 us>
 
-    [Read]
-    Sequential 1MiB (Q=  8, T= 1):  6835.432 MB/s [   6518.8 IOPS] <  1225.31 us>
-    Sequential 1MiB (Q=  1, T= 1):  3654.139 MB/s [   3484.9 IOPS] <   286.54 us>
-    Random 4KiB (Q= 32, T=16):  4345.706 MB/s [1060963.4 IOPS] <   481.82 us>
-    Random 4KiB (Q=  1, T= 1):    87.317 MB/s [  21317.6 IOPS] <    46.78 us>
-    
-    [Write]
-    Sequential 1MiB (Q=  8, T= 1):  4998.115 MB/s [   4766.6 IOPS] <  1675.83 us>
-    Sequential 1MiB (Q=  1, T= 1):  3689.889 MB/s [   3519.0 IOPS] <   283.73 us>
-    Random 4KiB (Q= 32, T=16):  4040.302 MB/s [ 986401.9 IOPS] <   517.86 us>
-    Random 4KiB (Q=  1, T= 1):   282.182 MB/s [  68892.1 IOPS] <    14.44 us>
-    
-    对比另一块公司发的电脑的ssd，三星980pro性能强太多。
-    
-    KXG60ZNV512G KIOXIA
+[Write]
+Sequential 1MiB (Q=  8, T= 1):  4998.115 MB/s [   4766.6 IOPS] <  1675.83 us>
+Sequential 1MiB (Q=  1, T= 1):  3689.889 MB/s [   3519.0 IOPS] <   283.73 us>
+Random 4KiB (Q= 32, T=16):  4040.302 MB/s [ 986401.9 IOPS] <   517.86 us>
+Random 4KiB (Q=  1, T= 1):   282.182 MB/s [  68892.1 IOPS] <    14.44 us>
 
-    [Read]
-    Sequential 1MiB (Q=  8, T= 1):  3250.798 MB/s [   3100.2 IOPS] <  2578.73 us>
-    Sequential 1MiB (Q=  1, T= 1):  2045.820 MB/s [   1951.0 IOPS] <   511.97 us>
-    Random 4KiB (Q= 32, T=16):   660.167 MB/s [ 161173.6 IOPS] <  1378.33 us>
-    Random 4KiB (Q=  1, T= 1):    39.156 MB/s [   9559.6 IOPS] <   104.33 us>
-    
-    [Write]
-    Sequential 1MiB (Q=  8, T= 1):  2797.679 MB/s [   2668.1 IOPS] <  2989.80 us>
-    Sequential 1MiB (Q=  1, T= 1):  1773.235 MB/s [   1691.1 IOPS] <   590.63 us>
-    Random 4KiB (Q= 32, T=16):   299.802 MB/s [  73193.8 IOPS] <  4632.64 us>
-    Random 4KiB (Q=  1, T= 1):    73.377 MB/s [  17914.3 IOPS] <    55.62 us>
+对比另一块公司发的电脑的ssd，三星980pro性能强太多。
+
+KXG60ZNV512G KIOXIA
+
+[Read]
+Sequential 1MiB (Q=  8, T= 1):  3250.798 MB/s [   3100.2 IOPS] <  2578.73 us>
+Sequential 1MiB (Q=  1, T= 1):  2045.820 MB/s [   1951.0 IOPS] <   511.97 us>
+Random 4KiB (Q= 32, T=16):   660.167 MB/s [ 161173.6 IOPS] <  1378.33 us>
+Random 4KiB (Q=  1, T= 1):    39.156 MB/s [   9559.6 IOPS] <   104.33 us>
+
+[Write]
+Sequential 1MiB (Q=  8, T= 1):  2797.679 MB/s [   2668.1 IOPS] <  2989.80 us>
+Sequential 1MiB (Q=  1, T= 1):  1773.235 MB/s [   1691.1 IOPS] <   590.63 us>
+Random 4KiB (Q= 32, T=16):   299.802 MB/s [  73193.8 IOPS] <  4632.64 us>
+Random 4KiB (Q=  1, T= 1):    73.377 MB/s [  17914.3 IOPS] <    55.62 us>
+```
 
 ![](/images/wintel-entrap_images/86dd733d.png)
 
