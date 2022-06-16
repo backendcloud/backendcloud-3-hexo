@@ -26,7 +26,7 @@ tags:
 # hyper-v 带来的L1缓存性能断崖式下降
 用测试软件测试下来电脑存储的速度和预期一致。
 
-* 硬盘用的三星980pro，顺序读速度七千MB每秒，顺序写速度五千MB每秒。（可以用raid0组合实现顺序读写的翻n倍，甚至可以超过ddr5的读写速度，但是硬盘好看的顺序读写数据背后是随机读写很弱，即使用raid0也不能让随机读写性能得到提升，而日常使用中很多是随机读写的场景，内存擅长的是随机读写，所以不管怎样硬盘没法取代内存。内存不够扩内存不要用硬盘来补。）
+* 硬盘用的三星980pro，单根ssd顺序读速度七千MB每秒，顺序写速度五千MB每秒。（可以用raid0组合实现顺序读写的再翻n倍，甚至可以超过ddr5的读写速度，但硬盘随机读写很弱，即使用raid0也不能让随机读写性能得到提升，而日常使用中很多是随机读写的场景，内存擅长的是随机读写，所以不管怎样硬盘没法取代内存。内存不够扩内存不要用硬盘来补。）
 * 内存用的芝奇ddr5 5600 C36-36-36-76，读写八万MB每秒。
 * L3 < L2 < L1，L2 L3读写在几十万MB到一百多万MB每秒，L1缓存的速度两百万MB到四百万MB每秒。
 
@@ -41,5 +41,10 @@ tags:
 ![](/images/wintel-entrap_images/992792ac.png)
 
 > 目前只知道是hyper-v导致的现象，不知道根本原因是hyper-v导致的还是测试软件的问题，就是不知道开启了hyper-v性能是否真的下降了。多了一层Hyper-V Hypervisor，L1性能损失成这样吗？
-
 ![](/images/wintel-entrap_images/da244eba.png)
+
+> 另外hyper-v还有一个坑，虽然网上说hyper-v和vmware可以共存，但是仅在一层虚拟化上，若涉及嵌套虚拟化，是不能共存的。只能二选一。
+![](/images/wintel-entrap_images/55c71134.png)
+![](/images/wintel-entrap_images/4595cde7.png)
+![](/images/wintel-entrap_images/55c71134.png)
+![](/images/wintel-entrap_images/d3c24655.png)
