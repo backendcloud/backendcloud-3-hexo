@@ -47,7 +47,5 @@ tags:
 
 > 另外hyper-v还有一个坑，虽然网上说hyper-v和vmware可以共存，但是仅在一层虚拟化上，若涉及嵌套虚拟化，是不能共存的。只能二选一。
  
-![](/images/wintel-entrap_images/55c71134.png)
 ![](/images/wintel-entrap_images/4595cde7.png)
-![](/images/wintel-entrap_images/55c71134.png)
 ![](/images/wintel-entrap_images/d3c24655.png)
