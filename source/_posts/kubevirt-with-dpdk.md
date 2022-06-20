@@ -1,5 +1,5 @@
 ---
-title: workinprocess - KubeVirt with DPDK
+title: KubeVirt with DPDK
 readmore: true
 date: 2022-06-20 19:47:49
 categories: 云原生
@@ -9,17 +9,17 @@ tags:
 - userspace-cni
 ---
 
-Kubernetes优秀的架构设计，屏蔽了DPDK底层的复杂，让KubeVirt 支持DPDK变得比较容易。
+Kubernetes优秀的架构设计，借助multus cni + intel userspace cni 可以屏蔽了DPDK底层的复杂，让KubeVirt 支持DPDK变得比较容易。
 
-因为 e2e验证 等原因，KubeVirt社区至今未加入DPDK支持，本篇试着基于已提交但未合并的pr，在最新版的KubeVirt v0.53加入DPDK功能。
+因为 e2e验证 等原因，KubeVirt社区至今未加入对DPDK支持，本篇试着在最新版的KubeVirt v0.53加入DPDK功能。
 
 # Phase1 & Phase2
 
-|        | Phase1                                                                                                                                                                                                                                       | Phase2                                                                                                                                                                          |
-|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 权限     | 大                                                                                                                                                                                                                                            | 小                                                                                                                                                                               |
-| 运行Pod | virt-handler                                                                                                                                                                                                                                 | virt-lancher                                                                                                                                                                    |
-| 主要功能 | 第一步是决定改使用哪种 BindMechanism，一旦 BindMechanism 确定，则依次调用以下方法：<br>* discoverPodNetworkInterface：获取 Pod 网卡设备相关的信息，包括 IP 地址，路由，网关等信息<br>* preparePodNetworkInterfaces：基于前面获取的信息，配置网络<br>* setCachedInterface：缓存接口信息在内存中<br>* setCachedVIF：在文件系统中持久化 VIF 对象 | 和Phase1一样Phase2 也会选择正确的 BindMechanism，然后取得 Phase1 的配置信息（by loading cached VIF object）。基于 VIF 信息， proceed to decorate the domain xml configuration of the VM it will encapsulate |
+|        | Phase1                                                                                                                                                                                                                                                 | Phase2                                                                                                                                                                          |
+|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 权限     | 大                                                                                                                                                                                                                                                      | 小                                                                                                                                                                               |
+| 运行Pod | virt-handler                                                                                                                                                                                                                                           | virt-lancher                                                                                                                                                                    |
+| 主要功能 | 第一步是决定改使用哪种 BindMechanism，一旦 BindMechanism 确定，则依次调用以下方法：<br>1. discoverPodNetworkInterface：获取 Pod 网卡设备相关的信息，包括 IP 地址，路由，网关等信息<br>2. preparePodNetworkInterfaces：基于前面获取的信息，配置网络<br>3. setCachedInterface：缓存接口信息在内存中<br>4. setCachedVIF：在文件系统中持久化 VIF 对象 | 和Phase1一样Phase2 也会选择正确的 BindMechanism，然后取得 Phase1 的配置信息（by loading cached VIF object）。基于 VIF 信息， proceed to decorate the domain xml configuration of the VM it will encapsulate |
 
 DPDK不需要Phase1做任何事情，因为不需要获取Pod的网络信息，也不需要缓存Pod的网络和配置vm的网络。
 
@@ -129,15 +129,18 @@ func (t *templateService) renderLaunchManifest(vmi *v1.VirtualMachineInstance, i
 ```
 
 > 生成类似下面的pod yaml
->       volumes:
->         - name: vhostuser-sockets
->           emptyDir: {}
->       containers:
->         - name: vm
->           image: vm-vhostuser:latest
->           volumeMounts:
->             - name: vhostuser-sockets
->               mountPath: /var/run/vm
+
+```yaml
+      volumes:
+        - name: vhostuser-sockets
+          emptyDir: {}
+      containers:
+        - name: vm
+          image: vm-vhostuser:latest
+          volumeMounts:
+            - name: vhostuser-sockets
+              mountPath: /var/run/vm
+```
 
 # 准备libvirt xml define
 pkg/virt-launcher/virtwrap/converter/network.go
@@ -221,15 +224,17 @@ func GetPodInterfaceName(networks map[string]*v1.Network, cniNetworks map[string
 ```
 
 > 生成类似下面的libvrit xml define
->         <interface type='vhostuser'>
->           <mac address='00:00:00:0A:30:89'/>
->           <source type='unix' path='/var/run/vm/sock' mode='server'/>
->            <model type='virtio'/>
->           <driver queues='2'>
->             <host mrg_rxbuf='off'/>
->           </driver>
->         </interface>
 
+```xml
+        <interface type='vhostuser'>
+          <mac address='00:00:00:0A:30:89'/>
+          <source type='unix' path='/var/run/vm/sock' mode='server'/>
+           <model type='virtio'/>
+          <driver queues='2'>
+            <host mrg_rxbuf='off'/>
+          </driver>
+        </interface>
+```
 # 变更KubeVirt API
 staging/src/kubevirt.io/api/core/v1/schema.go
 ```go
@@ -248,21 +253,26 @@ type InterfaceVhostuser struct{}
 ```
 
 > 支持类似下面的CRD
-> apiVersion: kubevirt.io/v1
-> kind: VirtualMachineInstance
-> metadata:
->   name: vm-trex-1
-> spec:
->   domain:
->     devices:
->       interfaces:
->       - name: default
->         masquerade: {}
->       - name: vhost-user-net-1
->         vhostuser: {}
->   networks:
->   - name: default
->     pod: {}
->   - name: vhost-user-net-1
->     multus:
->       networkName: userspace-ovs-net-1
+
+```yaml
+apiVersion: kubevirt.io/v1
+kind: VirtualMachineInstance
+metadata:
+  name: vm-trex-1
+spec:
+  domain:
+    devices:
+      interfaces:
+      - name: default
+        masquerade: {}
+      - name: vhost-user-net-1
+        vhostuser: {}
+  networks:
+  - name: default
+    pod: {}
+  - name: vhost-user-net-1
+    multus:
+      networkName: userspace-ovs-net-1
+```
+
+> 感觉KubeVirt增加DPDK不是很复杂，只是在KubeVirt自动化流程上多加点DPDK相关的pod yaml部分，vm define xml部分。关键是对DPDK功能的验证，今后再开一篇补上验证相关的内容。
