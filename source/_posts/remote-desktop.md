@@ -23,7 +23,7 @@ tags:
 | 方案2：自己搭建ssh隧道 | 稳定 | 需要后台建立ssh隧道，需要云服务和流量使用费                                                  |
 | 方案3：cpolar    | 稳定，免费 | 只是目前免费稳定，将来cpolar如何开展业务不是自己能控制的。免费的账号url的地址每次链接都不一样，需要登录dashboard查看url地址 |
 
-下面介绍下综合最优的第三种方案。
+下面介绍下综合最优的方案3。
 
 step1. 官网 https://www.cpolar.com 注册和下载安装cpolar
 step2. authtoken添加到的cpolar.yml文件中 $ cpolar authtoken xxxyyyzzz
