@@ -17,13 +17,16 @@ KubeVirt 项目将 Kubernetes 转换为用于应用程序容器和虚拟机工�
 
 > KubeVirt 可以部署在具有裸金属或 VM 形式的 Kubernetes 工作节点的容器引擎上。如果您的集群工作者节点配置了 VM 形式，那么 KubeVirt 将以嵌套模式运行遗留的 KVM 或 VMware 虚拟机。
 
-# 在容器引擎中运行 KVM 和 VirtualBox 虚拟机
+# 在容器引擎中运行 KVM 和 VirtualBox/VMware 虚拟机
 
 分两步：
 1. 将磁盘转换为原始格式。有两个免费实用工具可以帮助您实现这一点: Oracle VirtualBoxVBoxManagement 和 QEMU 磁盘映像实用工具。
 
-    VBoxManage clonehd --format RAW kvm_qcow2_OR_VMware_vmdk_disk disk-name.img
-    qemu-img convert kvm_qcow2_OR_VMware_vmdk_disk -O raw disk-name.img
+```bash
+VBoxManage clonehd --format RAW kvm_qcow2_OR_VMware_vmdk_disk disk-name.img
+
+qemu-img convert kvm_qcow2_OR_VMware_vmdk_disk -O raw disk-name.img
+```
 
 2. 用磁盘创建一个持久卷声明PVC，并启动使用PVC的VM。
 
