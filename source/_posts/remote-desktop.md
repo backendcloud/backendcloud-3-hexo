@@ -1,5 +1,5 @@
 ---
-title: 远程登录windows桌面
+title: 公网登录windows自带远程桌面方案
 readmore: false
 date: 2022-06-20 19:27:47
 categories: Tools
@@ -37,3 +37,4 @@ step3的输出会显示url地址，或者 https://dashboard.cpolar.com/status �
 2. 用 https://github.com/MScholtes/PS2EXE 工具将ps1转exe
 3. 将生成的exe文件放到目录 %USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
 
+> 某些杀毒软件可能会导致上面的方式的开机自动运行失败
