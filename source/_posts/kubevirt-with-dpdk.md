@@ -287,7 +287,7 @@ Open vSwitch 提供两种类型的 vHost User ports:
 
 > vHost User采用客户端服务端模式。服务端 creates/manages/destroys the vHost User sockets。客户端连接到服务端。
 
-# For vhost-user ports, Open vSwitch acts as the server and QEMU the client. 
+## For vhost-user ports, Open vSwitch acts as the server and QEMU the client. 
 
     ovs-vsctl add-port br0 vhost-user-1 -- set Interface vhost-user-1 type=dpdkvhostuser
 
@@ -302,7 +302,7 @@ libvirt xml define
       </driver>
     </interface>
 
-# For vhost-user-client ports, Open vSwitch acts as the client and QEMU the server.
+## For vhost-user-client ports, Open vSwitch acts as the client and QEMU the server.
 
     VHOST_USER_SOCKET_PATH=/path/to/socket
     ovs-vsctl add-port br0 vhost-client-1 -- set Interface vhost-client-1 type=dpdkvhostuserclient options:vhost-server-path=$VHOST_USER_SOCKET_PATH
@@ -317,4 +317,15 @@ libvirt xml define
             <host mrg_rxbuf='off'/>
           </driver>
         </interface>
+
+> 由于在QEMU中不支持动态重新连接中，因此在OVS-DPDK中已弃用了dpdkvhostuser模式。dpdkvhostuser模式重新启动OVS需要重新启动VM。
+> 
+> 在 DPDK vhostuserclient 模式下，QEMU充当服务器，QEMU创建了Vhostuser套接字文件，此时OVS充当客户端。即使重新启动OVS也不会影响VM，因为OVS可以在重新启动后连接到socket，OVS支持重启后自动重新连接。
+> 
+> 由于旧模式 DPDK VHostuser 被弃用，KubeVirt仅实现了DPDK VHostUserClient模式。
+> 
+> OVS-DPDK 借助vhostuser socket绕过内核空间，增强了应用程序的数据包处理性能，它需要启用大页内存，在host和guest间共享数据包处理。
+> 
+> userspace CNI 借助 multus CNI增加一个额外的DPDK网络，在 OVS-DPDK 和 kubevirt (Qemu) 间共享 vhostuser socket。
+
 
