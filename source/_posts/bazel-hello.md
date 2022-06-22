@@ -10,8 +10,12 @@ tags:
 # 简介
 Bazel是一个类似于类似于 Make、Maven 和 Gradle的构建和测试工具。使用 Java、C++、Go、Android、iOS 以及许多其他语言和平台进行构建和测试。Bazel 可在 Windows、macOS 和 Linux 上运行。
 
-Bazel近来很火，因为Bazel更容易与 Docker 和 Kubernetes 集成，其与项目的CI/CD挂钩，帮助提生产力。
-
+Bazel近来很火，因为Bazel更容易与 Docker 和 Kubernetes 集成，其与项目的CI/CD挂钩，帮助提生产力。当然Bazel还有很多其他的优势：
+* 开源
+* 100%在沙箱环境构建
+* 支持任何语言，因为除了直接支持的语言，还有支持语言扩展，比如官方维护的go语言扩展rules_go。支持编写任何其他语言的扩展，甚至自创了一套配置语言Starlark。
+* 支持超大项目
+* 快速构建，快速测试
 
 # install bazel 的两种方式
 ## bazel release 页面下载二进制文件

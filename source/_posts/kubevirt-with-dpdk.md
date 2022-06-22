@@ -278,3 +278,43 @@ spec:
 ```
 
 > 感觉KubeVirt增加DPDK不是很复杂，只是在KubeVirt自动化流程上多加点DPDK相关的pod yaml部分，vm define xml部分。关键是对DPDK功能的验证，今后再开一篇补上验证相关的内容。
+
+# 附：OVS-DPDK & Libvirt 配置
+
+Open vSwitch 提供两种类型的 vHost User ports:
+* vhost-user (dpdkvhostuser)
+* vhost-user-client (dpdkvhostuserclient)
+
+> vHost User采用客户端服务端模式。服务端 creates/manages/destroys the vHost User sockets。客户端连接到服务端。
+
+# For vhost-user ports, Open vSwitch acts as the server and QEMU the client. 
+
+    ovs-vsctl add-port br0 vhost-user-1 -- set Interface vhost-user-1 type=dpdkvhostuser
+
+libvirt xml define
+
+    <interface type='vhostuser'>
+      <mac address='00:00:00:00:00:01'/>
+      <source type='unix' path='/usr/local/var/run/openvswitch/dpdkvhostuser0' mode='client'/>
+       <model type='virtio'/>
+      <driver queues='2'>
+        <host mrg_rxbuf='off'/>
+      </driver>
+    </interface>
+
+# For vhost-user-client ports, Open vSwitch acts as the client and QEMU the server.
+
+    VHOST_USER_SOCKET_PATH=/path/to/socket
+    ovs-vsctl add-port br0 vhost-client-1 -- set Interface vhost-client-1 type=dpdkvhostuserclient options:vhost-server-path=$VHOST_USER_SOCKET_PATH
+
+libvirt xml define
+
+        <interface type='vhostuser'>
+          <mac address='00:00:00:0A:30:89'/>
+          <source type='unix' path='/var/run/vm/sock' mode='server'/>
+           <model type='virtio'/>
+          <driver queues='2'>
+            <host mrg_rxbuf='off'/>
+          </driver>
+        </interface>
+
