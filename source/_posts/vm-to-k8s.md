@@ -11,7 +11,7 @@ tags:
 
 # KubeVirt简介
 
-随着微服务的出现，人们通常会问: “是否有可能在 Kernel-based Virtual Machine (kVM)中运行我的遗留虚拟机(VM)或在 Kubernetes 上运行我的微服务的 VMware，或者我需要将它们迁移到容器中?”这个问题的一个可能的答案是 KubeVirt。
+随着微服务的出现，人们通常会问: “是否有可能在 Kubernetes 上运行我在 Kernel-based Virtual Machine (kVM)中运行我的遗留虚拟机(VM)或在 Kubernetes 上运行在 VMware 中的VM，或者我需要将它们迁移到容器中?”这个问题的一个可能的答案是 KubeVirt。
 
 KubeVirt 项目将 Kubernetes 转换为用于应用程序容器和虚拟机工作负载的编制引擎。它解决了那些已经采用或想要采用 Kubernetes 的开发团队的需求，这些团队拥有现有的基于 VM 的工作负载，而这些工作负载不能轻易地放入容器中。KubeVirt这项技术提供了一个统一的开发平台，开发人员可以在其中构建、修改和部署驻留在公共共享环境中的应用程序容器和 VM 中的应用程序。
 
