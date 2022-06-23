@@ -318,7 +318,7 @@ libvirt xml define
           </driver>
         </interface>
 
-> 由于在QEMU中不支持动态重新连接中，因此在OVS-DPDK中已弃用了dpdkvhostuser模式。dpdkvhostuser模式重新启动OVS需要重新启动VM。
+> 由于在QEMU中不支持动态重新连接中，dpdkvhostuser模式重新启动OVS需要重新启动VM，因此在OVS-DPDK中已弃用了dpdkvhostuser模式。
 > 
 > 在 DPDK vhostuserclient 模式下，QEMU充当服务器，QEMU创建了Vhostuser套接字文件，此时OVS充当客户端。即使重新启动OVS也不会影响VM，因为OVS可以在重新启动后连接到socket，OVS支持重启后自动重新连接。
 > 
