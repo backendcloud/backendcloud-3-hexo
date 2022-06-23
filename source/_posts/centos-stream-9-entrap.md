@@ -1,5 +1,5 @@
 ---
-title: Centos Stream 9 入坑之 error in libcrypto
+title: Centos Stream 9 git使用报错 error in libcrypto
 readmore: true
 date: 2022-06-23 18:18:14
 categories: Linux
@@ -62,7 +62,7 @@ Resolving deltas: 100% (114844/114844), done.
 
 “愤怒”个啥劲，不是有 CentOS Stream 吗。
 
-“我来”，有一定技术储备的公司说说也就罢了，阿猫阿狗也来凑热闹，那些以前只是把CentOS的标志换成自己公司标志的也说CentOS不支持了“我来”。自己的实力配吗。这不搞笑吗！
+“我来”，有一定技术储备的公司说说也就罢了，搞笑的是那些只会把CentOS的标志换成自己标志的阿猫阿狗也来凑热闹也说CentOS不支持了“我来”。自己的实力配吗。
 
 过去CentOS的做法简而言之，Red Hat将Fedora用于测试它想在RHEL中实现的功能。这些功能进入到RHEL，然后使用最新的RHEL版本创建CentOS，CentOS就作为一种免费且自我支持的RHEL的替代方案。这就相当于：
 
