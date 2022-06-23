@@ -279,7 +279,7 @@ spec:
 
 > 感觉KubeVirt增加DPDK不是很复杂，只是在KubeVirt自动化流程上多加点DPDK相关的pod yaml部分，vm define xml部分。关键是对DPDK功能的验证，今后再开一篇补上验证相关的内容。
 
-# 附：OVS-DPDK & Libvirt 配置
+# 附：DPDK vHost User Ports
 
 Open vSwitch 提供两种类型的 vHost User ports:
 * vhost-user (dpdkvhostuser)

@@ -23,7 +23,7 @@ tags:
     export DOCKER_PREFIX=backendcloud
     export DOCKER_TAG=mybuild5
 
-> 用centos7 + docker跑100%成功，用最新的centos stream 9，以及用podman代替docker，跑了几次才成功，看了下报错，都是网络问题导致。大家都懂的国内网络原因。
+> os：centos7 容器环境：docker跑成功。os：用最新的centos stream 9，容器环境：用Podman代替docker，跑了几次才成功，看了下报错，都是网络问题导致。大家都懂的国内网络原因。
 >
 > 以下是用centos stream 9，podman 执行make && make push && make manifests的日志
 
