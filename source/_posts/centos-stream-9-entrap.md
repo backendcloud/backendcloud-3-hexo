@@ -41,6 +41,8 @@ Setting system policy to DEFAULT:SHA1
 Note: System-wide crypto policies are applied on application start-up.
 It is recommended to restart the system for the change of policies
 to fully take place.
+[root@centos9 ~]# update-crypto-policies --show
+DEFAULT:SHA1
 [root@centos9 .ssh]# git clone "ssh://xxx@gerrit.xxx.com:29418/xxx/xxx"
 Cloning into 'xxx'...
 remote: Counting objects: 172185, done
