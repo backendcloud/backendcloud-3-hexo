@@ -80,4 +80,4 @@ Fedora是最上游，CentOS Stream是中游，RHEL是下游
 
 > CentOS Stream的版本稳定性上：发布在 Stream 上的更新与发布在 RHEL 未发布的次要版本上的更新是相同的。目的是为了让 CentOS Stream 与 RHEL 本身一样具有基本的稳定性。
 
-win11，office，ios上的app都是这种迭代速度，用的人数以亿记，为何centos不可以。现代软件开发管理流程，现代CICD可以让这种迭代速度在保持功能性的同时也保证稳定性。
+win11，office，ios上的app都是这种迭代速度在演进着，用的人数以亿计，为何centos加快迭代就不可以。现代软件开发管理流程，现代CICD可以让这种迭代速度在保持功能性的同时也保证稳定性。
