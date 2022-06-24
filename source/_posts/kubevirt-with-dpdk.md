@@ -304,7 +304,7 @@ libvirt xml define
 
 ## For vhost-user-client ports, Open vSwitch acts as the client and QEMU the server.
 
-    VHOST_USER_SOCKET_PATH=/path/to/socket
+    VHOST_USER_SOCKET_PATH=/tmp/dpdkvhostclient0
     ovs-vsctl add-port br0 vhost-client-1 -- set Interface vhost-client-1 type=dpdkvhostuserclient options:vhost-server-path=$VHOST_USER_SOCKET_PATH
 
 libvirt xml define
@@ -316,6 +316,16 @@ libvirt xml define
           <driver queues='2'>
             <host mrg_rxbuf='off'/>
           </driver>
+        </interface>
+
+or
+
+        <interface type='vhostuser'>
+            <mac address='56:48:4f:53:54:01'/>
+            <source type='unix' path='/tmp/dpdkvhostclient0' mode='server'/>
+            <model type='virtio'/>
+            <driver name='vhost' rx_queue_size='1024' tx_queue_size='1024'/>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x10' function='0x0'/>
         </interface>
 
 > 由于在QEMU中不支持动态重新连接中，dpdkvhostuser模式重新启动OVS需要重新启动VM，因此在OVS-DPDK中已弃用了dpdkvhostuser模式。
