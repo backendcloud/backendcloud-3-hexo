@@ -1,5 +1,5 @@
 ---
-title: intel userspace cni 适配 Kubevirt（workinprocess）
+title: intel userspace cni 适配 Kubevirt
 readmore: true
 date: 2022-06-24 19:09:27
 categories:
@@ -12,7 +12,7 @@ tags:
 
 虽然KubeVirt还没官方支持DPDK，但intel userspace cni已经为KubeVirt做了一些适配。
 
-主要是3点适配：
+有以下3点适配：
 * vhost user client&server
 * emptyDir
 * ovs&qemu privilege
@@ -68,10 +68,10 @@ func createVhostPort(sock_dir string, sock_name string, client bool, bridge_name
 }
 ```
 
-> 只需要关注client == true的部分，另一种client == false已经废弃，execCommand(cmd, args)方法执行了ovs-vsctl add-port COMMAND: ovs-vsctl add-port <bridge_name> <sock_name> -- set Interface <sock_name> type=<dpdkvhostuser|dpdkvhostuserclient>
+> 上面代码只需要关注client == true的部分，另一种client == false已经废弃，execCommand(cmd, args)方法执行了ovs-vsctl add-port COMMAND: ovs-vsctl add-port <bridge_name> <sock_name> -- set Interface <sock_name> type=<dpdkvhostuser|dpdkvhostuserclient>
 
 # emptyDir
-emptyDir提供给libevirt容器podvolumemount使用，emptyDir用于创建vhostuser socket
+volumeMount.HostPath.Path基础上增加volumeMount.EmptyDir提供给libevirt容器podvolumemount使用，emptyDir用于创建vhostuser socket
 
 pkg/annotations/annotations.go
 ```go
@@ -109,7 +109,7 @@ func GetPodVolumeMountHostSharedDir(pod *v1.Pod) (string, error) {
 ```
 > host提供给VolumeMount的host volume增加emptyDir，命名看上去很长 DefaultHostkubeletPodBaseDir + string(pod.UID) + "/" + DefaultHostEmptyDirVolumeName + volMntKeySharedDir
 >
-> unix socket有108长度的限制，可以通过mount的方式缩短host user socket path长度。
+> unix socket有108长度的限制，可以通过下面一段代码mount的一个短的path来缩短host user socket path长度。
 
 cniovs/cniovs.go
 ```go
@@ -166,8 +166,43 @@ func createSharedDir(sharedDir, oldSharedDir string) error {
 > 章节 Sockets - The File Namespace - Details of File Namespace
 
 # ovs&qemu privilege
-Also added a "group" name input for the vhostuser socket
-so that when OvS is running as reduced privilege
-openvswitch:hugetlbfs and qemu runs with group as
-hugetlbfs, the vhostuser socket will be shareable between
-them.
+conf.HostConf.VhostConf.Group 配置一个"group"名称，默认配置为"hugetlbfs"，用于vhostuser socket的权限设定。让ovs和qemu用户在同一个用户组中，使得vhostuser socket在他们中可以共享，避免出现低权限访问不了高权限的情况。
+
+```go
+func setSharedDirGroup(sharedDir string, group string) error {
+	groupInfo, err := user.LookupGroup(group)
+	if err != nil {
+		return err
+	}
+
+	logging.Debugf("setSharedDirGroup: group %s's gid is %s", group, groupInfo.Gid)
+	gid, err := strconv.Atoi(groupInfo.Gid)
+	if err != nil {
+		return err
+	}
+
+	err = os.Chown(DefaultHostVhostuserBaseDir, -1, gid)
+	if err != nil {
+		return err
+	}
+
+	err = os.Chown(sharedDir, -1, gid)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func addLocalDeviceVhost(conf *types.NetConf, args *skel.CmdArgs, actualSharedDir string, data *OvsSavedData) error {
+	...
+	group := conf.HostConf.VhostConf.Group
+	if group != "" {
+		err = setSharedDirGroup(sharedDir, group)
+		if err != nil {
+			logging.Errorf("addLocalDeviceVhost: Failed to set shared dir group: %v", err)
+			return err
+		}
+	}
+	...
+}
+```
