@@ -10,6 +10,8 @@ tags:
 - KubeVirt
 ---
 
+# intel userspace cni 适配 Kubevirt
+
 虽然KubeVirt还没官方支持DPDK，但intel userspace cni已经为KubeVirt做了一些适配。
 
 有以下3点适配：
@@ -17,7 +19,7 @@ tags:
 * emptyDir
 * ovs&qemu privilege
 
-# vhost user client&server
+## vhost user client&server
 kubevirt 使用DPDK需要用到intel的网络插件userspace cni，该插件使得ovs工作在client模式，kubevirt使得qemu工作在server模式。
 
 > 关于 ovs&kubevirt vhost user client&server 参考 <a href="https://www.backendcloud.cn/2022/06/20/kubevirt-with-dpdk/#For-vhost-user-client-ports-Open-vSwitch-acts-as-the-client-and-QEMU-the-server" target="_blank">https://www.backendcloud.cn/2022/06/20/kubevirt-with-dpdk/#For-vhost-user-client-ports-Open-vSwitch-acts-as-the-client-and-QEMU-the-server</a>
@@ -70,7 +72,7 @@ func createVhostPort(sock_dir string, sock_name string, client bool, bridge_name
 
 > 上面代码只需要关注client == true的部分，另一种client == false已经废弃，execCommand(cmd, args)方法执行了ovs-vsctl add-port COMMAND: ovs-vsctl add-port <bridge_name> <sock_name> -- set Interface <sock_name> type=<dpdkvhostuser|dpdkvhostuserclient>
 
-# emptyDir
+## emptyDir
 volumeMount.HostPath.Path基础上增加volumeMount.EmptyDir提供给libevirt容器podvolumemount使用，emptyDir用于创建vhostuser socket
 
 pkg/annotations/annotations.go
@@ -165,7 +167,7 @@ func createSharedDir(sharedDir, oldSharedDir string) error {
 > 参考 https://www4.cs.fau.de/Services/Doc/C/libc.html#TOC189
 > 章节 Sockets - The File Namespace - Details of File Namespace
 
-# ovs&qemu privilege
+## ovs&qemu privilege
 conf.HostConf.VhostConf.Group 配置一个"group"名称，默认配置为"hugetlbfs"，用于vhostuser socket的权限设定。让ovs和qemu用户在同一个用户组中，使得vhostuser socket在他们中可以共享，避免出现低权限访问不了高权限的情况。
 
 ```go
