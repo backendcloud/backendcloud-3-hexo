@@ -1,5 +1,5 @@
 ---
-title: intel userspace cni 源码分析（1）(workinprocess)
+title: intel userspace cni 源码分析(workinprocess)
 readmore: true
 date: 2022-06-27 18:45:11
 categories: 云原生
@@ -15,57 +15,17 @@ tags:
 ```bash
 # intel userspace cni 大致目录结构，暂时不涉及vpp，忽略vpp的代码
 ├── cniovs
-│   ├── cniovs.go
+│   ├── cniovs.go - ovs网络插件
 │   ├── cniovs_test.go
-│   ├── localdb.go
+│   ├── localdb.go - ovs本地存储
 │   ├── localdb_test.go
 │   ├── ovsctrl_fake.go
-│   ├── ovsctrl.go
+│   ├── ovsctrl.go - 各种ovs-vsctl命令
 │   └── ovsctrl_test.go
 ├── cnivpp
 ├── docker
-│   ├── dpdk-app-centos
-│   │   ├── docker-entrypoint.sh
-│   │   ├── Dockerfile
-│   │   ├── dpdk-args.c
-│   │   ├── dpdk-args.h
-│   │   ├── l3fwd_eal_init.txt
-│   │   ├── l3fwd_parse_args.txt
-│   │   ├── l3fwd_substitute.sh
-│   │   ├── README.md
-│   │   ├── testpmd_eal_init.txt
-│   │   ├── testpmd_launch_args_parse.txt
-│   │   └── testpmd_substitute.sh
-│   ├── usrsp-app
-│   │   └── usrsp-app.go
-│   └── vpp-centos-userspace-cni
-│       ├── 80-vpp.conf
-│       ├── Dockerfile
-│       ├── README.md
-│       ├── startup.conf
-│       └── vppcni.sh
 ├── examples
-│   ├── crd-userspace-net-ovs-no-ipam.yaml
-│   ├── ovs-vhost
-│   │   ├── userspace-ovs-netAttach-1.yaml
-│   │   ├── userspace-ovs-netAttach-2.yaml
-│   │   ├── userspace-ovs-pod-1.yaml
-│   │   └── userspace-ovs-pod-2.yaml
-│   ├── pod-multi-vhost.yaml
-│   └── vpp-memif-ping
-│       ├── kubeConfig
-│       │   ├── userspace-vpp-netAttach-1.yaml
-│       │   ├── userspace-vpp-netAttach-2.yaml
-│       │   ├── userspace-vpp-pod-1.yaml
-│       │   └── userspace-vpp-pod-2.yaml
-│       └── sharedDir
-│           ├── userspace-vpp-netAttach-1.yaml
-│           ├── userspace-vpp-netAttach-2.yaml
-│           ├── userspace-vpp-pod-1.yaml
-│           └── userspace-vpp-pod-2.yaml
 ├── logging
-│   ├── logging.go
-│   └── logging_test.go
 ├── pkg
 │   ├── annotations
 │   │   ├── annotations.go
@@ -79,19 +39,9 @@ tags:
 │   └── types
 │       └── types.go
 ├── scripts
-│   ├── dpdk-docker-run.sh
-│   └── usrsp-docker-run.sh
 ├── tests
-│   ├── get-prefix.sh
-│   ├── multus-sample.conf
-│   └── vhostuser-sample.conf
 ├── userspace
-│   ├── testdata
-│   │   └── testdata.go
-│   ├── userspace.go
-│   └── userspace_test.go
 └── usrspcni
-    └── usrspcni.go
 ```
 
 cat cniovs/localdb.go
@@ -172,6 +122,45 @@ func LoadConfig(conf *types.NetConf, args *skel.CmdArgs, data *OvsSavedData) err
 	configdata.FileCleanup(localDir, path)
 
 	return nil
+}
+```
+
+> OvsSavedData是存储OVS data的数据结构，后面需要json序列号和反序列化，标记json key，
+> SaveConfig()方法将OvsSavedData保存至文件/var/run/ovs/cni/data/local-<ContainerId:12>-<IfName>.json
+> LoadConfig()和SaveConfig()反过来，将文件内容读到OvsSavedData
+> 存储用文件的形式保存OvsSavedData为了给 cmdDel() 方法用
+
+cniovs/ovsctrl.go 每个方法对应一条openvswitch命令。
+```go
+createVhostPort // COMMAND: ovs-vsctl add-port <bridge_name> <sock_name> -- set Interface <sock_name> type=<dpdkvhostuser|dpdkvhostuserclient>
+deleteVhostPort // COMMAND: ovs-vsctl del-port <bridge_name> <sock_name>
+createBridge // COMMAND: ovs-vsctl add-br <bridge_name> -- set bridge <bridge_name> datapath_type=netdev
+configL2Bridge // COMMAND: ovs-ofctl add-flow <bridge_name> actions=NORMAL
+deleteBridge // COMMAND: ovs-vsctl del-br <bridge_name>
+getVhostPortMac // COMMAND: ovs-vsctl --bare --columns=mac find port name=<sock_name>
+findBridge // COMMAND: ovs-vsctl --bare --columns=name find bridge name=<bridge_name>
+doesBridgeContainInterfaces // COMMAND: ovs-vsctl list-ports <bridge_name>
+```
+
+cniovs/cniovs.go
+```go
+AddOnHost // step1：根据conf.HostConf.BridgeConf.BridgeName创建ovs bridge，若未配置用默认br0代替。step2：创建bridge interface仅支持conf.HostConf.IfType == "vhostuser"一种类型。step3：Save Config - Save Create Data for Delete
+DelFromHost // step1：用cniovs/localdb.go 从本地保存的json文件中 Load Config 删除bridge interface，检查brdge，若没有interface则删除bridge
+AddOnContainer // Write configuration data(下面的ConfigurationData struct) that will be consumed by container。分2种情况，有k8sclient，k8sclient.WritePodAnnotation写入集群的PodAnnotation。若没有k8sclient，用文件保存信息
+DelFromContainer // 调用configdata.FileCleanup方法清理文件夹（文件夹下0个文件则清理文件夹）和文件
+addLocalDeviceVhost // 在 AddOnHost 方法中被调用，用于创建vhostuser socket以及相关操作
+delLocalDeviceVhost // 在 DelFromHost 方法中被调用，用于删除vhostuser socket以及相关操作  
+generateRandomMacAddress // 生成随机mac地址
+getShortSharedDir createSharedDir setSharedDirGroup// 这三个方法参考 https://www.backendcloud.cn/2022/06/24/userspace-cni-for-kubevirt/
+```
+
+```go
+type ConfigurationData struct {
+	ContainerId string         `json:"containerId"` // From args.ContainerId, used locally. Used in several place, namely in the socket filenames.
+	IfName      string         `json:"ifName"`      // From args.IfName, used locally. Used in several place, namely in the socket filenames.
+	Name        string         `json:"name"`        // From NetConf.Name
+	Config      UserSpaceConf  `json:"config"`      // From NetConf.ContainerConf
+	IPResult    current.Result `json:"ipResult"`    // Network Status also has IP, but wrong format
 }
 ```
 
