@@ -109,7 +109,7 @@ func GetPodVolumeMountHostSharedDir(pod *v1.Pod) (string, error) {
 	return hostSharedDir, nil
 }
 ```
-> host提供给VolumeMount的host volume增加emptyDir，命名看上去很长 DefaultHostkubeletPodBaseDir + string(pod.UID) + "/" + DefaultHostEmptyDirVolumeName + volMntKeySharedDir
+> 上面的代码中host提供给VolumeMount的host volume增加emptyDir，命名看上去很长 DefaultHostkubeletPodBaseDir + string(pod.UID) + "/" + DefaultHostEmptyDirVolumeName + volMntKeySharedDir
 >
 > unix socket有108长度的限制，可以通过下面一段代码mount的一个短的path来缩短host user socket path长度。
 
@@ -168,8 +168,9 @@ func createSharedDir(sharedDir, oldSharedDir string) error {
 > 章节 Sockets - The File Namespace - Details of File Namespace
 
 ## ovs&qemu privilege
-conf.HostConf.VhostConf.Group 配置一个"group"名称，默认配置为"hugetlbfs"，用于vhostuser socket的权限设定。让ovs和qemu用户在同一个用户组中，使得vhostuser socket在他们中可以共享，避免出现低权限访问不了高权限的情况。
+下面的代码conf.HostConf.VhostConf.Group 配置一个"group"名称，默认配置为"hugetlbfs"，用于vhostuser socket的权限设定。让ovs和qemu用户在同一个用户组中，使得vhostuser socket在他们中可以共享，避免出现低权限访问不了高权限的情况。
 
+cniovs/cniovs.go
 ```go
 func setSharedDirGroup(sharedDir string, group string) error {
 	groupInfo, err := user.LookupGroup(group)
