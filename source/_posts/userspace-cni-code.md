@@ -10,7 +10,7 @@ tags:
 
 > 基于 截至2022.06.27 最新的 intel userspace cni 源码
 
-最近搞KubeVirt的代码和理解DPDK，太复杂了弄得想吐。对kubevirt和cni和网络和dpdk的理解是搞kubevirt dpdk的基础，对k8s的理解又是搞kubevirt的基础，对k8s的各种组件和k8s生态和开发方式的理解又是搞k8s的基础。没完没了的发散。发散到了一个intel的网络插件，一看代码发现简短简单，换个脑子，先梳理下intel userspace cni的源码，再继续搞KubeVirt去。
+最近搞KubeVirt的代码和理解DPDK，涉及东西比计较多，没完没了的发散。发散到了一个intel的网络插件，先梳理下intel userspace cni的源码，再继续搞KubeVirt去。
 
 ```bash
 # intel userspace cni 大致目录结构，暂时不涉及vpp，忽略vpp的代码
@@ -130,7 +130,8 @@ func LoadConfig(conf *types.NetConf, args *skel.CmdArgs, data *OvsSavedData) err
 > LoadConfig()和SaveConfig()反过来，将文件内容读到OvsSavedData
 > 存储用文件的形式保存OvsSavedData为了给 cmdDel() 方法用
 
-cniovs/ovsctrl.go 每个方法对应一条openvswitch命令。
+cniovs/ovsctrl.go (代码太长，可以自行github查看，这里为了锁定篇幅仅解释方法) 
+> 每个方法对应一条openvswitch命令。
 ```go
 createVhostPort // COMMAND: ovs-vsctl add-port <bridge_name> <sock_name> -- set Interface <sock_name> type=<dpdkvhostuser|dpdkvhostuserclient>
 deleteVhostPort // COMMAND: ovs-vsctl del-port <bridge_name> <sock_name>
@@ -142,7 +143,7 @@ findBridge // COMMAND: ovs-vsctl --bare --columns=name find bridge name=<bridge_
 doesBridgeContainInterfaces // COMMAND: ovs-vsctl list-ports <bridge_name>
 ```
 
-cniovs/cniovs.go
+cniovs/cniovs.go (代码太长，可以自行github查看，这里为了锁定篇幅仅解释方法)
 ```go
 AddOnHost // step1：根据conf.HostConf.BridgeConf.BridgeName创建ovs bridge，若未配置用默认br0代替。step2：创建bridge interface仅支持conf.HostConf.IfType == "vhostuser"一种类型。step3：Save Config - Save Create Data for Delete
 DelFromHost // step1：用cniovs/localdb.go 从本地保存的json文件中 Load Config 删除bridge interface，检查brdge，若没有interface则删除bridge
