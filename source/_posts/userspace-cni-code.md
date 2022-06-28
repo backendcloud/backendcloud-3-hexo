@@ -1,5 +1,5 @@
 ---
-title: intel userspace cni 源码分析(workinprocess)
+title: intel userspace cni 源码分析
 readmore: true
 date: 2022-06-27 18:45:11
 categories: 云原生
@@ -19,19 +19,19 @@ tags:
 │   ├── cniovs.go - ovs网络插件
 │   ├── localdb.go - ovs本地存储
 │   ├── ovsctrl.go - 各种ovs-vsctl命令
-├── cnivpp
-├── logging
+├── cnivpp - vpp相关，本文不涉及vpp-dpdk，只涉及ovs-dpdk
+├── logging - 日志
 ├── pkg
 │   ├── annotations
-│   │   ├── annotations.go
+│   │   ├── annotations.go - pod annotation操作
 │   ├── configdata
-│   │   ├── configdata.go
+│   │   ├── configdata.go - 配置数据结构
 │   ├── k8sclient
-│   │   ├── k8sclient.go
+│   │   ├── k8sclient.go - k8s 客户端（调用client-go）
 │   └── types
-│       └── types.go
+│       └── types.go - userspace cni自定义的类型
 └── userspace
-    └── userspace.go
+    └── userspace.go - main文件入口，cni的add/get/del方法的实现
 ```
 
 cat cniovs/localdb.go
@@ -143,7 +143,7 @@ func DelFromContainer // 调用configdata.FileCleanup方法清理文件夹（文
 func addLocalDeviceVhost // 在 AddOnHost 方法中被调用，用于创建vhostuser socket以及相关操作
 func delLocalDeviceVhost // 在 DelFromHost 方法中被调用，删除ovs bridge vhostuser port，umount 相关文件夹，删除vhostuser socket 以及相关文件
 func generateRandomMacAddress // 生成随机mac地址
-func getShortSharedDir createSharedDir setSharedDirGroup// 这三个方法参考 https://www.backendcloud.cn/2022/06/24/userspace-cni-for-kubevirt/
+func getShortSharedDir createSharedDir setSharedDirGroup // 这三个方法参考 https://www.backendcloud.cn/2022/06/24/userspace-cni-for-kubevirt/
 ```
 
 ```go
@@ -185,7 +185,14 @@ func main() {
 ```
 > 实际上 intel userspace cni的get方法是空方法，就实现了add和del
 
-del分5步：
+add主要有5步：
+1. 通过cni命令的args获取网络namespace
+2. get host和pod的共享目录
+3. 增加host相关的网络资源
+4. 通过cni命令的args获取ip信息，通过reset参数传递给AddOnContainer方法
+5. 增加pod相关的网络资源
+
+del主要有5步：
 1. get host和pod的共享目录
 2. 删除host相关的网络资源
 3. 清理pod相关的网络资源
