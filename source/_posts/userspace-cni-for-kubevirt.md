@@ -167,6 +167,7 @@ func createSharedDir(sharedDir, oldSharedDir string) error {
 > 参考 https://www4.cs.fau.de/Services/Doc/C/libc.html#TOC189
 > 章节 Sockets - The File Namespace - Details of File Namespace
 
+
 ## ovs&qemu privilege
 下面的代码conf.HostConf.VhostConf.Group 配置一个"group"名称，默认配置为"hugetlbfs"，用于vhostuser socket的权限设定。让ovs和qemu用户在同一个用户组中，使得vhostuser socket在他们中可以共享，避免出现低权限访问不了高权限的情况。
 
