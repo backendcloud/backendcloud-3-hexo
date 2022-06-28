@@ -185,7 +185,12 @@ func main() {
 ```
 > 实际上 intel userspace cni的get方法是空方法，就实现了add和del
 
-
+del分5步：
+1. get host和pod的共享目录
+2. 删除host相关的网络资源
+3. 清理pod相关的网络资源
+4. 删除ipam相关配置
+5. 删除网络namespace
 
 
 
