@@ -11,7 +11,7 @@ tags:
 
 > 基于 截至2022.06.27 最新的 intel userspace cni 源码
 
-最近搞KubeVirt的代码和理解DPDK，涉及东西比计较多，没完没了的发散。发散到了一个intel的网络插件，先梳理下intel userspace cni的源码，再继续搞KubeVirt去。
+KubeVirt + DPDK，涉及到一个intel的网络插件intel userspace cni，在搞KubeVirt + DPDK前先梳理下intel userspace cni的源码。
 
 ```bash
 # intel userspace cni 大致目录结构，暂时不涉及vpp，忽略vpp的代码
