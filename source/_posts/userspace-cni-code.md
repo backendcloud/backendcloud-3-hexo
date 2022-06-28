@@ -16,32 +16,21 @@ tags:
 # intel userspace cni 大致目录结构，暂时不涉及vpp，忽略vpp的代码
 ├── cniovs
 │   ├── cniovs.go - ovs网络插件
-│   ├── cniovs_test.go
 │   ├── localdb.go - ovs本地存储
-│   ├── localdb_test.go
-│   ├── ovsctrl_fake.go
 │   ├── ovsctrl.go - 各种ovs-vsctl命令
-│   └── ovsctrl_test.go
 ├── cnivpp
-├── docker
-├── examples
 ├── logging
 ├── pkg
 │   ├── annotations
 │   │   ├── annotations.go
-│   │   └── annotations_test.go
 │   ├── configdata
 │   │   ├── configdata.go
-│   │   └── configdata_test.go
 │   ├── k8sclient
 │   │   ├── k8sclient.go
-│   │   └── k8sclient_test.go
 │   └── types
 │       └── types.go
-├── scripts
-├── tests
-├── userspace
-└── usrspcni
+└── userspace
+    └── userspace.go
 ```
 
 cat cniovs/localdb.go
@@ -171,8 +160,28 @@ pgk文件夹主要三个go文件，annotations.go，configdata.go，k8sclient.go
 func saveRemoteConfig // 分2种情况，有k8sclient，k8sclient.WritePodAnnotation写入集群的PodAnnotation。若没有k8sclient，用文件保存信息 
 func getK8sArgs // 将cni main方法的命令参数转成go结构体变量k8sArgs中去
 func getK8sClient // 生成k8sclient。分2种情况，传参传入了kubernetes.Interface，直接返会该client，另一种情况没有传入client，则根据传参kubeconfig或者环境变量生成k8sclient。
+func GetPod // 用k8s client-go包和上面生成k8sclinet和pod ns&podname信息，get pod
+func WritePodAnnotation // 更新pod annotation
+func setPodAnnotationConfigData // 将types.ConfigurationData更新的pod中去
 ```
 
+userspace/userspace.go 最后是包含main方法的go代码文件，入口main方法实现了k8s cni定义的add，get，del方法
+```go
+func main() {
+	skel.PluginMain(
+		func(args *skel.CmdArgs) error {
+			return cmdAdd(args, nil, nil)
+		},
+		func(args *skel.CmdArgs) error {
+			return cmdGet(args, nil, nil)
+		},
+		func(args *skel.CmdArgs) error {
+			return cmdDel(args, nil, nil)
+		},
+		cniSpecVersion.All,
+		"CNI plugin that manages DPDK based interfaces")
+}
+```
 
 
 
