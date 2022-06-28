@@ -125,34 +125,35 @@ func LoadConfig(conf *types.NetConf, args *skel.CmdArgs, data *OvsSavedData) err
 }
 ```
 
+> 以上代码：
 > OvsSavedData是存储OVS data的数据结构，后面需要json序列号和反序列化，标记json key，
 > SaveConfig()方法将OvsSavedData保存至文件/var/run/ovs/cni/data/local-<ContainerId:12>-<IfName>.json
 > LoadConfig()和SaveConfig()反过来，将文件内容读到OvsSavedData
 > 存储用文件的形式保存OvsSavedData为了给 cmdDel() 方法用
 
-cniovs/ovsctrl.go (代码太长，可以自行github查看，这里为了锁定篇幅仅解释方法) 
+cniovs/ovsctrl.go (代码太长，可在github查看，这里为了减少篇幅仅注释下方法) 
 > 每个方法对应一条openvswitch命令。
 ```go
-createVhostPort // COMMAND: ovs-vsctl add-port <bridge_name> <sock_name> -- set Interface <sock_name> type=<dpdkvhostuser|dpdkvhostuserclient>
-deleteVhostPort // COMMAND: ovs-vsctl del-port <bridge_name> <sock_name>
-createBridge // COMMAND: ovs-vsctl add-br <bridge_name> -- set bridge <bridge_name> datapath_type=netdev
-configL2Bridge // COMMAND: ovs-ofctl add-flow <bridge_name> actions=NORMAL
-deleteBridge // COMMAND: ovs-vsctl del-br <bridge_name>
-getVhostPortMac // COMMAND: ovs-vsctl --bare --columns=mac find port name=<sock_name>
-findBridge // COMMAND: ovs-vsctl --bare --columns=name find bridge name=<bridge_name>
-doesBridgeContainInterfaces // COMMAND: ovs-vsctl list-ports <bridge_name>
+func createVhostPort // COMMAND: ovs-vsctl add-port <bridge_name> <sock_name> -- set Interface <sock_name> type=<dpdkvhostuser|dpdkvhostuserclient>
+func deleteVhostPort // COMMAND: ovs-vsctl del-port <bridge_name> <sock_name>
+func createBridge // COMMAND: ovs-vsctl add-br <bridge_name> -- set bridge <bridge_name> datapath_type=netdev
+func configL2Bridge // COMMAND: ovs-ofctl add-flow <bridge_name> actions=NORMAL
+func deleteBridge // COMMAND: ovs-vsctl del-br <bridge_name>
+func getVhostPortMac // COMMAND: ovs-vsctl --bare --columns=mac find port name=<sock_name>
+func findBridge // COMMAND: ovs-vsctl --bare --columns=name find bridge name=<bridge_name>
+func doesBridgeContainInterfaces // COMMAND: ovs-vsctl list-ports <bridge_name>
 ```
 
-cniovs/cniovs.go (代码太长，可以自行github查看，这里为了锁定篇幅仅解释方法)
+cniovs/cniovs.go (代码太长，可在github查看，这里为了减少篇幅仅注释下方法)
 ```go
-AddOnHost // step1：根据conf.HostConf.BridgeConf.BridgeName创建ovs bridge，若未配置用默认br0代替。step2：创建bridge interface仅支持conf.HostConf.IfType == "vhostuser"一种类型。step3：Save Config - Save Create Data for Delete
-DelFromHost // step1：用cniovs/localdb.go 从本地保存的json文件中 Load Config 删除bridge interface，检查brdge，若没有interface则删除bridge
-AddOnContainer // Write configuration data(下面的ConfigurationData struct) that will be consumed by container。分2种情况，有k8sclient，k8sclient.WritePodAnnotation写入集群的PodAnnotation。若没有k8sclient，用文件保存信息
-DelFromContainer // 调用configdata.FileCleanup方法清理文件夹（文件夹下0个文件则清理文件夹）和文件
-addLocalDeviceVhost // 在 AddOnHost 方法中被调用，用于创建vhostuser socket以及相关操作
-delLocalDeviceVhost // 在 DelFromHost 方法中被调用，用于删除vhostuser socket以及相关操作  
-generateRandomMacAddress // 生成随机mac地址
-getShortSharedDir createSharedDir setSharedDirGroup// 这三个方法参考 https://www.backendcloud.cn/2022/06/24/userspace-cni-for-kubevirt/
+func AddOnHost // step1：根据conf.HostConf.BridgeConf.BridgeName创建ovs bridge，若未配置用默认br0代替。step2：创建bridge interface仅支持conf.HostConf.IfType == "vhostuser"一种类型。step3：Save Config - Save Create Data for Delete
+func DelFromHost // step1：用cniovs/localdb.go 从本地保存的json文件中 Load Config 删除bridge interface，检查brdge，若没有interface则删除bridge
+func AddOnContainer // 调用下面的SaveRemoteConfig方法Write configuration data(下面的ConfigurationData struct) that will be consumed by container。
+func DelFromContainer // 调用configdata.FileCleanup方法清理文件夹（文件夹下0个文件则清理文件夹）和文件
+func addLocalDeviceVhost // 在 AddOnHost 方法中被调用，用于创建vhostuser socket以及相关操作
+func delLocalDeviceVhost // 在 DelFromHost 方法中被调用，删除ovs bridge vhostuser port，umount 相关文件夹，删除vhostuser socket 以及相关文件
+func generateRandomMacAddress // 生成随机mac地址
+func getShortSharedDir createSharedDir setSharedDirGroup// 这三个方法参考 https://www.backendcloud.cn/2022/06/24/userspace-cni-for-kubevirt/
 ```
 
 ```go
@@ -164,4 +165,15 @@ type ConfigurationData struct {
 	IPResult    current.Result `json:"ipResult"`    // Network Status also has IP, but wrong format
 }
 ```
+
+pgk文件夹主要三个go文件，annotations.go，configdata.go，k8sclient.go都是k8s client更新pod annotation相关的，联合起来解释 (代码太长，可在github查看，这里为了减少篇幅仅注释下方法)
+```go
+func saveRemoteConfig // 分2种情况，有k8sclient，k8sclient.WritePodAnnotation写入集群的PodAnnotation。若没有k8sclient，用文件保存信息 
+func getK8sArgs // 将cni main方法的命令参数转成go结构体变量k8sArgs中去
+func getK8sClient // 生成k8sclient。分2种情况，传参传入了kubernetes.Interface，直接返会该client，另一种情况没有传入client，则根据传参kubeconfig或者环境变量生成k8sclient。
+```
+
+
+
+
 
