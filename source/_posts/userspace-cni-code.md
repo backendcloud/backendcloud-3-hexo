@@ -6,6 +6,7 @@ categories: 云原生
 tags:
 - cni
 - userspace cni
+- 源码分析
 ---
 
 > 基于 截至2022.06.27 最新的 intel userspace cni 源码
@@ -182,6 +183,8 @@ func main() {
 		"CNI plugin that manages DPDK based interfaces")
 }
 ```
+> 实际上 intel userspace cni的get方法是空方法，就实现了add和del
+
 
 
 
