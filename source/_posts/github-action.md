@@ -213,6 +213,41 @@ jobs:
 关于手动触发还支持自定义输入文本，也就是输入文本当成传入的参数，用在后续的构建命令中
 ![](/images/blog-cicd/img_1.png)
 
+## 代码检查 以bash脚本检查为例
+
+```yaml
+name: shellcheck
+'on':
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+
+      - name: Install shellcheck from GitHub releases
+        run: |
+          sudo curl -L https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.$(uname -s).$(uname -m).tar.xz -o shellcheck.tar.xz
+          sudo tar -xvf shellcheck.tar.xz
+          sudo mv shellcheck-v${SHELLCHECK_VERSION}/shellcheck /usr/local/bin/shellcheck
+          sudo chmod 755 /usr/local/bin/shellcheck
+          shellcheck --version
+        env:
+          SHELLCHECK_VERSION: 0.7.2
+
+      - name: Shellcheck!
+        run: |
+          shellcheck 代码仓库里要检查的脚本的路径
+          shellcheck 代码仓库里要检查的脚本的路径
+```
 
 ## GitHub Actions 编译安卓
 ```yaml
