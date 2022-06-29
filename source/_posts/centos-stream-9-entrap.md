@@ -24,7 +24,9 @@ mac，windows，centos7 os下git clone项目的代码仓库都是ok的，唯独C
 1. 升级老系统
 2. 老系统不方便升级，只能牺牲点安全，在 Centos Stream 9 上执行下面的命令
 
-   update-crypto-policies --set DEFAULT:SHA1
+```bash
+update-crypto-policies --set DEFAULT:SHA1
+```
 
 ```bash
 [root@centos9 .ssh]# git clone "ssh://xxx@gerrit.xxx.com:29418/xxx/xxx"
