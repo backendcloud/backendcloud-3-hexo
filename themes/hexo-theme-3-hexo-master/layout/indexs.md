@@ -8,6 +8,8 @@
 * 融合DevOps
    * 基于Bazel的全开发语言，全平台融合构建，融合CICD
    * 有助于生产力，有助于融合DevOps的自动化脚本和工具
+* 其他融合解决方案（integrated solution）
+* 开源项目[KubeFusion](https://github.com/kubefusion)（计划中）
 
 [//]: # (1.虚拟机技术和容器技术的融合 2.多云融合（多云（公有云私有云中心云边缘云）融合管理，分布式应用融合部署）3.在1和2融合环境上的全语言全平台CICD)
 [//]: # (* 容器和虚拟机融合技术，如KubeVirt生态)
