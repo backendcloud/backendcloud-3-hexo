@@ -8,13 +8,15 @@ tags:
 - RT
 ---
 
-# KubeVirt对实时内核的支持的相关代码分析
+# KubeVirt适配实时内核
 
-> 实时追求的是cpu响应的低延时，不是高性能，相反实时的性能是很差的，因为在性能和低延时天平上完全导向了低延时，就是那性能交换了低延时。
+> 实时追求的是cpu响应的低延时，不是高性能，相反实时的性能是偏差的，因为在性能和低延时天平上导向了低延时，用性能交换了延时。
 
-> 本篇是关于KubeVirt对实时内核的支持，首先KubeVirt启动的虚拟机的镜像系统需要是实时内核的操作系统。
+> KubeVirt对实时内核的支持的前提是KubeVirt启动的虚拟机的镜像系统是实时内核的操作系统。
 
-以下代码，检测到虚拟机manifest的实时配置为enable，则去配置下VCPUScheduler和PMU。为了实现实时，优化了cpu的调度以及绑核，PMU（Performance Monitoring Unit）设置为off，就是关闭了cpu性能监控单元。
+下面的代码，检测到虚拟机manifest的有配置实时选项，则去配置VCPUScheduler和PMU。优化了cpu的调度以及绑核，关闭了cpu性能监控单元PMU（Performance Monitoring Unit）。
+
+pkg/virt-launcher/virtwrap/converter/vcpu/vcpu.go
 ```go
 ...
 	if vmi.IsRealtimeEnabled() {
@@ -49,7 +51,7 @@ func formatVCPUScheduler(domain *api.Domain, vmi *v12.VirtualMachineInstance) {
 
 > 为了达到最佳的实时效果，除了代码对实时的适配外，还需要虚拟机manifest的配置，业务应用的对分配cpu的核的绑定配置。
 
-> cpu绑核的代码，numa的代码过于复杂，本篇略过，下面讲下对虚拟机manifest的配置
+> cpu绑核以及numa的代码过于复杂，本篇略过，以后单独开两篇描述，下面讲下对虚拟机manifest的配置相关项。首先介绍两个概念MemBalloon和PMU。
 
 ## MemBalloon 虚拟机的内存热插拔技术
 MemBalloon是虚拟机的内存热插拔技术，可以设定内存的上限，可以在虚拟机运行过程中，动态修改内存的根数和每根内存的大小。允许该特性会影响实时效果。可以通过virsh cli配置
@@ -68,11 +70,11 @@ MemBalloon是虚拟机的内存热插拔技术，可以设定内存的上限，�
 
 ## PMU（Performance Monitoring Unit）
 
-虚拟性能监控单元 (PMU) 可以显示虚拟机cpu运行的统计信息。PMU可以帮助用户识别和分析他们的业务影响虚拟机的性能可能出现问题的来源。
+虚拟性能监控单元 (PMU) 可以显示虚拟机cpu运行的统计信息。PMU可以帮助用户在虚拟机的性能异常的情况下，识别和分析可能出现问题的来源。
 
-但开启PMU会影响CPU的响应延时。可以牺牲调试工具来换取实时性。
+但开启PMU会影响CPU的响应延时。追求实时性只能牺牲该调试工具。
 
-验证系统是否开启了PMU可以执行下面的命令查看 CPU 上的 arch_perfmon 标志，若有内容就已经开启，没有任何返回则不支持或已关闭
+验证系统是否开启了PMU可以执行下面的命令查看 CPU 上的 arch_perfmon 标志，若有内容就已经开启，没有任何返回则不支持或已关闭。
 
     # cat /proc/cpuinfo|grep arch_perfmon
 
