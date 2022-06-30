@@ -12,7 +12,7 @@ tags:
 
 > 对实时性要求高的业务需要用到有实时内核的操作系统，KubeVirt对实时内核也有支持。
 
-> 实时追求的是cpu响应的低延时，不是高性能，相反实时的性能是偏差的，因为在性能和低延时天平上导向了低延时，用性能交换了延时。
+> 实时追求的是cpu响应的低延时，不是高性能，相反实时的性能是偏差的，因为在性能和低延时天平上倒向了低延时，用性能交换了延时。
 
 下面的代码，检测到虚拟机manifest的有配置实时选项，则去配置VCPUScheduler和PMU。优化了cpu的调度以及绑核，关闭了cpu性能监控单元PMU（Performance Monitoring Unit）。
 
@@ -86,7 +86,7 @@ MemBalloon是虚拟机的内存热插拔技术，可以设定内存的上限，�
 虚拟机启动好了后，进入虚拟机执行yum install -y perf就可以通过perf工具显示虚拟机的性能统计数据。
 
 
-## 实时虚拟机manifest配置参考：
+# 实时虚拟机manifest配置参考：
 
 ```yaml
 apiVersion: kubevirt.io/v1
