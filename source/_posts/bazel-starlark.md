@@ -97,9 +97,11 @@ var valueInt is 16
 Err happened!
 ```
 
-> 除了引用otto包在go中嵌入javascript代码，也可以直接用otto运行javascript代码
-> $ go get -v github.com/robertkrimen/otto/otto
-> $ otto example.js
+除了引用otto包在go中嵌入javascript代码，也可以直接用otto运行javascript代码
+```bash
+$ go get -v github.com/robertkrimen/otto/otto
+$ otto example.js
+```
 
 除了在go代码中嵌入JavaScript，还可以嵌入以下的语言：
 * anko - 用Go语言编写的可编写脚本的解释器。
@@ -122,7 +124,7 @@ Err happened!
 
 ## run starlark
 
-> 了解了上面的知识，可以了解go写的Starlark语言的解释器了。  https://github.com/google/starlark-go
+> 有了上面的知识，可以开始了解Go写的Starlark语言的解释器了。  https://github.com/google/starlark-go
 
 ### 进入starlark交互界面
 ```bash
@@ -150,7 +152,7 @@ By value:       penny, nickel, dime, quarter
 ```
 
 ### 将starlark脚本嵌入Go代码
-先执行了下starlark脚本，然后在Go代码中嵌入了starlark脚本，可以看到Go的main方法不仅执行了starlark脚本，还获取了starlark的函数并在Go中调用starlark函数和传参。
+下面的内容是在Go代码中嵌入了starlark脚本，可以看到Go的main方法不仅执行了starlark脚本，还获取了starlark的函数并在Go中调用starlark函数和给starlark函数传参。
 ```bash
 [root@localhost tt]# cat fibonacci.star 
 def fibonacci(n):
@@ -196,7 +198,9 @@ fibonacci(10) = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
 
 # Starlark & Go & Bazel
 
-上面的章节都是单单Starlark语言，比较简单，有了一点点python语法就可以很快上手Starlark语言和运行Starlark语言。一旦和Bazel结合起来，涉及的东西太多太多了，已远不是本篇篇幅能够覆盖的。拿云原生项目举例：
+上面的章节都是单单Starlark语言，比较容易入门，有了一点点python语法就可以很快上手Starlark语言和运行Starlark语言。一旦和Bazel结合起来，涉及的东西太多太多了，已远不是本篇篇幅能够覆盖的。
+
+以云原生项目举例：
 * Bazel 给 go_rules，用于Go项目的 Bazel构建。 https://github.com/bazelbuild/rules_go
 * rules_docker, rules_k8s
 * 为自己项目写的bazel rule和bazel库
