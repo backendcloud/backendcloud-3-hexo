@@ -150,7 +150,7 @@ By value:       penny, nickel, dime, quarter
 ```
 
 ### 将starlark脚本嵌入Go代码
-先执行了下starlark脚本，然后在Go代码中嵌入了starlark脚本，可以看到Go的main方法不仅执行了starlark脚本，还获取了starlark的函数作为了Go的函数。
+先执行了下starlark脚本，然后在Go代码中嵌入了starlark脚本，可以看到Go的main方法不仅执行了starlark脚本，还获取了starlark的函数并在Go中调用starlark函数和传参。
 ```bash
 [root@localhost tt]# cat fibonacci.star 
 def fibonacci(n):
