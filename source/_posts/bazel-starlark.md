@@ -1,5 +1,5 @@
 ---
-title: Starlark语言（workinprocess）
+title: Starlark语言
 readmore: true
 date: 2022-07-01 18:53:07
 categories: Devops
@@ -12,7 +12,7 @@ tags:
 
 Tensorflow， Envoy， Kubernetes， KubeVirt 等等大型项目都是用 Bazel 构建的，要参与开发这些项目或者基于这些项目做开发，不能避开Bazel，且Bazel是当前开源Build System里最先进也最代表着未来方向的产品，非常有必要掌握。
 
-Starlark是一门配置语言，设计之初是为了作为bazel的配置语言，Starlark语法类似 Python，但不是Python，保持语言类似于 Python 可以减少学习曲线，使语义对用户更加明显。与 Python 显著不同的地方在于，独立的 Starlark 线程是并行执行的，因此 Starlark 工作负载在并行机器上可以很好地伸缩。
+Starlark是一门配置语言，设计之初是为了作为 Bazel 的配置语言，Starlark语法类似 Python，但不是Python，保持语言类似于 Python 可以减少学习曲线，使语义对用户更加明显。与 Python 显著不同的地方在于，独立的 Starlark 线程是并行执行的，因此 Starlark 工作负载在并行机器上可以很好地伸缩。
 
 > https://github.com/bazelbuild/starlark
 
@@ -20,9 +20,9 @@ Starlark 语言的主要用途是描述构建: 如何编译 C++ 或 Scala 库，
 
 # Starlark & Go
 
-在了解Starlark前，要先对go代码中嵌入其他语言，以及用go写的其他脚本语言的解释器做下了解。
+在了解Starlark和Go的结合前，要先对go代码中嵌入其他语言，以及用Go实现的其他脚本语言的解释器做下了解。
 
-## otto：A JavaScript interpreter in Go (golang)
+## otto：A JavaScript interpreter in Go
 
 ```go
 import (
@@ -150,4 +150,56 @@ By value:       penny, nickel, dime, quarter
 ```
 
 ### 将starlark脚本嵌入Go代码
+先执行了下starlark脚本，然后在Go代码中嵌入了starlark脚本，可以看到Go的main方法不仅执行了starlark脚本，还获取了starlark的函数作为了Go的函数。
+```bash
+[root@localhost tt]# cat fibonacci.star 
+def fibonacci(n):
+    res = list(range(n))
+    for i in res[2:]:
+        res[i] = res[i-2] + res[i-1]
+    return res
+print(fibonacci(8))
+[root@localhost tt]# starlark fibonacci.star 
+[0, 1, 1, 2, 3, 5, 8, 13]
+[root@localhost tt]# cat main.go 
+package main
 
+import (
+        "fmt"
+        "go.starlark.net/starlark"
+)
+
+func main() {
+        // Execute Starlark program in a file.
+        thread := &starlark.Thread{Name: "my thread"}
+        globals, err := starlark.ExecFile(thread, "fibonacci.star", nil, nil)
+        if err != nil {
+                fmt.Println("Err happened!")
+        }
+
+        // Retrieve a module global.
+        fibonacci := globals["fibonacci"]
+
+        // Call Starlark function from Go.
+        v, err := starlark.Call(thread, fibonacci, starlark.Tuple{starlark.MakeInt(10)}, nil)
+        if err != nil {
+                fmt.Println("Err happened!")
+        }
+        fmt.Printf("fibonacci(10) = %v\n", v) // fibonacci(10) = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+}
+[root@localhost tt]# go run main.go 
+[0, 1, 1, 2, 3, 5, 8, 13]
+fibonacci(10) = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+[root@localhost tt]# 
+```
+
+
+# Starlark & Go & Bazel
+
+上面的章节都是单单Starlark语言，比较简单，有了一点点python语法就可以很快上手Starlark语言和运行Starlark语言。一旦和Bazel结合起来，涉及的东西太多太多了，已远不是本篇篇幅能够覆盖的。拿云原生项目举例：
+* Bazel 给 go_rules，用于Go项目的 Bazel构建。 https://github.com/bazelbuild/rules_go
+* rules_docker, rules_k8s
+* 为自己项目写的bazel rule和bazel库
+* 等等
+
+> 除了Go语言的rules_go，官方还提供了rules_rust rules_nodejs rules_python rules_scala rules_swift rules_kotlin rules_java rules_dotnet rules_cc等等
