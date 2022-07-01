@@ -8,14 +8,21 @@ tags:
 - Starlark
 ---
 
+# Starlark
 
 Tensorflow， Envoy， Kubernetes， KubeVirt 等等大型项目都是用 Bazel 构建的，要参与开发这些项目或者基于这些项目做开发，不能避开Bazel，且Bazel是当前开源Build System里最先进也最代表着未来方向的产品，非常有必要掌握。
 
-Starlark是一门配置语言，设计之初是为了作为bazel的配置语言，Starlark语法类似 Python。与 Python 显著不同的地方在于，独立的 Starlark 线程是并行执行的，因此 Starlark 工作负载在并行机器上可以很好地伸缩。
+Starlark是一门配置语言，设计之初是为了作为bazel的配置语言，Starlark语法类似 Python，但不是Python，保持语言类似于 Python 可以减少学习曲线，使语义对用户更加明显。与 Python 显著不同的地方在于，独立的 Starlark 线程是并行执行的，因此 Starlark 工作负载在并行机器上可以很好地伸缩。
+
+> https://github.com/bazelbuild/starlark
+
+Starlark 语言的主要用途是描述构建: 如何编译 C++ 或 Scala 库，如何构建项目及其依赖项，如何运行测试。描述构建可能非常复杂，特别是当代码库混合了多种语言并针对多种平台时。
+
+# Starlark & Go
 
 在了解Starlark前，要先对go代码中嵌入其他语言，以及用go写的其他脚本语言的解释器做下了解。
 
-# otto：A JavaScript interpreter in Go (golang)
+## otto：A JavaScript interpreter in Go (golang)
 
 ```go
 import (
@@ -90,6 +97,10 @@ var valueInt is 16
 Err happened!
 ```
 
+> 除了引用otto包在go中嵌入javascript代码，也可以直接用otto运行javascript代码
+> $ go get -v github.com/robertkrimen/otto/otto
+> $ otto example.js
+
 除了在go代码中嵌入JavaScript，还可以嵌入以下的语言：
 * anko - 用Go语言编写的可编写脚本的解释器。
 * binder - 转到基于gopher-lua的 Lua绑定库。
@@ -100,7 +111,7 @@ Err happened!
 * go-duktape - Go的Duktape JavaScript引擎绑定。
 * go-lua - Lua 5.2 VM到纯Go的端口。
 * go-php - Go的PHP绑定。
-* go-python - 与CPython C-API的幼稚go绑定。
+* go-python - 与CPython C-API的go绑定。
 * golua - Lua C API的绑定。
 * gopher-lua - 用Go编写的Lua 5.1 VM和编译器。
 * gval - 用Go编写的高度可定制的表达语言。
@@ -109,4 +120,34 @@ Err happened!
 * purl - Go中嵌入的Perl 5.18.2。
 * tengo - 用于Go的字节码编译脚本语言。
 
-了解了上面的知识，可以了解go写的Starlark语言的解释器了。
+## run starlark
+
+> 了解了上面的知识，可以了解go写的Starlark语言的解释器了。  https://github.com/google/starlark-go
+
+### 进入starlark交互界面
+```bash
+[root@localhost ~]# go get -u go.starlark.net/cmd/starlark
+[root@localhost ~]# starlark
+Welcome to Starlark (go.starlark.net)
+>>>  
+```
+
+### 直接运行starlark脚本
+```bash
+[root@localhost ~]# cat a.star
+coins = {
+  'dime': 10,
+  'nickel': 5,
+  'penny': 1,
+  'quarter': 25,
+}
+print('By name:\t' + ', '.join(sorted(coins.keys())))
+print('By value:\t' + ', '.join(sorted(coins.keys(), key=coins.get)))
+
+[root@localhost ~]# starlark a.star 
+By name:        dime, nickel, penny, quarter
+By value:       penny, nickel, dime, quarter
+```
+
+### 将starlark脚本嵌入Go代码
+
