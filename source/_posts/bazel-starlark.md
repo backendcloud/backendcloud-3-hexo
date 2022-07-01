@@ -1,7 +1,7 @@
 ---
 title: Starlark语言（workinprocess）
 readmore: true
-date: 2022-07-01 10:53:07
+date: 2022-07-01 18:53:07
 categories: Devops
 tags:
 - Bazel
@@ -74,11 +74,11 @@ func main() {
 > go代码中引用了otto，otto是javascript解释器的go的实现，翻译成大白话就是go编写的js的解释器。
 
 上面的go代码嵌入了javascript代码，分别做了
-* 运行js
-* js获取变量
-* js赋值数字和字符串变量
-* 获取js表达式的返回值
-* js脚本发生错误，go捕获错误
+1. 运行js
+2. js获取变量
+3. js赋值数字和字符串变量
+4. 获取js表达式的返回值
+5. js脚本发生错误，go捕获错误
 
 运行结果如下：
 ```bash
