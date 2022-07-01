@@ -11,7 +11,7 @@ tags:
 
 Tensorflow， Envoy， Kubernetes， KubeVirt 等等大型项目都是用 Bazel 构建的，要参与开发这些项目或者基于这些项目做开发，不能避开Bazel，且Bazel是当前开源Build System里最先进也最代表着未来方向的产品，非常有必要掌握。
 
-Starlark是一门配置语言，语法类似 Python。与 Python 不同，独立的 Starlark 线程是并行执行的，因此 Starlark 工作负载在并行机器上可以很好地伸缩。
+Starlark是一门配置语言，设计之初是为了作为bazel的配置语言，Starlark语法类似 Python。与 Python 显著不同的地方在于，独立的 Starlark 线程是并行执行的，因此 Starlark 工作负载在并行机器上可以很好地伸缩。
 
 在了解Starlark前，要先对go代码中嵌入其他语言，以及用go写的其他脚本语言的解释器做下了解。
 
@@ -89,3 +89,24 @@ The value of def is 11
 var valueInt is 16
 Err happened!
 ```
+
+除了在go代码中嵌入JavaScript，还可以嵌入以下的语言：
+* anko - 用Go语言编写的可编写脚本的解释器。
+* binder - 转到基于gopher-lua的 Lua绑定库。
+* cel-go - 具有渐进式输入功能的快速，便携式，非图灵完整表达评估。
+* expr - 可以评估表达式的引擎。
+* gentee - 可嵌入的脚本编程语言。
+* gisp - Go中的简单LISP。
+* go-duktape - Go的Duktape JavaScript引擎绑定。
+* go-lua - Lua 5.2 VM到纯Go的端口。
+* go-php - Go的PHP绑定。
+* go-python - 与CPython C-API的幼稚go绑定。
+* golua - Lua C API的绑定。
+* gopher-lua - 用Go编写的Lua 5.1 VM和编译器。
+* gval - 用Go编写的高度可定制的表达语言。
+* ngaro - 可嵌入的Ngaro VM实现，支持在Retro中编写脚本。
+* otto - 用Go编写的JavaScript解释器。
+* purl - Go中嵌入的Perl 5.18.2。
+* tengo - 用于Go的字节码编译脚本语言。
+
+了解了上面的知识，可以了解go写的Starlark语言的解释器了。
