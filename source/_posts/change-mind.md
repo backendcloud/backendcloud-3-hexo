@@ -19,6 +19,7 @@ tags:
 > 上面所有思路前提是设备是科学的
 
 
+
 # x11转发
 
 Golang项目需要用shell和linux环境，为了开发方便有的项目要从windows Goland切成linux Goland。但是有个小问题：
@@ -26,6 +27,7 @@ xmanager 自己家里用没人管，但在商业环境下用可能被骚扰，�
 
     SSH      * VcXsrv: https://sourceforge.net/projects/vcxsrv/
     SSH      * Xming: https://sourceforge.net/projects/xming/
+
 
 
 # 幻灯片
