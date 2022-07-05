@@ -1,5 +1,5 @@
 ---
-title: 一步步学写Bazel lib&rules （1） - Bazel官方基础库 （workinprocess）
+title: 一步步学写Bazel lib&rules （1） - Bazel官方基础库简单浏览
 readmore: true
 date: 2022-07-04 18:51:43
 categories: Devops
@@ -261,5 +261,3 @@ def _split_extension(p):
 replace_extension调用_split_extension方法将文件名分为后缀名之前的部分和后缀名，然后替换掉后缀名。
 
 normalize。若path为空则返回点，判断path是否以斜杠开头断定是绝对路径还是相对路径，用斜杠将path分割成数组，若元素为空或点则去除元素，若为两个点，表示上一层目录，若前一个元素不为空且不为两个点，则可以pop前一个元素，这样可以连带..一起精简掉两个元素。
-
-> 本文章为付费文章，可在微信公众号查看全文（workinprocess）
