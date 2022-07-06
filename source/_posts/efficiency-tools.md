@@ -32,7 +32,7 @@ xmanager 自己家里用没人管，但在商业环境下用可能被骚扰，�
 
 >zsh比bash好用些，对bash兼容性比较好，bash对sh兼容性比较好。
 
-> ohmyzsh自己号称有300+插件，
+> ohmyzsh号称有300+插件
 
     wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
     sh install.sh
@@ -41,8 +41,8 @@ xmanager 自己家里用没人管，但在商业环境下用可能被骚扰，�
 
 
 # gh
-gh 是 github cli
-github的项目仅仅有git上还不完全够用，需要gh补充。
+github的项目仅仅有git上还不完全够用，需要gh补充。gh 是 github cli
+
 
 
 # Dendron

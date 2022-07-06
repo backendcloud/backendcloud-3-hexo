@@ -4,7 +4,7 @@ readmore: true
 date: 2022-06-15 19:25:03
 categories: Tools
 tags:
-- bazel
+- Bazel
 ---
 
 # 简介
