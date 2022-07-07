@@ -26,6 +26,21 @@ xmanager 自己家里用没人管，但在商业环境下用可能被骚扰，�
 
 
 
+# Dendron
+
+Dendron是vscode的markdown笔记插件，提升markdown写笔记的效率。
+
+> Dendron is an open-source, local-first, markdown-based, note-taking tool. It's a personal knowledge management solution (PKM).
+
+
+# mdbook&mdbook-pdf
+
+Rust写的markdown写书工具mdbook，build可以生成html，后者是生成pdf的插件
+
+> https://github.com/rust-lang/mdBook
+> https://github.com/HollowMan6/mdbook-pdf
+
+
 # 高效shell
 
 默认shell从bash换到zsh，并安装ohmyzsh，感觉好用多了。
@@ -44,9 +59,3 @@ xmanager 自己家里用没人管，但在商业环境下用可能被骚扰，�
 github的项目仅仅有git上还不完全够用，需要gh补充。gh 是 github cli
 
 
-
-# Dendron
-
-Dendron是vscode的markdown笔记插件，提升markdown写笔记的效率。
-
-> Dendron is an open-source, local-first, markdown-based, note-taking tool. It's a personal knowledge management solution (PKM).
