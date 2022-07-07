@@ -33,13 +33,13 @@ Dendron是vscode的markdown笔记插件，提升markdown写笔记的效率。
 > Dendron is an open-source, local-first, markdown-based, note-taking tool. It's a personal knowledge management solution (PKM).
 
 
-# mdbook&mdbook-pdf
+# mdbook&mdbook-pdf&mdBook-pagetoc
 
-Rust写的markdown写书工具mdbook，build可以生成html，后者是生成pdf的插件
+mdbook是Rust写的markdown写电子书的工具，build可以生成html。mdbook-pdf是生成pdf的插件。mdBook-pagetoc是生成页内目录的插件。
 
 > https://github.com/rust-lang/mdBook
 > https://github.com/HollowMan6/mdbook-pdf
-
+> https://github.com/JorelAli/mdBook-pagetoc
 
 # 高效shell
 
@@ -55,7 +55,7 @@ Rust写的markdown写书工具mdbook，build可以生成html，后者是生成pd
 换下默认主题，从`ZSH_THEME="robbyrussell"`换成`ZSH_THEME="agnoster"`
 
 
-# gh
-github的项目仅仅有git上还不完全够用，需要gh补充。gh 是 github cli
+# gh (github cli)
+github的操作，对git的补充。
 
 
