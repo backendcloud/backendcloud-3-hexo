@@ -37,8 +37,17 @@ If sudo merely called exec, then sudo couldn't do things like run any cleanup ta
 
 # 拿经典的redis镜像举例
 
-## 首先得了解CMD RUN ENTRYPOINT区别
+## 首先得了解RUN CMD ENTRYPOINT区别
 三者的共同点是：都是执行命令；都有两种格式Shell格式和Exec格式。
+
+不同点是：RUN命令执行命令并创建新的镜像层，通常用于安装软件包。CMD ENTRYPOINT是设置容器启动后默认执行的命令其参数且他们的组合官网有个说明。
+
+|No ENTRYPOINT|ENTRYPOINT exec_entry p1_entry|ENTRYPOINT [“exec_entry”, “p1_entry”]
+---|---|---|---
+No CMD|	error, not allowed	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry
+CMD [“exec_cmd”, “p1_cmd”]|	exec_cmd p1_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry exec_cmd p1_cmd
+CMD [“p1_cmd”, “p2_cmd”]|	p1_cmd p2_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry p1_cmd p2_cmd
+CMD exec_cmd p1_cmd	|/bin/sh -c exec_cmd p1_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry /bin/sh -c exec_cmd p1_cmd
 
 ## Dockfile
 ```yaml
@@ -57,7 +66,7 @@ CMD [ "redis-server" ]
 RUN addgroup -S redis && adduser -S -G redis redis
 ...
 ```
-上面的需要root处理的步骤放这一段
+上面的需要root处理的步骤放这一段，后面启动redis-server用了非root用户启动。原因是下面的脚本：
 
 ##
 ```bash
@@ -71,3 +80,5 @@ fi
 
 exec "$@"
 ```
+
+> 上面的代码有一层递归。
