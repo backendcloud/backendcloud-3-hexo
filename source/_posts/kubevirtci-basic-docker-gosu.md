@@ -70,7 +70,8 @@ RUN addgroup -S redis && adduser -S -G redis redis
 ```
 上面的需要root处理的步骤放这一段，后面启动redis-server用了非root用户启动。原因是下面的`docker-entrypoint.sh`脚本：
 
-##
+## entrypoint.sh
+
 ```bash
 #!/bin/sh
 ...
