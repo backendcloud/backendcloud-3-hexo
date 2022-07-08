@@ -42,12 +42,12 @@ If sudo merely called exec, then sudo couldn't do things like run any cleanup ta
 
 不同点是：RUN命令执行命令并创建新的镜像层，通常用于安装软件包。CMD ENTRYPOINT是设置容器启动后默认执行的命令其参数且他们的组合官网有个说明。
 
-|No ENTRYPOINT|ENTRYPOINT exec_entry p1_entry|ENTRYPOINT [“exec_entry”, “p1_entry”]
----|---|---|---
-No CMD|	error, not allowed	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry
-CMD [“exec_cmd”, “p1_cmd”]|	exec_cmd p1_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry exec_cmd p1_cmd
-CMD [“p1_cmd”, “p2_cmd”]|	p1_cmd p2_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry p1_cmd p2_cmd
-CMD exec_cmd p1_cmd	|/bin/sh -c exec_cmd p1_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry /bin/sh -c exec_cmd p1_cmd
+| | No ENTRYPOINT|ENTRYPOINT exec_entry p1_entry|ENTRYPOINT [“exec_entry”, “p1_entry”]|
+| --- | --- | --- | --- |
+|No CMD|	error, not allowed	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry|
+|CMD [“exec_cmd”, “p1_cmd”]|	exec_cmd p1_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry exec_cmd p1_cmd|
+|CMD [“p1_cmd”, “p2_cmd”]|	p1_cmd p2_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry p1_cmd p2_cmd|
+|CMD exec_cmd p1_cmd	|/bin/sh -c exec_cmd p1_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry /bin/sh -c exec_cmd p1_cmd|
 
 ## Dockfile
 ```yaml
@@ -82,3 +82,9 @@ exec "$@"
 ```
 
 > 上面的代码有一层递归。
+
+检测到root用户启动redis命令redis-server，就会做两件事：
+1. 找到当前目录的所有非redis用户文件并将找出的全部文件改成redis所有，`find . \! -user redis`是找出当前目录的所有非redis用户文件，`-exec chown redis '{}' +`是将找出的文件修改成redis用户所有。
+2. `exec gosu redis "$0" "$@"`改用redis用户执行当前脚本，发生一次递归，就是改用redis用户重新执行CMD+ENTRYPOINT，且不fock()新的进程PID，销毁旧进程，使用旧进程PID。
+
+第二次执行CMD+ENTRYPOINT，因为是redis用户执行的，所以不进入if语句，直接`exec "$@"`，因为没有了`$0`所以不会再递归执行CMD+ENTRYPOINT了。
