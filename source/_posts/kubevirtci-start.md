@@ -1,6 +1,6 @@
 ---
 title: 一步步学KubeVirt CI （1） - 开篇
-readmore: fasle
+readmore: false
 date: 2022-07-07 19:45:32
 categories: 云原生
 tags:
