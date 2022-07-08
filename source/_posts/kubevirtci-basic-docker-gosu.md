@@ -88,9 +88,9 @@ exec "$@"
 
 检测到root用户启动redis命令redis-server，就会做两件事：
 1. 找到当前目录的所有非redis用户文件并将找出的全部文件改成redis所有，`find . \! -user redis`是找出当前目录的所有非redis用户文件，`-exec chown redis '{}' +`是将找出的文件修改成redis用户所有。
-2. `exec gosu redis "$0" "$@"`改用redis用户执行当前脚本，发生一次递归，就是改用redis用户重新执行CMD+ENTRYPOINT，且不fock()新的进程PID，销毁旧进程，使用旧进程PID。
+2. `exec gosu redis "$0" "$@"`改用redis用户执行当前脚本，发生一次递归，就是改用redis用户重新执行CMD+ENTRYPOINT，且不fock()新的进程PID，替换当前的shell，且不会生成新的进程保证了`gosu redis “$0” "@"`对应的进程ID为1，此时运行命令为：`docker-entrypoint.sh redis-server /etc/redis.conf`
 
-第二次执行CMD+ENTRYPOINT，因为是redis用户执行的，所以不进入if语句，直接`exec "$@"`，因为没有了`$0`所以不会再递归执行CMD+ENTRYPOINT了。
+第二次执行CMD+ENTRYPOINT，因为是redis用户执行的，所以不进入if语句，直接`exec "$@"`，因为没有了`$0`所以不会再递归执行CMD+ENTRYPOINT了。`exec`同上面的`exec`，执行如下命令`redis-server /etc/redis.conf`
 
 该脚本的内容就是根据 CMD 的内容来判断，如果是 redis-server 的话，则切换到 redis 用户身份启动服务器，否则依旧使用 root 身份执行。比如：
 
