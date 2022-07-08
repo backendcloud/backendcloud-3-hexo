@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （3） - gosu在容器中的使用(workinprocess)
+title: 一步步学KubeVirt CI （3） - gosu在容器中的使用
 readmore: true
 date: 2022-07-08 18:40:08
 categories: 云原生
@@ -66,7 +66,7 @@ CMD [ "redis-server" ]
 RUN addgroup -S redis && adduser -S -G redis redis
 ...
 ```
-上面的需要root处理的步骤放这一段，后面启动redis-server用了非root用户启动。原因是下面的脚本：
+上面的需要root处理的步骤放这一段，后面启动redis-server用了非root用户启动。原因是下面的`docker-entrypoint.sh`脚本：
 
 ##
 ```bash
@@ -88,3 +88,10 @@ exec "$@"
 2. `exec gosu redis "$0" "$@"`改用redis用户执行当前脚本，发生一次递归，就是改用redis用户重新执行CMD+ENTRYPOINT，且不fock()新的进程PID，销毁旧进程，使用旧进程PID。
 
 第二次执行CMD+ENTRYPOINT，因为是redis用户执行的，所以不进入if语句，直接`exec "$@"`，因为没有了`$0`所以不会再递归执行CMD+ENTRYPOINT了。
+
+该脚本的内容就是根据 CMD 的内容来判断，如果是 redis-server 的话，则切换到 redis 用户身份启动服务器，否则依旧使用 root 身份执行。比如：
+
+```bash
+$ docker run -it redis id
+uid=0(root) gid=0(root) groups=0(root)
+```
