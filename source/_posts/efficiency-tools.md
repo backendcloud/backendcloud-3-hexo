@@ -18,7 +18,7 @@ xmanager 自己家里用没人管，但在商业环境下用可能被骚扰，�
 
 # Marp
 
-用marp写ppt太香了，专注于内容，而不用去花时间排版做形式，除非非常注重宣传和包装的ppt，要用office powerpoint。程序员写的ppt用marp感觉够用了。可惜只有vscode可以用，intellij用不了。
+用marp写ppt太香了，专注于内容，而不用去花时间排版做形式，除非非常注重宣传和包装的ppt，要用office powerpoint。程序员写的ppt用marp感觉够用了。可惜只有vscode可以用，Jetbrains用不了。
 
 > demo： http://slide.backendcloud.cn/html/marp_recipes.html
 
@@ -35,11 +35,12 @@ Dendron是vscode的markdown笔记插件，提升markdown写笔记的效率。
 
 # mdbook & mdbook-pdf & mdBook-pagetoc
 
-mdbook是Rust写的markdown写电子书的工具，build可以生成html。mdbook-pdf是生成pdf的插件。mdBook-pagetoc是生成页内目录的插件。
+mdbook是Rust写的markdown写电子书的工具，build可以生成html。mdbook-pdf是生成pdf的插件。mdBook-pagetoc是生成页内目录的插件。mdbook-theme是theme仓库。
 
 > https://github.com/rust-lang/mdBook
 > https://github.com/HollowMan6/mdbook-pdf
 > https://github.com/JorelAli/mdBook-pagetoc
+> https://github.com/zjp-CN/mdbook-theme
 
 # zsh & ohmyzsh
 
@@ -57,5 +58,4 @@ mdbook是Rust写的markdown写电子书的工具，build可以生成html。mdboo
 
 # gh (github cli)
 github的命令行操作，git的补充。
-
 
