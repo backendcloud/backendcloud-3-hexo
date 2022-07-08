@@ -10,6 +10,10 @@
    * 有助于生产力，有助于融合DevOps的自动化脚本和工具
 * 其他融合解决方案（integrated solution）
 * 开源项目[KubeFusion](https://github.com/kubefusion)（该Github账号下的主项目KubeFusion是包含多种融合技术的集成和定制以及KubeFusion自身特有功能，其他项目是关于fusion scheme以及主项目的关联小项目。在筹备中，可能2022年会上几个小项目，2023年上半年发布KubeFusion v0.1版）
+* 出版书籍
+  * [《KubeVirt CI》](http://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。
+  * 《Bazel在企业项目中的应用》 in the plan
+  * 《KubeVirt源码分析》 in the plan
 
 [//]: # (1.虚拟机技术和容器技术的融合 2.多云融合（多云（公有云私有云中心云边缘云）融合管理，分布式应用融合部署）3.在1和2融合环境上的全语言全平台CICD)
 [//]: # (* 容器和虚拟机融合技术，如KubeVirt生态)
