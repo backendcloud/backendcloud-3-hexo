@@ -49,6 +49,8 @@ If sudo merely called exec, then sudo couldn't do things like run any cleanup ta
 |CMD [“p1_cmd”, “p2_cmd”]|	p1_cmd p2_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry p1_cmd p2_cmd|
 |CMD exec_cmd p1_cmd	|/bin/sh -c exec_cmd p1_cmd	|/bin/sh -c exec_entry p1_entry	|exec_entry p1_entry /bin/sh -c exec_cmd p1_cmd|
 
+> 所以下面的Dockfile，docker-entrypoint.sh是$0，redis-server是$1
+
 ## Dockfile
 ```yaml
 FROM alpine:3.4
