@@ -13,27 +13,7 @@ tags:
 1. gosu启动命令时只有一个进程，所以docker容器启动时使用gosu，那么该进程可以做到PID等于1；
 2. sudo启动命令时先创建sudo进程，然后该进程作为父进程去创建子进程，1号PID被sudo进程占据；
 
-# su & gosu
-```bash
-$ docker run -it --rm ubuntu:trusty su -c 'exec ps aux'
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root         1  0.0  0.0  46636  2688 ?        Ss+  02:22   0:00 su -c exec ps a
-root         6  0.0  0.0  15576  2220 ?        Rs   02:22   0:00 ps aux
-$ docker run -it --rm ubuntu:trusty sudo ps aux
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root         1  3.0  0.0  46020  3144 ?        Ss+  02:22   0:00 sudo ps aux
-root         7  0.0  0.0  15576  2172 ?        R+   02:22   0:00 ps aux
-$ docker run -it --rm -v $PWD/gosu-amd64:/usr/local/bin/gosu:ro ubuntu:trusty gosu root ps aux
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root         1  0.0  0.0   7140   768 ?        Rs+  02:22   0:00 ps aux
-```
 
-# sudo: Why does sudo call fork() and exec() rather than just exec()?
-
-If sudo merely called exec, then sudo couldn't do things like run any cleanup tasks when the exec'd code completed. Take `pam_open_session` and `pam_close_session` for example.
-
-> https://linux.die.net/man/3/pam_open_session
-> https://linux.die.net/man/3/pam_close_session
 
 # 拿经典的redis镜像举例
 
@@ -98,3 +78,35 @@ exec "$@"
 $ docker run -it redis id
 uid=0(root) gid=0(root) groups=0(root)
 ```
+
+# 附 为何要用gosu代替sudo
+
+sudo as it has unpredictable TTY and signal-forwarding behavior that can cause problems
+
+> 上面是docker官方best practices提到的 https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
+
+gosu官方仓库有一段回复 https://github.com/tianon/gosu#gosu
+
+
+## su & gosu
+```bash
+$ docker run -it --rm ubuntu:trusty su -c 'exec ps aux'
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0  46636  2688 ?        Ss+  02:22   0:00 su -c exec ps a
+root         6  0.0  0.0  15576  2220 ?        Rs   02:22   0:00 ps aux
+$ docker run -it --rm ubuntu:trusty sudo ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  3.0  0.0  46020  3144 ?        Ss+  02:22   0:00 sudo ps aux
+root         7  0.0  0.0  15576  2172 ?        R+   02:22   0:00 ps aux
+$ docker run -it --rm -v $PWD/gosu-amd64:/usr/local/bin/gosu:ro ubuntu:trusty gosu root ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   7140   768 ?        Rs+  02:22   0:00 ps aux
+```
+
+## sudo: Why does sudo call fork() and exec() rather than just exec()?
+
+If sudo merely called exec, then sudo couldn't do things like run any cleanup tasks when the exec'd code completed. Take `pam_open_session` and `pam_close_session` for example.
+
+> https://linux.die.net/man/3/pam_open_session
+> https://linux.die.net/man/3/pam_close_session
+
