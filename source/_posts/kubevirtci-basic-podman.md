@@ -21,7 +21,7 @@ CentOS Stream 8/9 默认用Podman代替Docker。
 
 # Podman CLI
 
-podman和docker cli命令几乎完全一致，常用命令基本感觉不到区别。Podman CLI 里面87%的指令都和DOcker CLI 相同。
+podman和docker cli命令几乎完全一致，常用命令基本感觉不到区别。Podman CLI 里面87%的指令都和Docker CLI 相同。
 * podman ps
 * podman images
 * podman run -dit the-image
@@ -179,5 +179,28 @@ RTNETLINK answers: No such process
 ```
 
 现在这 2 个容器就可以相互 ping 通，并成功建立连接。点到点链路不需要子网和子网掩码。
+
+```bash
+ ⚡ root@localhost  ~/CLionProjects/untitled/src   master ±✚  docker exec -it c1 sh
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+41: A@if40: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP qlen 1000
+    link/ether 96:c6:c1:f4:4d:0f brd ff:ff:ff:ff:ff:ff
+    inet 10.1.1.1/32 scope global A
+       valid_lft forever preferred_lft forever
+    inet6 fe80::94c6:c1ff:fef4:4d0f/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # ping 10.1.1.2
+PING 10.1.1.2 (10.1.1.2): 56 data bytes
+64 bytes from 10.1.1.2: seq=0 ttl=64 time=0.153 ms
+64 bytes from 10.1.1.2: seq=1 ttl=64 time=0.045 ms
+64 bytes from 10.1.1.2: seq=2 ttl=64 time=0.046 ms
+```
 
 此外，也可以不指定 --net=none 来创建点到点链路。这样容器还可以通过原先的网络来通信。
