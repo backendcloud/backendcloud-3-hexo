@@ -87,7 +87,7 @@ Storing signatures
 a37976309a6375e3107bf0c89cc373d6c0b953b6596238006aabf0ac3bcfa762
 ```
 
-# dns
+# DNS
 
 ```bash
  ✘ ⚡ root@localhost  /dev/pts  podman exec -it d4df0ba3f7e5 sh
