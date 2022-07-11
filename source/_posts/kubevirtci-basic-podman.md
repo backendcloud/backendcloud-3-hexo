@@ -54,7 +54,7 @@ pinging container registry localhost:5000: Get "https://localhost:5000/v2/": htt
     insecure = true
 
 ```bash
- ⚡ root@localhost  /dev/pts  podman system info|grep Inse -B3 -A5 
+ ⚡ root@localhost  ~/CLionProjects/untitled/src   master ±✚  podman system info|grep Inse -B3 -A5 
 registries:
   localhost:5000:
     Blocked: false
@@ -117,10 +117,10 @@ tmpfs on /etc/resolv.conf type tmpfs (rw,seclabel,size=2469232k,nr_inodes=819200
 
 Podman 服务默认会创建一个 podman0 网桥，它在内核层连通了其他的物理或虚拟网卡，这就将所有容器和本地主机都放到同一个物理网络。
 
-    ⚡ root@localhost  /dev/pts  podman network ls
+    ⚡ root@localhost  ~/CLionProjects/untitled/src   master ±✚  podman network ls
     NETWORK ID    NAME        DRIVER
     2f259bab93aa  podman      bridge
-    ⚡ root@localhost  /dev/pts  ip a
+    ⚡ root@localhost  ~/CLionProjects/untitled/src   master ±✚  ip a
     ...
     3: podman0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
         link/ether 4e:41:72:5c:b5:0e brd ff:ff:ff:ff:ff:ff
@@ -181,7 +181,7 @@ RTNETLINK answers: No such process
 现在这 2 个容器就可以相互 ping 通，并成功建立连接。点到点链路不需要子网和子网掩码。
 
 ```bash
- ⚡ root@localhost  ~/CLionProjects/untitled/src   master ±✚  docker exec -it c1 sh
+ ⚡ root@localhost  ~/CLionProjects/untitled/src   master ±✚  podman exec -it c1 sh
 Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
 / # ip a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
