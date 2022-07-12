@@ -7,7 +7,18 @@ tags:
 - Rust
 ---
 
-> Rust是现代语言，虽然工作上不一定用到，目前很难靠这个吃饭，但其设计思想非常值得学习。另外一个需要学习的重要原因是从语言的生命周期说，Rust处于快速上升期，而Java处于快速下降期，Go处于成熟期。换成大白话就是Rust有未来。
+> Rust是现代语言，虽然工作上不一定用到，目前很难靠这个吃饭，但其设计思想非常值得学习。另外一个需要学习的重要原因是从语言的生命周期说，Rust处于快速上升期，Java快速下降期，Go稳定期，换成大白话就是Rust有未来。
+
+现在的Rust的体量太小，和Java，Go的生态比还不值一提。但在云原生，web框架，中间件也已经有了些明星项目。比如：
+
+* https://github.com/kube-rs/kube-rs 
+* https://github.com/hyperium/tonic
+* https://github.com/iron/iron
+
+Rust目前在嵌入式，机器人，云原生几个重点领域已经有了不少的应用。还有几个Rust写的著名的操作系统。
+* https://github.com/redox-os/redox
+* https://rcore-os.github.io/rCore-Tutorial-Book-v3/
+
 
 > 本文作者对Rust也就是只接触1小时，仅从语言的外观找出些特性。本篇并非深入研究Rust。
 

@@ -119,7 +119,10 @@ docker build --build-arg centos_version=$centos_version . -t quay.io/kubevirtci/
 
 version
 
-  20210210.0
+
+    20210210.0
+
+
 
 Dockerfile
 ```bash
