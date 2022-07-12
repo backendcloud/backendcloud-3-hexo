@@ -9,9 +9,12 @@ tags:
 
 # Rust - 面向未来
 
-> Rust是现代语言，虽然工作上不一定用到，目前很难靠这个吃饭，但其设计思想非常值得学习。另外一个需要学习的重要原因是从语言的生命周期说，Rust处于快速上升期，Java快速下降期，Go稳定期，换成大白话就是Rust有未来。
+虽然Rust工作上不一定用到，目前很难靠这个吃饭。但因为下面几个原因，有必要了解下Rust：
+* 2016 年开始，截止到 2021年，Rust 连续五年成为 StackOverflow 语言榜上最受欢迎的语言
+* 非常新的语言，没有历史包袱，融入了很多现代编程的思想，非常值得借鉴。
+* 从语言的生命周期说，Rust处于快速上升期，Java快速下降期，Go稳定期，换成大白话就是Rust有更好的未来。
 
-现在的Rust的体量太小，和Java，Go的生态比还不值一提。但在云原生，web框架，中间件也已经有了些明星项目。比如：
+现在的Rust生态的体量太小，和Java，Go的生态比还不值一提。但在云原生，web框架，中间件以及应用领域也已经有了些明星项目。比如：
 
 * https://github.com/kube-rs/kube-rs 
 * https://github.com/bottlerocket-os/bottlerocket
@@ -24,14 +27,15 @@ tags:
 * https://github.com/alacritty/alacritty
 * https://github.com/EmbarkStudios/rust-gpu
 
-Rust目前在嵌入式，机器人，云原生几个重点领域已经有了不少的应用。还有几个Rust写的著名的操作系统。
+Rust目前在嵌入式，机器人，云原生几个重点领域有广阔发展前景。还有几个Rust写的著名的操作系统。
 * https://gitlab.redox-os.org/redox-os/redox
 * https://github.com/rcore-os/rCore   https://rcore-os.github.io/rCore-Tutorial-Book-v3/
 
 
-> 本文作者对Rust也就是只接触1小时，仅从语言的外观找出些特性。本篇并非深入研究Rust。
 
 # 特别的语法
+
+> 本文作者对Rust也就是只接触1小时，仅从语言的外观找出些特性。本篇并非深入研究Rust。
 
 ## 覆盖
 
