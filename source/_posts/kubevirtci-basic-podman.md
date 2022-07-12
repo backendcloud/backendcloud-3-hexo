@@ -37,8 +37,6 @@ podman和docker cli命令几乎完全一致，常用命令基本感觉不到区�
 
     podman run -d -p 5000:5000 --name registry registry:2
 
-
-
 # Podman - http: server gave HTTP response to HTTPS client
 
 私有仓库推送镜像的时候失败，报了常见的错误：
@@ -49,9 +47,11 @@ pinging container registry localhost:5000: Get "https://localhost:5000/v2/": htt
 
 编辑 /etc/containers/registries.conf 增加：
 
-    [[registry]]
-    location = "localhost:5000"
-    insecure = true
+```toml
+[[registry]]
+location = "localhost:5000"
+insecure = true
+```
 
 ```bash
  ⚡ root@localhost  ~/CLionProjects/untitled/src   master ±✚  podman system info|grep Inse -B3 -A5 
@@ -90,7 +90,7 @@ a37976309a6375e3107bf0c89cc373d6c0b953b6596238006aabf0ac3bcfa762
 # DNS
 
 ```bash
- ✘ ⚡ root@localhost  /dev/pts  podman exec -it d4df0ba3f7e5 sh
+ ⚡ root@localhost  /dev/pts  podman exec -it d4df0ba3f7e5 sh
 / # mount|grep hosts
 tmpfs on /etc/hosts type tmpfs (rw,seclabel,size=2469232k,nr_inodes=819200,mode=755,inode64)
 / # mount|grep hostname

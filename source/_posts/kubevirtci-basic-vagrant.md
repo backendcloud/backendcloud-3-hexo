@@ -1,5 +1,5 @@
 ---
-title: kubevirtci-basic-vagrant(workinprocess)
+title: 一步步学KubeVirt CI （5） - Vagrant
 readmore: true
 date: 2022-07-11 19:50:45
 categories: 云原生
@@ -7,12 +7,13 @@ tags:
 - KubeVirt CI
 ---
 
-
 # vagrant install
 
-    sudo yum install -y yum-utils
-    sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-    sudo yum -y install vagrant
+```bash
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+sudo yum -y install vagrant
+```
 
 # run vagrant
 
@@ -75,7 +76,7 @@ the comments in the Vagrantfile as well as documentation on
 `vagrantup.com` for more information on using Vagrant.
  ⚡ root@localhost  ~/tt  ls
 Vagrantfile
- ⚡ root@localhost  ~/tt  vagrant up                     
+ ⚡ root@localhost  ~/tt  vagrant up
 No usable default provider could be found for your system.
 
 Vagrant relies on interactions with 3rd party systems, known as
@@ -109,3 +110,108 @@ WARNING: The vboxdrv kernel module is not loaded. Either there is no module
 6.1.34r150636
  ⚡ root@localhost  ~/tt  
  ```
+
+CentOS Stream 9已经装了vagrant和virtualBox，提示不支持当前的linux内核，竟然不支持当前内核。virtualBox官网看了，只有最高到Centos Stream 8的版本，算了，virtualBox + vagrant就改在windows下跑吧。
+
+```powershell
+PS C:\Users\hanwei\tt> vagrant init hashicorp/bionic64
+A `Vagrantfile` has been placed in this directory. You are now
+ready to `vagrant up` your first virtual environment! Please read
+the comments in the Vagrantfile as well as documentation on
+`vagrantup.com` for more information on using Vagrant.
+PS C:\Users\hanwei\tt> ls
+
+
+    目录: C:\Users\hanwei\tt
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         2022/7/12      9:02           3094 Vagrantfile
+
+
+PS C:\Users\hanwei\tt> vagrant up
+No usable default provider could be found for your system.
+
+Vagrant relies on interactions with 3rd party systems, known as
+"providers", to provide Vagrant with resources to run development
+environments. Examples are VirtualBox, VMware, Hyper-V.
+
+The easiest solution to this message is to install VirtualBox, which
+is available for free on all major platforms.
+
+If you believe you already have a provider available, make sure it
+is properly installed and configured. You can see more details about
+why a particular provider isn't working by forcing usage with
+`vagrant up --provider=PROVIDER`, which should give you a more specific
+error message for that particular provider.
+PS C:\Users\hanwei\tt> vagrant up --provider=VMware
+The provider 'VMware' could not be found, but was requested to
+back the machine 'default'. Please use a provider that exists.
+
+Vagrant knows about the following providers: docker, hyperv, virtualbox
+PS C:\Users\hanwei\tt> vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+==> default: Box 'hashicorp/bionic64' could not be found. Attempting to find and install...
+    default: Box Provider: virtualbox
+    default: Box Version: >= 0
+==> default: Loading metadata for box 'hashicorp/bionic64'
+    default: URL: https://vagrantcloud.com/hashicorp/bionic64
+==> default: Adding box 'hashicorp/bionic64' (v1.0.282) for provider: virtualbox
+    default: Downloading: https://vagrantcloud.com/hashicorp/boxes/bionic64/versions/1.0.282/providers/virtualbox.box
+    default:
+==> default: Successfully added box 'hashicorp/bionic64' (v1.0.282) for 'virtualbox'!
+==> default: Importing base box 'hashicorp/bionic64'...
+==> default: Matching MAC address for NAT networking...
+==> default: Checking if box 'hashicorp/bionic64' version '1.0.282' is up to date...
+==> default: Setting the name of the VM: tt_default_1657588035744_45442
+Vagrant is currently configured to create VirtualBox synced folders with
+the `SharedFoldersEnableSymlinksCreate` option enabled. If the Vagrant
+guest is not trusted, you may want to disable this option. For more
+information on this option, please refer to the VirtualBox manual:
+
+  https://www.virtualbox.org/manual/ch04.html#sharedfolders
+
+This option can be disabled globally with an environment variable:
+
+  VAGRANT_DISABLE_VBOXSYMLINKCREATE=1
+
+or on a per folder basis within the Vagrantfile:
+
+  config.vm.synced_folder '/host/path', '/guest/path', SharedFoldersEnableSymlinksCreate: false
+==> default: Clearing any previously set network interfaces...
+==> default: Preparing network interfaces based on configuration...
+    default: Adapter 1: nat
+==> default: Forwarding ports...
+    default: 22 (guest) => 2222 (host) (adapter 1)
+==> default: Booting VM...
+==> default: Waiting for machine to boot. This may take a few minutes...
+    default: SSH address: 127.0.0.1:2222
+    default: SSH username: vagrant
+    default: SSH auth method: private key
+    default: Warning: Connection aborted. Retrying...
+    default: Warning: Connection reset. Retrying...
+    default:
+    default: Vagrant insecure key detected. Vagrant will automatically replace
+    default: this with a newly generated keypair for better security.
+    default:
+    default: Inserting generated public key within guest...
+    default: Removing insecure key from the guest if it's present...
+    default: Key inserted! Disconnecting and reconnecting using new SSH key...
+==> default: Machine booted and ready!
+==> default: Checking for guest additions in VM...
+    default: The guest additions on this VM do not match the installed version of
+    default: VirtualBox! In most cases this is fine, but in rare cases it can
+    default: prevent things such as shared folders from working properly. If you see
+    default: shared folder errors, please make sure the guest additions within the
+    default: virtual machine match the version of VirtualBox you have installed on
+    default: your host and reload your VM.
+    default:
+    default: Guest Additions Version: 6.0.10
+    default: VirtualBox Version: 6.1
+==> default: Mounting shared folders...
+    default: /vagrant => C:/Users/hanwei/tt
+PS C:\Users\hanwei\tt>
+```
+
+ ![](/images/kubevirtci-basic-vagrant/2022-07-12-09-14-26.png)
