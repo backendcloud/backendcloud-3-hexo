@@ -12,7 +12,7 @@ tags:
 虽然Rust工作上不一定用到，目前很难靠这个吃饭。但因为下面几个原因，有必要了解下Rust：
 * 2016 年开始，截止到 2021年，Rust 连续五年成为 StackOverflow 语言榜上最受欢迎的语言。
 * 非常新的语言，没有历史包袱，融入了很多现代编程的思想，非常值得借鉴。
-* 从语言的生命周期说，Rust处于快速上升期，Java快速下降期，Go稳定期，换成大白话就是Rust有更好的未来。
+* 从语言的生命周期说，Rust处于快速上升期，换成大白话就是Rust有更好的未来。
 
 现在的Rust生态的体量太小，和Java，Go的生态比还不值一提。但在云原生，web框架，中间件以及应用领域也已经有了些明星项目。比如：
 
@@ -80,6 +80,80 @@ fn dangle() -> &String {
 ```
 > 上面的代码在编译时候就会报错：Missing lifetime specifier
 
+## 函数和struct方法（Rust没有类的概念，可以用struct实现类的功能，这点和Go很像）和关联函数
+```rust
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    length: u32,
+}
+
+fn main() {
+    let rect = Rectangle {
+        width: 30,
+        length: 50,
+    };
+    println!("{}", area(&rect));
+    println!("{:#?}", rect);
+}
+
+fn area(rect: &Rectangle) -> u32 {
+    rect.width * rect.length
+}
+```
+
+```rust
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    length: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.length
+    }
+}
+fn main() {
+    let rect = Rectangle {
+        width: 30,
+        length: 50,
+    };
+    println!("{}", rect.area());
+    println!("{:#?}", rect);
+}
+```
+
+```rust
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    length: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.length
+    }
+
+    fn square(size: u32) -> Rectangle {
+        Rectangle {
+            width: size,
+            length: size,
+        }
+    }
+}
+fn main() {
+    let s = Rectangle::square(20);
+    println!("{:#?}", s);
+    let rect = Rectangle {
+        width: 30,
+        length: 50,
+    };
+    println!("{}", rect.area());
+    println!("{:#?}", rect);
+}
+```
 
 # 所有权
 
