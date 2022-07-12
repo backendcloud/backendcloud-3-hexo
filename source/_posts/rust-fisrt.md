@@ -1,5 +1,5 @@
 ---
-title: Rust初探
+title: 初识Rust
 readmore: false
 date: 2022-07-12 21:01:35
 categories: 未分类
@@ -55,6 +55,31 @@ let guess:u32 = match guess.trim().parse(){
 
 ## println!
 println!不是函数，而是macro宏。使用!来区分它们与普通方法调用。
+
+## 对可变引用的限制
+Rust语言在特定的作用域内，只能有一个可变的引用。可以用于在编译时防止数据竞争。例如：
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+    let s1 = &mut s;
+    let s2 = &mut s;
+    println!("{}, {}",s1, s2)
+}
+```
+> 上面的代码在编译时候就会报错：Cannot borrow `s` as mutable more than once at a time
+
+## 不存在悬空引用
+其他语言会发生：一个指针引用了内存中的某个地址，而这块内存可能已经释放并另作他用了。在Rust里，编译器可保证不出现此类情况。例如下面的代码s出了函数作用域会被销毁，但是返回了一个对被销毁对象的引用，编译不会通过，提示缺少生命周期说明符：
+
+```rust
+fn dangle() -> &String {
+    let s = String::from("hello");
+    return &s;
+}
+```
+> 上面的代码在编译时候就会报错：Missing lifetime specifier
+
 
 # 所有权
 
