@@ -7,7 +7,6 @@ tags:
 - KubeVirt CI
 ---
 
-
 # run
 
 > 先把流程跑通一遍。
@@ -123,7 +122,7 @@ version
   20210210.0
 
 Dockerfile
-```
+```bash
 
 FROM quay.io/fedora/fedora@sha256:38813cf0913241b7f13c7057e122f7c3cfa2e7c427dca3194f933d94612e280b
 
