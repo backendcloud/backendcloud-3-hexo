@@ -17,7 +17,7 @@ tags:
 
 Rust目前在嵌入式，机器人，云原生几个重点领域已经有了不少的应用。还有几个Rust写的著名的操作系统。
 * https://github.com/redox-os/redox
-* https://rcore-os.github.io/rCore-Tutorial-Book-v3/
+* https://github.com/rcore-os/rCore   https://rcore-os.github.io/rCore-Tutorial-Book-v3/
 
 
 > 本文作者对Rust也就是只接触1小时，仅从语言的外观找出些特性。本篇并非深入研究Rust。
