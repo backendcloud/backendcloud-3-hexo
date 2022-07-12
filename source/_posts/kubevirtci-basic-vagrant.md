@@ -1,7 +1,7 @@
 ---
 title: 一步步学KubeVirt CI （5） - Vagrant
 readmore: true
-date: 2022-07-11 19:50:45
+date: 2022-07-12 19:50:45
 categories: 云原生
 tags:
 - KubeVirt CI
