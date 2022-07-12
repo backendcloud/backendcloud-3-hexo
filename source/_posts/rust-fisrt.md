@@ -12,8 +12,15 @@ tags:
 现在的Rust的体量太小，和Java，Go的生态比还不值一提。但在云原生，web框架，中间件也已经有了些明星项目。比如：
 
 * https://github.com/kube-rs/kube-rs 
+* https://github.com/bottlerocket-os/bottlerocket
+* https://github.com/containers/youki
+* https://github.com/firecracker-microvm/firecracker
+* https://github.com/nushell/nushell
 * https://github.com/hyperium/tonic
 * https://github.com/iron/iron
+* https://github.com/swc-project/swc
+* https://github.com/alacritty/alacritty
+* https://github.com/EmbarkStudios/rust-gpu
 
 Rust目前在嵌入式，机器人，云原生几个重点领域已经有了不少的应用。还有几个Rust写的著名的操作系统。
 * https://gitlab.redox-os.org/redox-os/redox
