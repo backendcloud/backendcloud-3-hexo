@@ -37,10 +37,10 @@ Rust目前在嵌入式，机器人，云原生几个重点领域有广阔发展�
 
 > 仅从语言的外观找出些特性。本篇并非深入研究Rust。
 
-## 没有null
+## 没有Null
 Rust没有其他语言的null，因为当尝试使用非Null值那样使用Null值，就会引起错误。这是个Billion dollar mistake。
 
-虽然Rust中没有Null这个东西，但Rust中有Null这个概念，Rust提供拥有Null这个概念的枚举Option<T>。
+虽然Rust中没有Null这个东西，但Rust中有Null这个概念，Rust提供拥有Null这个概念的枚举`Option<T>`。
 
 ## 覆盖
 
