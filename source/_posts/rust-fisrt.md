@@ -85,7 +85,10 @@ fn dangle() -> &String {
 ```
 > 上面的代码在编译时候就会报错：Missing lifetime specifier
 
-## 函数和struct方法（Rust没有类的概念，可以用struct实现类的功能，这点和Go很像）和关联函数
+## 函数 和 方法 和 关联函数
+
+### 函数
+
 ```rust
 #[derive(Debug)]
 struct Rectangle {
@@ -107,6 +110,7 @@ fn area(rect: &Rectangle) -> u32 {
 }
 ```
 
+### struct方法（Rust没有类的概念，可以用struct实现类的功能，这点和Go很像）
 ```rust
 #[derive(Debug)]
 struct Rectangle {
@@ -119,6 +123,7 @@ impl Rectangle {
         self.width * self.length
     }
 }
+
 fn main() {
     let rect = Rectangle {
         width: 30,
@@ -129,6 +134,7 @@ fn main() {
 }
 ```
 
+### 关联函数
 ```rust
 #[derive(Debug)]
 struct Rectangle {
@@ -148,6 +154,7 @@ impl Rectangle {
         }
     }
 }
+
 fn main() {
     let s = Rectangle::square(20);
     println!("{:#?}", s);
@@ -164,6 +171,33 @@ fn main() {
 * Option<T>
 * 枚举可以和struct一样实现其他语言类的功能
 * 可以在枚举类型的变体中嵌入任意类型的数据（如数值，字符串，struct，另外一种枚举类型）
+
+## 不能在同一作用域内同时拥有可变和不可变引用。
+
+```rust
+fn main() {
+    let mut v = vec![1,2,3,4,5];
+    let first = &v[0];
+    v.push(6);
+    println!("The first element is {}", first);
+}
+```
+编译报错：
+```bash
+error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
+ --> src\main.rs:4:5
+  |
+3 |     let first = &v[0];
+  |                  - immutable borrow occurs here
+4 |     v.push(6);
+  |     ^^^^^^^^^ mutable borrow occurs here
+5 |     println!("The first element is {}", first);
+  |                                         ----- immutable borrow later used here
+
+```
+> vect这种数据类型是放在heap上的，在内存中的摆放是连续的。所以在往vect添加一个元素时，在内存中就可能没有这么大的连续内存块了，
+Rust这时就把内存重新分配下，再找个足够大的内存来存放这个添加内存之后的vect，这样原来的内存会被释放和重新分配，而上面代码
+的first仍然指向原来的地址，这样程序就出问题了。Rust的借用规则在编译时就可以防止这种情况发生。
 
 # 所有权
 
