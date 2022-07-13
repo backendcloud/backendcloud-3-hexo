@@ -40,7 +40,7 @@ Rust目前在嵌入式，机器人，云原生几个重点领域有广阔发展�
 ## 没有Null
 Rust没有其他语言的null，因为当尝试使用非Null值那样使用Null值，就会引起错误。这是个Billion dollar mistake。
 
-虽然Rust中没有Null这个东西，但Rust中有Null这个概念，Rust提供拥有Null这个概念的枚举`Option<T>`。
+虽然Rust中没有Null这个东西，但Rust中有Null这个概念，Rust提供拥有Null这个概念：`Option<T>`。
 
 ## 覆盖
 
@@ -169,7 +169,7 @@ fn main() {
 
 ## 枚举很强大，相对于其他语言的枚举
 * `Option<T>`
-* 枚举可以和struct一样实现其他语言类的功能
+* 枚举可以和struct一样实现其他语言中`类`的功能
 * 可以在枚举类型的变体中嵌入任意类型的数据（如数值，字符串，struct，另外一种枚举类型）
 
 ## 不能在同一作用域内同时拥有可变和不可变引用。
@@ -195,9 +195,7 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
   |                                         ----- immutable borrow later used here
 
 ```
-> vect这种数据类型是放在heap上的，在内存中的摆放是连续的。所以在往vect添加一个元素时，在内存中就可能没有这么大的连续内存块了，
-Rust这时就把内存重新分配下，再找个足够大的内存来存放这个添加内存之后的vect，这样原来的内存会被释放和重新分配，而上面代码
-的first仍然指向原来的地址，这样程序就出问题了。Rust的借用规则在编译时就可以防止这种情况发生。
+> vect这种数据类型是放在heap上的，在内存中的摆放是连续的。所以在往vect添加一个元素时，在内存中就可能没有这么大的连续内存块了，Rust这时就把内存重新分配下，再找个足够大的内存来存放这个添加内存之后的ect，这样原来的内存会被释放和重新分配，而上面代码的first仍然指向原来的地址，这样程序就出问题了。Rust的借用规则在编译时就可以防止这种情况发生。
 
 # 所有权
 
