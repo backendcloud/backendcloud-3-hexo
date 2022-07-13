@@ -197,6 +197,21 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
 ```
 > vect这种数据类型是放在heap上的，在内存中的摆放是连续的。所以在往vect添加一个元素时，在内存中就可能没有这么大的连续内存块了，Rust这时就把内存重新分配下，再找个足够大的内存来存放这个添加内存之后的ect，这样原来的内存会被释放和重新分配，而上面代码的first仍然指向原来的地址，这样程序就出问题了。Rust的借用规则在编译时就可以防止这种情况发生。
 
+## HashMap
+```rust
+use std::collections::HashMap;
+
+fn main() {
+    let text = "hello world wonderfull world";
+    let mut map = HashMap::new();
+    for word in text.split_whitespace() {
+        let count = map.entry(word).or_insert(0);
+        *count += 1;
+    }
+    print!("{:#?}", map);
+}
+```
+
 # 所有权
 
 ```rust
@@ -224,3 +239,4 @@ fn makes_copy(some_number:i32)
 * 存在heap的数据的变量离开作用域，它的值会被drop函数清理，除非数据的所有权移动到另一个变量上。
 * 把引用作为函数参数这个行为叫做借用，用符号&表示引用，引用不会取得所有权。
 > stack访问速度快，heap访问速度慢。一般标量是放在stack中的，String变量的内容放在heap上，其地址和字符个数这些存放在stack上。
+
