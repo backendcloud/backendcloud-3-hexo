@@ -230,6 +230,63 @@ fn main() {
 }
 ```
 
+## 错误传播
+除了可以在函数中处理错误外，还可以将错误返回给函数的调用者，让调用者决定如何进一步处理错误。
+
+```rust
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut s = String::new();
+    File::open("hello.txt")?.read_to_string(&mut s)?;
+    Ok(s)
+}
+
+fn main() {
+    let result = read_username_from_file();
+}
+```
+
+## 泛型
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+
+fn main() {}
+```
+
+再如下面的代码中x1方法只有在`Point<i32>`中存在x1方法
+
+```rust
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Point<T> {
+    fn x(&self) -> &T {
+        &self.x
+    }
+}
+
+impl Point<i32> {
+    fn x1(&self) -> &i32 {
+        &self.x
+    }
+}
+
+fn main() {}
+```
+
 # 所有权
 
 ```rust
