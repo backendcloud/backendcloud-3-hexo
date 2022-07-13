@@ -18,7 +18,7 @@ Containers     0           0           0B          0B (0%)
 Local Volumes  1           0           23.29GB     23.29GB (100%)
 ```
 
-Podman占空间的主要是镜像文件和本地卷，分别坐下清理
+Podman占空间的主要是镜像文件和本地卷，分别做下清理
 
 ```bash
 podman system prune -a
@@ -103,9 +103,9 @@ Command (m for help):
 
 # 思路
 
-有两个思路，第一个用`fdisk`新建分区，`mkds`格式化新建分区，然后`pvcreate`将新建的分区创建物理卷，再利用`lvextend`将物理卷合并到原来的卷组中。这样做总感觉文件存放在两个拼接的分区性能受影响。
+有两个思路，第一个思路：用`fdisk`新建分区，`mkfs`格式化新建分区，然后`pvcreate`将新建的分区创建物理卷，再利用`lvextend`将物理卷合并到原来的卷组中。这样做总感觉文件存放在两个拼接的分区性能受影响。
 
-于是又了另一个思路，将未分区的空间合并到已分区的空间。就是将110G的未分配空间合并到/dev/sda3
+于是又了另一个思路：将未分区的空间合并到已分区的空间。就是将110G的未分配空间合并到/dev/sda3
 
 ```bash
  parted ---pretend-input-tty /dev/sda resizepart 3 100%;

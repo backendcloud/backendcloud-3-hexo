@@ -195,7 +195,7 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
   |                                         ----- immutable borrow later used here
 
 ```
-> vect这种数据类型是放在heap上的，在内存中的摆放是连续的。所以在往vect添加一个元素时，在内存中就可能没有这么大的连续内存块了，Rust这时就把内存重新分配下，再找个足够大的内存来存放这个添加内存之后的ect，这样原来的内存会被释放和重新分配，而上面代码的first仍然指向原来的地址，这样程序就出问题了。Rust的借用规则在编译时就可以防止这种情况发生。
+> vec这种数据类型是放在heap上的，在内存中的摆放是连续的。所以在往vec添加一个元素时，在内存中就可能没有这么大的连续内存块了，Rust这时就把内存重新分配下，再找个足够大的内存来存放这个添加了元素之后的vec，这样原来的内存会被释放和重新分配，而上面代码的first仍然指向原来的地址，这样程序就出问题了。Rust的借用规则在编译时就可以防止这种情况发生。
 
 ## HashMap
 ```rust
