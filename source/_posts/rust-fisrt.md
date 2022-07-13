@@ -61,7 +61,7 @@ let guess:u32 = match guess.trim().parse(){
 ## println!
 println!不是函数，而是macro宏。使用!来区分它们与普通方法调用。
 
-## 对可变引用的限制
+## 对多个可变引用的限制
 Rust语言在特定的作用域内，只能有一个可变的引用。可以用于在编译时防止数据竞争。例如：
 
 ```rust
@@ -110,7 +110,7 @@ fn area(rect: &Rectangle) -> u32 {
 }
 ```
 
-### struct方法（Rust没有类的概念，可以用struct实现类的功能，这点和Go很像）
+### struct方法（Rust没有类的概念，可以用struct实现类的功能，这点和Go很像）（用struct实例化后的名称+点调用）
 ```rust
 #[derive(Debug)]
 struct Rectangle {
@@ -134,7 +134,7 @@ fn main() {
 }
 ```
 
-### 关联函数
+### 关联函数（用struct名称+冒号冒号调用）
 ```rust
 #[derive(Debug)]
 struct Rectangle {
@@ -168,7 +168,7 @@ fn main() {
 ```
 
 ## 枚举很强大，相对于其他语言的枚举
-* Option<T>
+* `Option<T>`
 * 枚举可以和struct一样实现其他语言类的功能
 * 可以在枚举类型的变体中嵌入任意类型的数据（如数值，字符串，struct，另外一种枚举类型）
 
