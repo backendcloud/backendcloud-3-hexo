@@ -27,9 +27,14 @@ tags:
 * https://github.com/alacritty/alacritty
 * https://github.com/EmbarkStudios/rust-gpu
 
-Rust目前在嵌入式，机器人，云原生几个重点领域有广阔发展前景。还有几个Rust写的著名的操作系统。
+Rust目前在嵌入式，机器人，云原生几个重点领域有广阔发展前景。操作系统和操作系统相关也有很多项目：
 * https://gitlab.redox-os.org/redox-os/redox
 * https://github.com/rcore-os/rCore   https://rcore-os.github.io/rCore-Tutorial-Book-v3/
+* https://github.com/Ko-oK-OS/xv6-rust
+* https://github.com/rustsbi/rustsbi
+* https://github.com/rcore-os/zCore
+* https://github.com/mit-pdos/biscuit
+* https://github.com/tock/tock
 
 
 
