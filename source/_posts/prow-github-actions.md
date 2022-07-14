@@ -96,6 +96,8 @@ jobs:
 ![](/images/prow-github-actions/2022-07-14-17-16-14.png)
 
 ## /close
+![](/images/prow-github-actions/2022-07-14-17-26-55.png)
 
 ## /reopen
+![](/images/prow-github-actions/2022-07-14-17-28-11.png)
 

@@ -7,4 +7,4 @@ tags:
 - KubeVirt CI
 ---
 
- > 参考之前发布过的一篇文章 {% post_link bazel-go-hello}
+> 参考之前发布过的一篇文章 {% post_link bazel-go-hello %}
