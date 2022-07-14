@@ -114,3 +114,4 @@ Getting more help:
  ⚡ root@localhost  ~  
 ```
 
+> 第一次执行`bazelisk`会下载配置文件中对应版本的bazel，没有就是最新版本。之后再执行`bazelisk`效果和速度等同于`bazel`。
