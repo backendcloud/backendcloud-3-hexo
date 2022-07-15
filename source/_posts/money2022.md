@@ -6,21 +6,6 @@ categories: 生活
 tags:
 ---
 
-```bash
-[developer@localhost ~]$ cat /sys/module/kvm_intel/parameters/nested
-N
-[developer@localhost ~]$ uname -r
-3.10.0-1160.el7.x86_64
-[developer@localhost ~]$ lsmod|grep kvm_intel
-kvm_intel             188740  0 
-kvm                   637289  1 kvm_intel
-# 上面有了kvm说明host bois打开了intel vmx，vmware也打开了intel vmx（该机器是vmware虚拟机），再确认下是否打开了嵌套虚拟化
-[developer@localhost ~]$ logout
-[root@localhost ~]# modprobe -r kvm_intel^C
-[root@localhost ~]# lsmod|grep kvm_intel
-kvm_intel             188740  0 
-```
-
 # 自媒体
 
 曾经看不上的硬广行为，如今却：
