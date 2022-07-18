@@ -10,6 +10,10 @@ tags:
 
 # virt-sysprep 是什么
 
+## 背景
+为了能够在模拟环境中快速创建KVM虚拟机，需要以虚拟机作为模版，快速clone出需要的部署集群所需虚拟机。
+
+## virt-sysprep
 virt-clone命令可以复制一个已经存在的虚拟机，这个命令只能在vm停机状态使用，它将克隆已存在VM的所有信息，包括UUID和MAC地址。
 
 我们可以使用virt-sysprep工具来配置新克隆的VM。virt-sysperp初始化虚拟机实例。virt-sysperp会将虚假机初始化到系统刚安装的状态，它会删除掉虚拟机中的ssh key文件、重置网络MAC地址、主机名以及系统用户。
