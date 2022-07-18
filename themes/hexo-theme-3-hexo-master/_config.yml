@@ -183,7 +183,7 @@ highlight:
   on: true # true开启代码高亮，开启需要关闭博客 _config.yml 中的 highlight
   lineNum: false # true显示行号
   copy: true # 复制功能
-  theme: zenbum
+  theme: github
 # 代码高亮主题,效果可以查看 https://highlightjs.org/static/demo/
 # 支持主题：
 # sublime : 参考sublime的高亮主题
