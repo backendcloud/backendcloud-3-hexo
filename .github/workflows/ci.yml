@@ -51,6 +51,8 @@ jobs:
           npm i
           npm install hexo-readmore --save
           npm install hexo-deployer-git --save
+          npm un hexo-renderer-marked -S
+          npm i hexo-renderer-markdown-it markdown-it-emoji -S
       - name: Deploy hexo
         env:
           SSH_HOST_PRI: ${{ secrets.SSH_HOST }}
