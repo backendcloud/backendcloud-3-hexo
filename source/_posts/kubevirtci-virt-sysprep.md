@@ -16,7 +16,7 @@ tags:
 ## virt-sysprep 是什么
 virt-clone命令可以复制一个已经存在的虚拟机，这个命令只能在vm停机状态使用，它将克隆已存在VM的所有信息，包括UUID和MAC地址。
 
-我们可以使用virt-sysprep工具来配置新克隆的VM。virt-sysperp初始化虚拟机实例。virt-sysperp会将虚假机初始化到系统刚安装的状态，它会删除掉虚拟机中的ssh key文件、重置网络MAC地址、主机名以及系统用户。
+可以使用virt-sysprep工具来配置新克隆的VM。virt-sysperp初始化虚拟机实例。virt-sysperp会将虚假机初始化到系统刚安装的状态，它会删除掉虚拟机中的ssh key文件、重置网络MAC地址、主机名以及系统用户。
 
 # install
 ```bash
@@ -26,6 +26,7 @@ yum install libguestfs-tools -y
 
 # run
 ```bash
+#初始化
 [root@kvm-node1 images]# virt-sysprep -d kvm-clone1
 [ 0.0] Examining the guest ...
 [ 44.9] Performing "abrt-data" ...
@@ -64,7 +65,7 @@ yum install libguestfs-tools -y
 ```
 
 ```bash
-#重置虚拟机主机名和root用户账号(这里密码案例是 CHANGE_ME)
+# virt-sysprep参数很多，能配置的地方也很多，举个常用的配置hostname和root密码的例子：重置虚拟机主机名和root用户账号(这里密码案例是 CHANGE_ME)
 [root@kvm-node1 images]# virt-sysprep -d devstack --hostname devstack --root-password password:CHANGE_ME
 ```
 
