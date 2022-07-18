@@ -1,7 +1,7 @@
 ---
 title: Rust生态的现状和未来
 readmore: false
-date: 2022-07-18 10:35:32
+date: 2022-07-18 08:35:32
 categories: 未分类
 tags:
 ---
@@ -19,7 +19,7 @@ tags:
 google下一代全平台操作系统fuschia，现在很低调，2022年7月登进去，还是是每天都有大量代码merge。2016 年开始开发的 Fuchsia 操作系统，在 2020 年 12 月首次亮相于 google open source，其中 22% 的代码为 Rust 编写。2022年7月再去看，已经又一大半的底层代码用rust编写。
 
 # 云原生
-代表的项目:
+Rust在云原生的代表项目（随便列举几个）:
 * https://github.com/WasmEdge/WasmEdge
 * https://github.com/krustlet/krustlet
 * https://github.com/openeuler-mirror/stratovirt
@@ -38,25 +38,25 @@ runc 是一个有名的 low-level OCI rumtime, 他们就开发了一个 crun . p
 众所周知, golang 是容器生态的主要语言, podman 也是 go 写的,但是在 podman 4 的版本中, podman 增加了非 CNI 的网络栈支持, 这几个工具是 netavark 和 aardvark-dns, 这两个工具是 rust 写的, 而且还有 youki 这个 rust 写的 low-level OCI runtime, 不知道将来某一天 podman 会不会默认使用 youki , 还有好几个 rust 写的容器技术相关的应用和库, 这是要与 golang 分天下的节奏.
 
 # 区块链
-已完全取代Golang在区块链的地位，成为首选语言。
+Rust已完全取代Golang在区块链的地位，成为首选语言。
 
 # 嵌入式，机器人
-在大量蚕食c/c++的市场
+Rust在大量蚕食c/c++的市场
 
 # 中间件
 在数据处理层的中间件，Rust已经有很多生产级的应用。
 
 # 前端
-google的下一代全平台操作系统fuschia的前端是Flutter+Dart生态
+google的下一代全平台操作系统fuschia的前端是google自己的一套Flutter+Dart生态。
 
-javascript的所有工具链快要完全被rust取代了，以前的js工具链都是js编写的
-
-前端两大发展方向：wasm和js/ts  都被rust拿下
+前端原来是js和ts的天下，js是号称网页版的汇编，ts是完全兼容js的更高级的语言，js工具链都是js编写的。如今javascript的所有工具链快要完全被rust取代了。前端两各发展方向：wasm和js/ts  都被rust拿下。
 
 # web框架
-多如牛毛的用于web后端开发的web框架
+多如牛毛的用于web后端开发的Rust web框架
 
-# FFI（Foreign Function Interface）
+# Rust FFI（Foreign Function Interface）
 > 参考 https://doc.rust-lang.org/nomicon/ffi.html
 
-> Rust就如自己的名称一样，一种真菌的名字，这是要成为大一统的语言，大一统整个语言生态吗
+上面都是Rust生态的现状，那未来呢？
+
+> Rust就如自己的名称一样，一种真菌的名字，这是要成为大一统的语言，大一统整个语言生态吗？
