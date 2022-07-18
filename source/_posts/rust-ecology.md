@@ -43,8 +43,23 @@ Rust已完全取代Golang在区块链的地位，成为首选语言。
 ## 嵌入式，机器人
 Rust在大量蚕食c/c++的市场
 
+> 参考 https://github.com/rust-embedded/awesome-embedded-rust
+
 ## 中间件
 在数据处理层的中间件，Rust已经有很多生产级的应用。
+
+## GPU和游戏
+
+例如：
+* https://github.com/Rust-GPU/Rust-CUDA
+* https://github.com/EmbarkStudios/rust-gpu
+* https://github.com/bevyengine/bevy
+* https://github.com/FyroxEngine/Fyrox
+
+
+## 机器学习和科学计算
+
+Transformers，linfa，Polars，oxide-enzyme，MegFlow，qdrant等等
 
 ## 前端
 google的下一代全平台操作系统fuschia的前端是google自己的一套Flutter+Dart生态。
