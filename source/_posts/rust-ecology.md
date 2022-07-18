@@ -46,7 +46,7 @@ Rust在大量蚕食c/c++的市场
 > 参考 https://github.com/rust-embedded/awesome-embedded-rust
 
 ## 中间件
-在数据处理层的中间件，Rust已经有很多生产级的应用。
+在数据处理层的中间件，Rust已经有很多生产级的应用。这个领域是很多公司试水Rust开发项目的首选领域。也是Rust开始认为最擅长的领域。
 
 ## GPU和游戏
 
@@ -67,7 +67,7 @@ google的下一代全平台操作系统fuschia的前端是google自己的一套F
 前端原来是js和ts的天下，js是号称网页版的汇编，ts是完全兼容js的更高级的语言，js工具链都是js编写的。如今javascript的所有工具链快要完全被rust取代了。前端两大发展方向：wasm和js/ts  都被rust拿下。
 
 ## web框架
-多如牛毛的用于web后端开发的Rust web框架。
+多如牛毛的用于web后端开发的Rust web框架。Rocket，actix-web，yew，warp，axum，tokio等等。
 
 ## Rust FFI（Foreign Function Interface）
 > 参考 https://doc.rust-lang.org/nomicon/ffi.html
