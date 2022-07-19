@@ -131,9 +131,51 @@ exit 0
 ```
 > 设定timeout为20秒，等待interface down，若还没down则通过ifdown命令down掉，网口down的时候可能dhcpclient会起进程，kill掉对应网口的dhcpclient进程后进入清理文件的工作。
 
+## 清理防火墙规则和配置
 ```bash
+#!/usr/bin/env bash
+#
+# Remove any custom firewall rules or firewalld configuration
+#
+# Modern systems typically make use of the dynamic firewall daemon
+# firewalld which provides many advantages and additional features over
+# more traditional approaches. Customisation of the systems firewall rules
+# it handled through user space tools that output configuration
+# customisations to /etc/firewalld/zones and /etc/firewalld/services.
+# Deleting these files will remove any custom configuration from the
+# system
+#
+# Older systems or other firewall implementations usually persist rules
+# information for iptables in /etc/sysconfig/iptables and use the file to
+# configure the firewall at startup. As such simply deleting the file will
+# be enough to remove any custom configuration from the system
+set -o errexit
 
+fw_config_locations=(
+    "/etc/sysconfig/iptables"
+    "/etc/firewalld/services/*"
+    "/etc/firewalld/zones/*"
+)
+
+# If using firewalld stop the daemon/service prior to removing the config
+if command -v systemctl &>/dev/null; then
+    if systemctl is-active firewalld.service &>/dev/null; then
+        systemctl stop firewalld.service
+    fi
+fi
+
+# Include hidden files in globs
+shopt -s nullglob dotglob
+
+# Remove any custom configuration
+for fw_config in ${fw_config_locations[@]}
+do
+    rm -rf ${fw_config}
+done
+
+exit 0
 ```
+> `command -v systemctl`检查是否存在systemctl命令。整个脚本先停掉防火墙服务，然后清理相关文件。
 
 ```bash
 
