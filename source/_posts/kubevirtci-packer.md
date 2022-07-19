@@ -376,5 +376,145 @@ REPOSITORY                   TAG                 IMAGE ID      CREATED         S
 <none>                       <none>              650f4f83a78c  46 seconds ago  139 MB
 ```
 
-可以看出packer并行，几乎同时构建出了两个镜像。在终端的输出啷个镜像的日志输出还会以不同的颜色区分开。
+可以看出packer几乎同时并行构建出了两个镜像。在终端的输出啷个镜像的日志输出还会以不同的颜色区分开。
 
+## Post-Processors（后处理器）
+
+后处理器仅在 Packer 将实例保存为镜像后运行。比如给镜像打tag，push镜像到镜像仓库中。
+
+```bash
+ ⚡ root@localhost  ~/packer_tutorial  cat docker-ubuntu.pkr.hcl
+packer {
+  required_plugins {
+    docker = {
+      version = ">= 0.0.7"
+      source  = "github.com/hashicorp/docker"
+    }
+  }
+}
+#定义变量块
+variable "docker_image" {
+  type    = string
+  default = "ubuntu:xenial"
+}
+
+source "docker" "ubuntu" {
+  image  = var.docker_image
+  commit = true
+}
+
+source "docker" "ubuntu-bionic" {
+  image = "ubuntu:bionic"
+  commit = true
+}
+
+build {
+  name = "learn-packer"
+  sources = [
+    "source.docker.ubuntu",
+    "source.docker.ubuntu-bionic"
+  ]
+
+  provisioner "shell" {
+    environment_vars = [
+      "FOO=hello world",
+    ]
+    inline = [
+      "echo Adding file to Docker Container",
+      "echo \"FOO is $FOO\" > example.txt",
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
+      "echo Running ${var.docker_image} Docker image.",
+    "echo \"${var.docker_image} is run\" > example.txt", ]
+  }
+
+  post-processor "docker-tag" {
+    repository = "learn-packer"
+    tags       = ["ubuntu-xenial"]
+    only       = ["docker.ubuntu"]
+  }
+
+  post-processor "docker-tag" {
+    repository = "learn-packer"
+    tags       = ["ubuntu-bionic"]
+    only       = ["docker.ubuntu-bionic"]
+  }
+
+}
+ ⚡ root@localhost  ~/packer_tutorial  packer build docker-ubuntu.pkr.hcl
+learn-packer.docker.ubuntu: output will be in this color.
+learn-packer.docker.ubuntu-bionic: output will be in this color.
+
+==> learn-packer.docker.ubuntu: Creating a temporary directory for sharing data...
+==> learn-packer.docker.ubuntu: Pulling Docker image: ubuntu:xenial
+==> learn-packer.docker.ubuntu-bionic: Creating a temporary directory for sharing data...
+==> learn-packer.docker.ubuntu-bionic: Pulling Docker image: ubuntu:bionic
+    learn-packer.docker.ubuntu: Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+    learn-packer.docker.ubuntu-bionic: Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+    learn-packer.docker.ubuntu-bionic: Trying to pull docker.io/library/ubuntu:bionic...
+    learn-packer.docker.ubuntu: Trying to pull docker.io/library/ubuntu:xenial...
+    learn-packer.docker.ubuntu-bionic: Getting image source signatures
+    learn-packer.docker.ubuntu-bionic: Copying blob sha256:09db6f815738b9c8f25420c47e093f89abaabaa653f9678587b57e8f4400b5ff
+    learn-packer.docker.ubuntu-bionic: Copying config sha256:ad080923604aa54962e903125cd9a860605c111bc45afc7d491cd8c77dccc13b
+    learn-packer.docker.ubuntu-bionic: Writing manifest to image destination
+    learn-packer.docker.ubuntu-bionic: Storing signatures
+    learn-packer.docker.ubuntu-bionic: ad080923604aa54962e903125cd9a860605c111bc45afc7d491cd8c77dccc13b
+==> learn-packer.docker.ubuntu-bionic: Starting docker container...
+    learn-packer.docker.ubuntu-bionic: Run command: docker run -v /root/.config/packer/tmp2997834459:/packer-files -d -i -t --entrypoint=/bin/sh -- ubuntu:bionic
+    learn-packer.docker.ubuntu-bionic: Container ID: 49d3eab7d8e8b7b70d97e713b12ffe49cc1d6c3f7aebc71fe82b6cc15bba3b7d
+==> learn-packer.docker.ubuntu-bionic: Using docker communicator to connect: 10.88.0.38
+==> learn-packer.docker.ubuntu-bionic: Provisioning with shell script: /tmp/packer-shell567913809
+    learn-packer.docker.ubuntu: Getting image source signatures
+    learn-packer.docker.ubuntu: Copying blob sha256:fb15d46c38dcd1ea0b1990006c3366ecd10c79d374f341687eb2cb23a2c8672e
+    learn-packer.docker.ubuntu: Copying blob sha256:58690f9b18fca6469a14da4e212c96849469f9b1be6661d2342a4bf01774aa50
+    learn-packer.docker.ubuntu: Copying blob sha256:b51569e7c50720acf6860327847fe342a1afbe148d24c529fb81df105e3eed01
+    learn-packer.docker.ubuntu: Copying blob sha256:da8ef40b9ecabc2679fe2419957220c0272a965c5cf7e0269fa1aeeb8c56f2e1
+    learn-packer.docker.ubuntu: Copying config sha256:b6f50765242581c887ff1acc2511fa2d885c52d8fb3ac8c4bba131fd86567f2e
+    learn-packer.docker.ubuntu: Writing manifest to image destination
+    learn-packer.docker.ubuntu: Storing signatures
+    learn-packer.docker.ubuntu: b6f50765242581c887ff1acc2511fa2d885c52d8fb3ac8c4bba131fd86567f2e
+==> learn-packer.docker.ubuntu-bionic: Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+    learn-packer.docker.ubuntu-bionic: Adding file to Docker Container
+==> learn-packer.docker.ubuntu: Starting docker container...
+    learn-packer.docker.ubuntu: Run command: docker run -v /root/.config/packer/tmp2584029487:/packer-files -d -i -t --entrypoint=/bin/sh -- ubuntu:xenial
+    learn-packer.docker.ubuntu: Container ID: e595e0cd96a25c5367814dd4bf209f68b36ad061813ddd19cb56377bf37b7c47
+==> learn-packer.docker.ubuntu-bionic: Provisioning with shell script: /tmp/packer-shell1625316059
+==> learn-packer.docker.ubuntu: Using docker communicator to connect: 10.88.0.39
+==> learn-packer.docker.ubuntu: Provisioning with shell script: /tmp/packer-shell3487480488
+==> learn-packer.docker.ubuntu-bionic: Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+    learn-packer.docker.ubuntu-bionic: Running ubuntu:xenial Docker image.
+==> learn-packer.docker.ubuntu: Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+==> learn-packer.docker.ubuntu-bionic: Committing the container
+    learn-packer.docker.ubuntu: Adding file to Docker Container
+==> learn-packer.docker.ubuntu: Provisioning with shell script: /tmp/packer-shell1339082068
+    learn-packer.docker.ubuntu-bionic: Image ID: 3c3e3165f6e01d3db1d5dbe5fc25996b7654dc6431daa2c4d417131fd23d9662
+==> learn-packer.docker.ubuntu-bionic: Killing the container: 49d3eab7d8e8b7b70d97e713b12ffe49cc1d6c3f7aebc71fe82b6cc15bba3b7d
+==> learn-packer.docker.ubuntu: Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+==> learn-packer.docker.ubuntu-bionic: Running post-processor:  (type docker-tag)
+    learn-packer.docker.ubuntu-bionic (docker-tag): Tagging image: 3c3e3165f6e01d3db1d5dbe5fc25996b7654dc6431daa2c4d417131fd23d9662    learn-packer.docker.ubuntu-bionic (docker-tag): Repository: learn-packer:ubuntu-bionic
+    learn-packer.docker.ubuntu: Running ubuntu:xenial Docker image.
+Build 'learn-packer.docker.ubuntu-bionic' finished after 11 seconds 314 milliseconds.
+==> learn-packer.docker.ubuntu: Committing the container
+    learn-packer.docker.ubuntu: Image ID: a7807fc9a8a9e4059a8a16d298cbb9024109641bf40c28f491b0f08fe75e1f1f
+==> learn-packer.docker.ubuntu: Killing the container: e595e0cd96a25c5367814dd4bf209f68b36ad061813ddd19cb56377bf37b7c47
+==> learn-packer.docker.ubuntu: Running post-processor:  (type docker-tag)
+    learn-packer.docker.ubuntu (docker-tag): Tagging image: a7807fc9a8a9e4059a8a16d298cbb9024109641bf40c28f491b0f08fe75e1f1f
+    learn-packer.docker.ubuntu (docker-tag): Repository: learn-packer:ubuntu-xenial
+Build 'learn-packer.docker.ubuntu' finished after 13 seconds 234 milliseconds.
+
+==> Wait completed after 13 seconds 234 milliseconds
+
+==> Builds finished. The artifacts of successful builds are:
+--> learn-packer.docker.ubuntu-bionic: Imported Docker image: 3c3e3165f6e01d3db1d5dbe5fc25996b7654dc6431daa2c4d417131fd23d9662
+--> learn-packer.docker.ubuntu-bionic: Imported Docker image: learn-packer:ubuntu-bionic with tags learn-packer:ubuntu-bionic
+--> learn-packer.docker.ubuntu: Imported Docker image: a7807fc9a8a9e4059a8a16d298cbb9024109641bf40c28f491b0f08fe75e1f1f
+--> learn-packer.docker.ubuntu: Imported Docker image: learn-packer:ubuntu-xenial with tags learn-packer:ubuntu-xenial
+ ⚡ root@localhost  ~/packer_tutorial  docker images
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+REPOSITORY                           TAG                 IMAGE ID      CREATED             SIZE
+localhost/learn-packer               ubuntu-xenial       a7807fc9a8a9  34 seconds ago      139 MB
+localhost/learn-packer               ubuntu-bionic       3c3e3165f6e0  36 seconds ago      65.5 MB
+```
