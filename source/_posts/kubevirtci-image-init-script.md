@@ -1,7 +1,6 @@
 ---
-title: kubevirtci-image-init-script（workinprocess）
-readmore: true
-date: 2022-07-19 12:40:13
+title: 一步步学KubeVirt CI （12） - 几个镜像初始化脚本
+date: 2022-07-19 19:40:13
 categories: 云原生
 tags:
 - KubeVirt CI
@@ -390,23 +389,352 @@ done
 
 exit 0
 ```
+> 参考 清理临时文件 代码分析
 
+## 清理machine-id
 ```bash
+#!/usr/bin/env bash
+#
+# Remove the local machine id prevent the possibility of machines having
+# duplicate identities post cloning operations
+#
+# The machine id is a identifier first generated at install from a random
+# source. The id then persists for all subsequent boots and can be used to
+# uniquely identify the system within the network. The machine-id is often
+# used in preference to other identifiers such as a mac address, that may
+# infact change over the lifetime of the machine
+#
+# For older systems the machine-id is located at /var/lib/dbus/machine-id
+# and is generated using the dbus-uuid utility.
+# To trigger the generation of a new machine-id, the machine-id file must
+# simply be removed. dbus will then create a new file and populate it with
+# a machine-id string on next boot. Note that if the file is only emptied
+# (rather than completely removed) then dbus will simply complain about
+# the fact and will NOT generate a new machine-id.
+#
+# For more modern systems the machine-id file is located at
+# /etc/machine-id and /var/lib/dbus/machine-id (if present) is either a
+# copy of /etc/machine-id or is simply a symlink pointing to it.
+# Modern systems now use the 'systemd-machine-id-setup' utility to
+# generate the id file in place of the dbus-uuid tool employed on older
+# systems.
+# To trigger the generation of a new machine-id the machine-id file under
+# /etc must be emptied (NOT removed) and the machine-id file under
+# /var/lib/dbus (as with older systems) must be removed. If the
+# /etc/machine-id file is removed rather than emptied the system will not
+# be able to generate a new machine-id. This has rather dire consequences
+# for the boot process.
+# Additionally, if the /etc/machine-id file is emptied but the
+# /var/lib/dbus/machine-id file remains populated with an id string
+# then the system will simply copy the dbus machine-id string
+# into /etc/machine-id on next boot - in other words a new id won't be
+# created and the old id will be copied back into /etc/machine-id
+set -o errexit
 
+# Machine ID file locations
+sysd_id="/etc/machine-id"
+dbus_id="/var/lib/dbus/machine-id"
+
+# Remove and recreate (and so empty) the machine-id file under /etc
+if [ -e ${sysd_id} ]; then
+    rm -f ${sysd_id} && touch ${sysd_id}
+fi
+
+# Remove the machine-id file under /var/lib/dbus if it is not a symlink
+if [[ -e ${dbus_id} && ! -h ${dbus_id} ]]; then
+    rm -f ${dbus_id}
+fi
+
+exit 0
 ```
 
+## 清理邮件
 ```bash
+#!/usr/bin/env bash
+#
+# Remove mail from the local mail spool
+set -o errexit
 
+mta_list=(
+    "exim"
+    "postfix"
+    "sendmail"
+)
+
+mail_spool_locations=(
+    "/var/spool/mail/*"
+    "/var/mail/*"
+)
+
+# Best effort attempt to stop any MTA service
+for mta in ${mta_list[@]}
+do
+    # Systemd
+    if command -v systemctl &>/dev/null ; then
+        mta_service="$(systemctl list-units --type service | grep ${mta} | \
+                       cut -d' ' -f1)"
+        if [ "x${mta_service}" != "x" ]; then
+            if systemctl is-active ${mta_service} &>/dev/null; then
+                systemctl stop ${mta_service}
+            fi
+        fi
+    # Sys-v-init
+    else
+        mta_service="$(find /etc/init.d/ -iname "*${mta}*")"
+        if [ "x${mta_service}" != "x" ]; then
+            if ${mta_service} status | grep running &>/dev/null; then
+                ${mta_service} stop
+            fi
+        fi
+    fi
+done
+
+
+# Include hidden files in globs
+shopt -s nullglob dotglob
+
+# Remove any mail
+for mail_spool in ${mail_spool_locations[@]}
+do
+    rm -rf ${mail_spool}
+done
+
+exit 0
+```
+> 先停掉邮件的systemd/Sys-v-init管理的邮件服务后清理相关文件
+
+## 清理安装包cache
+```bash
+#!/usr/bin/env bash
+#
+# Remove cache files associated with the guests package manager
+set -o errexit
+
+# Set the locations under which various package managers store cache files
+cache_locations=(
+    # Debian and derivatives
+    "/var/cache/apt/"
+    # Fedora
+    "/var/cache/dnf/"
+    # Red Hat and derivatives
+    "/var/cache/yum/"
+    # SUSE and openSUSE
+    "/var/cache/zypp*"
+)
+
+# Note that globs in the cache locations will be auto expanded by bash
+for cache_dir in ${cache_locations[@]}
+do
+    if [ -d ${cache_dir} ]; then
+        # Recursively remove all files from under the given directory
+        find ${cache_dir} -type f | xargs -I FILE rm -f FILE
+    fi
+done
+
+exit 0
+```
+> 支持Debian，Fedora，centos/rh，suse
+
+## 清理包管理数据库
+```bash
+#!/usr/bin/env bash
+#
+# Remove dynamically created package manager files
+#
+set -o errexit
+
+# RPM Host DB files. RPM will recreate these files automatically if needed
+rm -f /var/lib/rpm/__db.*
+
+# APT lists. APT will recreate these on the first 'apt update'
+apt_lists=/var/lib/apt/lists
+if [ -d "${apt_lists}" ]; then
+    find "${apt_lists}" -type f | xargs rm -f
+fi
+
+exit 0
 ```
 
+## 清理临时文件
 ```bash
+#!/usr/bin/env bash
+#
+# Remove temporary files from the guest
+#
+# Basic outline:
+# 1. Section 1 of 'Main' loop:
+#    Create a tmpfs file system and copy any existing files from the temp
+#    directory to the new file system
+# 2. Section 2 of 'Main' loop:
+#    Mount the tmpfs file system over the top of the existing on-disk temp
+#    files directory. This *hopefully* means than any process relying on
+#    files in the temp directory will still have access to them and will
+#    allow a clean shutdown while still allowing removal of all on disk
+#    temp files.
+#    Since tmpfs file systems live on memory the contents copied to them
+#    will disappear on shutdown
+# 3. Section 3 of 'Main' loop:
+#    Once the tmpfs file system has been mounted the original on-disk temp
+#    directory will no longer be directly accessible. In order to access
+#    and clear any temp files from these disk areas we need to re-mount or
+#    bind mount the device or file system on which the temp directory is
+#    residing to an alternate location. We can then access and remove
+#    any files from the disk by doing so from the alternate mount point.
+set -o errexit
 
+# Absolute path to guest temp file directories
+tmp_locations=(
+    "/tmp"
+    "/var/tmp"
+)
+
+# Set mountpoint used to access original on disk content
+mntpnt_orig_tmp="/mnt/orig_tmp"
+
+# Include hidden files in glob
+shopt -s dotglob
+
+# Since the current contents of the temp file system will essentially be
+# copied into memory, we need to ensure that we don't cause an out of
+# memory condition for the guest. The limit of 128m should be extremely
+# generous for most systems
+sum_tmp_space=0
+for tmp in ${tmp_locations[@]}
+do
+    if [ -d ${tmp} ]; then
+        tmp_space="$(du -sm ${tmp} | cut -f1)"
+    else
+        tmp_space=0
+    fi
+    sum_tmp_space=$(( ${sum_tmp_space} + ${tmp_space} ))
+    if [ ${sum_tmp_space} -gt 128 ]; then
+        echo "ERROR: Space for copying tmp into memory > 128mb. Exiting"
+        exit 1
+    fi
+done
+
+# Test for tmpfs filesystem at /dev/shm creating one if it doesn't exist
+# If /dev/shm is not present, attempt to create it
+if ! mount -l -t tmpfs | grep /dev/shm &>/dev/null; then
+    [[ -d /dev/shm ]] || mkdir /dev/shm && chmod 1777 /dev/shm
+    mount -t tmpfs -o defaults,size=128m tmpfs /dev/shm
+fi
+
+
+# Main
+for tmp in ${tmp_locations[@]}
+do
+    # Test if the path or its parents are already on a tmpfs file system
+    tmp_path="${tmp}"
+    on_tmpfs=false
+
+    while [[ ${tmp_path:0:1} = "/" ]] && [[ ${#tmp_path} > 1 ]] && \
+          [[ ${on_tmpfs} = false ]]
+    do
+        defifs=${IFS}
+        IFS=$'\n' # Set for convenience with mount output
+        for mountpoint in $(mount -l -t tmpfs | cut -d' ' -f3)
+        do
+            if [ "${mountpoint}" == "${tmp_path}" ]; then
+                on_tmpfs=true
+                continue # No need to test further
+            fi
+        done
+        IFS=${defifs} # Restore the default IFS and split behaviour
+        tmp_path=${tmp_path%/*} # Set to test parent on next iteration
+    done
+
+    # Perform required operations to delete temp files
+    if [ "${on_tmpfs}" = false ]; then
+        # Initialise/reset the var used to store where the temp is located
+        tmp_located_on=""
+        # If the temp directory is a mounted partition we need the device
+        defifs=${IFS} && IFS=$'\n' # Set for convenience with df output
+        for line in $(df | tr -s ' ')
+        do
+            # Sixth column of df output is the mountpoint
+            if echo ${line} | cut -d' ' -f6 | grep ^${tmp}$ &>/dev/null; then
+                # First column of df output is the device
+                tmp_located_on="$(echo ${line} | cut -d' ' -f1)"
+            fi
+        done
+        IFS=${defifs} # Restore the default IFS and split behaviour
+        # If the temp directory is not a mounted partition it must be on
+        # the root file system
+        [[ "x${tmp_located_on}" = "x" ]] && tmp_located_on="/"
+
+
+        # Recreate the temp directory under /dev/shm (on tmpfs)
+        shmtmp="/dev/shm/${tmp}"
+        mkdir -p ${shmtmp}
+        chmod 1777 ${shmtmp}
+        # Copy all files from original temp dir to new tmpfs based dir
+        files=(${tmp}/*) # Array allows wildcard/glob with [[ test ]]
+        [[ -e ${files} ]] && cp -pr ${tmp}/* ${shmtmp}
+        # Replace the original disk based temp directory structure with
+        # the ephemeral tmpfs based storage by mounting it over the top of
+        # the original temp directories location on the file system
+        mount --bind ${shmtmp} ${tmp}
+
+
+        # Create a mount point from which the contents of the original
+        # on-disk temp directory can be accessed post mount of the tmpfs
+        # file system
+        mkdir ${mntpnt_orig_tmp}
+        # Mount or bind mount in order to access the original on disk temp
+        if [ ${tmp_located_on} = "/" ]; then
+            # Temp file system is a folder on the root file system
+            mount_opts="--bind"
+            # Contents will be under mount point + original path e.g
+            # /mountpoint/var/tmp
+            tmp_path="${mntpnt_orig_tmp}/${tmp}"
+        else
+            # Temp file system is a disk partition
+            mount_opts=""
+            # Contents will be directly available under the mount point
+            tmp_path="${mntpnt_orig_tmp}"
+        fi
+        # Mount the device holding the temp file system or bind mount the
+        # root file system
+        mount ${mount_opts} ${tmp_located_on} ${mntpnt_orig_tmp}
+        # Delete all files from the on-disk temp directory
+        files=(${tmp_path}/*)
+        [[ -e ${files} ]] && rm -rf ${tmp_path}/*
+        # Cleanup
+        umount ${mntpnt_orig_tmp} && rm -rf ${mntpnt_orig_tmp}
+    fi
+done
+
+exit 0
 ```
 
+'Main'循环分三部分：
+1. 创建一个tmpfs文件系统，将要清理的文件夹复制到tmpfs文件系统
+2. 上一步意味着，若有进程需要读写要清理的文件，不受影响，只是实际操作的位置变成了tmpfs文件系统。tmpfs 文件系统存在于内存中，关机后数据会消失。
+3. 清理要清理的文件夹。因为原来的目录已成为tmpfs的挂载点，原来的目录已经不可访问，所以为了删除原来目录的文件需要将原来的目录再次挂载到一个新的挂载点。对应代码中的`${mntpnt_orig_tmp}`
+
+> mount tmpfs -> 最初要清理的目录
+> mount 最初要清理的目录 -> ${mntpnt_orig_tmp}
+> 有上面两次挂载，前者只发生一次，关机后tmpfs自动消失。后者每一个while循环发生一次，因为只要清理完数据，就可以umount了。目的不一样，后者是为了清理数据，前者为了不影响需要操作清理对象的进程
+
+代码用了几个技巧：
+* du -sm 获取文件夹的大小，单位MB，统计对象不超过128MB，防止发生内存溢出。
+* 用变量defifs临时保存了IFS
+* tmp_path=${tmp_path%/*}可以获取其父目录继续下一次迭代
+* mount 和 mount --bind，分设备和文件夹两种情况
+
+
+## 清理yum manager uuid
 ```bash
+#!/usr/bin/env bash
+#
+# Remove the yum package manager UUID associated with the guest
+#
+# A new UUID will be automatically generated the next time yum is run
+set -o errexit
 
-```
+uuid="/var/lib/yum/uuid"
+[[ -e ${uuid} ]] && rm -f ${uuid}
 
-```bash
-
+exit 0
 ```
