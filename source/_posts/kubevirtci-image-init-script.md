@@ -7,11 +7,11 @@ tags:
 ---
 
 
-virt-sysprep 初始化镜像有时候不完全满足需求，需要额外初始化步骤。virt-sysprep执行后，往往还需要执行些脚本辅助清理初始化工作。
+virt-sysprep（镜像初始化工具） 参考 {% post_link kubevirtci-virt-sysprep %} 
 
-virt-sysprep参考 {% post_link kubevirtci-virt-sysprep %} 
+有时还要额外定制些镜像初始化工作，需要编写些脚本辅助清理初始化工作
 
-## 清理 bash-history
+# 清理 bash-history
 ```bash
 #!/usr/bin/env bash
 #
@@ -27,7 +27,7 @@ exit 0
 ```
 > root只有一个，user往往有多个，将换行替换成空格作为rm命令的参数
 
-## 清理 cloud-init
+# 清理 cloud-init
 ```bash
 #!/usr/bin/env bash
 #
@@ -44,7 +44,7 @@ rm -f /var/log/cloud-init.log
 exit 0
 ```
 
-## 清理系统崩溃的dump数据
+# 清理系统崩溃的dump数据
 ```bash
 #!/usr/bin/env bash
 #
@@ -130,7 +130,7 @@ exit 0
 ```
 > 设定timeout为20秒，等待interface down，若还没down则通过ifdown命令down掉，网口down的时候可能dhcpclient会起进程，kill掉对应网口的dhcpclient进程后进入清理文件的工作。
 
-## 清理防火墙规则和配置
+# 清理防火墙规则和配置
 ```bash
 #!/usr/bin/env bash
 #
@@ -177,7 +177,7 @@ exit 0
 > `command -v systemctl`检查是否存在systemctl命令。整个脚本先停掉防火墙服务，然后清理相关文件。
 
 
-## 清理日志
+# 清理日志
 ```bash
 #!/usr/bin/env bash
 #
@@ -391,7 +391,7 @@ exit 0
 ```
 > 参考 清理临时文件 代码分析
 
-## 清理machine-id
+# 清理machine-id
 ```bash
 #!/usr/bin/env bash
 #
@@ -448,7 +448,7 @@ fi
 exit 0
 ```
 
-## 清理邮件
+# 清理邮件
 ```bash
 #!/usr/bin/env bash
 #
@@ -501,9 +501,9 @@ done
 
 exit 0
 ```
-> 先停掉邮件的systemd/Sys-v-init管理的邮件服务后清理相关文件
+> 先停掉的systemd或Sys-v-init管理的邮件服务后再清理相关文件
 
-## 清理安装包cache
+# 清理安装包cache
 ```bash
 #!/usr/bin/env bash
 #
@@ -535,7 +535,7 @@ exit 0
 ```
 > 支持Debian，Fedora，centos/rh，suse
 
-## 清理包管理数据库
+# 清理包管理数据库
 ```bash
 #!/usr/bin/env bash
 #
@@ -555,7 +555,7 @@ fi
 exit 0
 ```
 
-## 清理临时文件
+# 清理临时文件
 ```bash
 #!/usr/bin/env bash
 #
@@ -713,18 +713,18 @@ exit 0
 2. 上一步意味着，若有进程需要读写要清理的文件，不受影响，只是实际操作的位置变成了tmpfs文件系统。tmpfs 文件系统存在于内存中，关机后数据会消失。
 3. 清理要清理的文件夹。因为原来的目录已成为tmpfs的挂载点，原来的目录已经不可访问，所以为了删除原来目录的文件需要将原来的目录再次挂载到一个新的挂载点。对应代码中的`${mntpnt_orig_tmp}`
 
-> mount tmpfs -> 最初要清理的目录
-> mount 最初要清理的目录 -> ${mntpnt_orig_tmp}
+> `mount` `tmpfs` -> `最初要清理的目录`
+> `mount` `最初要清理的目录` -> `${mntpnt_orig_tmp}`
 > 有上面两次挂载，前者只发生一次，关机后tmpfs自动消失。后者每一个while循环发生一次，因为只要清理完数据，就可以umount了。目的不一样，后者是为了清理数据，前者为了不影响需要操作清理对象的进程
 
 代码用了几个技巧：
-* du -sm 获取文件夹的大小，单位MB，统计对象不超过128MB，防止发生内存溢出。
-* 用变量defifs临时保存了IFS
-* tmp_path=${tmp_path%/*}可以获取其父目录继续下一次迭代
-* mount 和 mount --bind，分设备和文件夹两种情况
+* `du -sm` 获取文件夹的大小，单位MB，统计对象不超过128MB，防止发生内存溢出。
+* 用变量`defifs`临时保存了`IFS`。
+* `tmp_path=${tmp_path%/*}`可以获取其父目录继续下一次迭代。
+* `mount` 和 `mount --bind`，分设备和文件夹两种情况。
 
 
-## 清理yum manager uuid
+# 清理yum manager uuid
 ```bash
 #!/usr/bin/env bash
 #
