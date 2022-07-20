@@ -13,9 +13,11 @@
 
 # 后端云输出
 
-## 后端云发布的部分开源项目和免费书籍
+## 后端云发布开源项目
 * 开源项目[KubeFusion](https://github.com/kubefusion)（该Github账号下的主项目KubeFusion是包含多种融合技术的集成和定制以及KubeFusion自身特有功能，其他项目是关于fusion scheme以及主项目的关联小项目。在筹备中，可能2022年会上几个小项目，2023年上半年发布KubeFusion v0.1版）
-* 书籍
+
+
+## 免费书籍
   * [《KubeVirt CI》](http://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。
   * 《Bazel在企业项目中的应用》 in the plan
   * 《KubeVirt源码分析》 in the plan
@@ -67,7 +69,7 @@
 
 # 联系方式
 * 可在后端云公众号直接留言
-* 美国地区可以直接联系手机号：3477099666 (美国以外号码联系需要前面加上国家代码 +1)
+* 美国地区可以直接联系手机号：3477099666  (美国以外号码联系需要前面加上国家代码 +1)
 * ✉ **[backendcloud@gmail.com](mailto:backendcloud@gmail.com)**
 
 

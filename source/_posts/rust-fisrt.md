@@ -2,7 +2,7 @@
 title: 初识Rust
 readmore: false
 date: 2022-07-12 21:01:35
-categories: 未分类
+categories: Fuchsia
 tags:
 - Rust
 ---
