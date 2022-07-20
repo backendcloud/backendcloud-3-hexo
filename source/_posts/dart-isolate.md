@@ -1,5 +1,5 @@
 ---
-title: Dart 多线程
+title: Dart 多线程（workinprocess）
 date: 2022-07-20 13:17:28
 categories: Fuchsia
 tags:
@@ -65,8 +65,7 @@ void main(List<String> args, SendPort mainSendPort) {
 ```
 
 执行结果：
-```powershell
-C:/sdk/dart2.17.6/bin/dart.exe --enable-asserts C:\Users\hanwei\AndroidStudioProjects\untitled\bin\untitled.dart
+```bash
 应用启动:1658285199756744
 新线程创建
 这是在init方法中
@@ -75,6 +74,4 @@ C:/sdk/dart2.17.6/bin/dart.exe --enable-asserts C:\Users\hanwei\AndroidStudioPro
 主线程接收到数据：加载中
 主线程接收到数据：异步任务完成
 子线程已经释放
-
-Process finished with exit code 0
 ```
