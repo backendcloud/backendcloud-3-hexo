@@ -1,7 +1,7 @@
 title: JIRA安装
 date: 2017-06-27 01:53:54
 categories:
-- 敏捷
+- Devops
 tags:
 - JIRA
 ---

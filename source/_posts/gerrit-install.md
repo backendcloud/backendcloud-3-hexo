@@ -1,7 +1,7 @@
 title: gerrit install
 date: 2017-06-28 15:51:07
 categories:
-- 敏捷
+- Devops
 tags:
 - gerrit
 ---

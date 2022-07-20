@@ -1,7 +1,7 @@
 title: gerrit触发jenkins执行脚本自动构建rpm包
 date: 2017-06-28 18:17:13
 categories:
-- 敏捷
+- Devops
 tags:
 - gerrit
 - jenkins

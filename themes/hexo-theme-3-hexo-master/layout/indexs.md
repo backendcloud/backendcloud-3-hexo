@@ -1,7 +1,7 @@
 ![](/images/index/29fa8cc3.png)
-# 后端云网站专注领域 - 基于Kubernetes的云原生超融合技术
+# 后端云网站专注领域
 
-* 虚拟机技术和容器技术的融合。代表技术KubeVirt
+* 基于Kubernetes的云原生超融合技术，虚拟机技术和容器技术的融合。代表技术KubeVirt
 * 多云融合
    * 多云融合管理。例如：公有云私有云的融合管理；中心云和边缘云的融合管理
   * 分布式（跨云）应用的管理
@@ -9,11 +9,21 @@
    * 基于Bazel的全开发语言，全平台融合构建，融合CICD
    * 有助于生产力，有助于融合DevOps的自动化脚本和工具
 * 其他融合解决方案（integrated solution）
+* Fuchsia生态
+
+# 后端云输出
+
+## 后端云发布的部分开源项目和免费书籍
 * 开源项目[KubeFusion](https://github.com/kubefusion)（该Github账号下的主项目KubeFusion是包含多种融合技术的集成和定制以及KubeFusion自身特有功能，其他项目是关于fusion scheme以及主项目的关联小项目。在筹备中，可能2022年会上几个小项目，2023年上半年发布KubeFusion v0.1版）
-* 出版书籍
+* 书籍
   * [《KubeVirt CI》](http://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。
   * 《Bazel在企业项目中的应用》 in the plan
   * 《KubeVirt源码分析》 in the plan
+
+
+## 其他
+* 视频课程：以免费视频课程为主，极少量付费视频课程
+* 后端云免费分享文章的发布平台（3个主力频道：[后端云网站](https://www.backendcloud.cn/)，可在最下面扫码关注“后端云”微信公众号，[腾讯云开发者社区“后端云”专栏](https://cloud.tencent.com/developer/column/72779)。后端云网站为最初发布平台，其他都是镜像）
 
 [//]: # (1.虚拟机技术和容器技术的融合 2.多云融合（多云（公有云私有云中心云边缘云）融合管理，分布式应用融合部署）3.在1和2融合环境上的全语言全平台CICD)
 [//]: # (* 容器和虚拟机融合技术，如KubeVirt生态)
@@ -21,6 +31,8 @@
 [//]: # (* 自动化：CICD；bash、golang脚本工具)
 
 [//]: # (This may be the most platform independent comment)
+
+
 
 # 后端云网站快捷键使用说明
 
@@ -54,7 +66,9 @@
 
 
 # 联系方式
-✉ **[backendcloud@gmail.com](mailto:backendcloud@gmail.com)**
+* 可在后端云公众号直接留言
+* 美国地区可以直接联系手机号：3477099666 (美国以外号码联系需要前面加上国家代码 +1)
+* ✉ **[backendcloud@gmail.com](mailto:backendcloud@gmail.com)**
 
 
 <hr>
