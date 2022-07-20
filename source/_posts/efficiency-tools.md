@@ -35,12 +35,17 @@ Dendron是vscode的markdown笔记插件，提升markdown写笔记的效率。
 
 # mdbook & mdbook-pdf & mdBook-pagetoc
 
-mdbook是Rust写的markdown写电子书的工具，build可以生成html。mdbook-pdf是生成pdf的插件。mdBook-pagetoc是生成页内目录的插件。mdbook-theme是theme仓库。
+mdbook是Rust写的markdown写电子书的工具，build可以生成html。mdbook-pdf是生成pdf的插件。
 
 > https://github.com/rust-lang/mdBook
+>
 > https://github.com/HollowMan6/mdbook-pdf
+>
 > https://github.com/JorelAli/mdBook-pagetoc
+>
 > https://github.com/zjp-CN/mdbook-theme
+>
+> https://github.com/JorelAli/mdBook-pagetoc
 
 # zsh & ohmyzsh
 

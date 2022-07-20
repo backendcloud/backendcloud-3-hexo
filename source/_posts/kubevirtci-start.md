@@ -14,6 +14,7 @@ tags:
 
 本书的所有内容基于下面两个代码仓库：
 > https://github.com/kubevirt/kubevirtci
+>
 > https://github.com/kubevirt/project-infra
 
 若有Kubenetes CI的技术储备会更好，没有也没关系。
