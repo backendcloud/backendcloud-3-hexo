@@ -7,13 +7,15 @@ tags:
 ---
 
 # Dart 的线程概念
-在Dart 中，它的线程概念被称为 Isolate 。 它与我们之前理解的Thread 概念有所不同，各个isolate 之间是无法共享内存空间，isolate 之间有自己的event loop。
+
+多线程经常用来解决耗时较长的异步任务。
+
+在Dart中，它的线程概念被称为 Isolate 。 它与我们之前理解的Thread 概念有所不同，各个isolate 之间是无法共享内存空间，isolate 之间有自己的event loop。Dart中多线程之间只能通过发送消息通信，所以它的资源开销低于线程，Dart的这种特别的线程也有被称为微线程这种说法。
 
 Dart中的线程是以隔离（Isolate）的方式存在的，每个Isolate都有自己独立的，私有内存块（多个线程不共享内存），没有共享内存，就不需要竞争资源，就不需要锁（不必担心死锁问题）。
 
 所有的Dart代码，都运行在Isolate中。Isolate提供了Dart | Flutter的运行环境，微任务队列，事件队列，事件轮询（EventLoop）都在Isolate中进行。
 
-多线程经常用来解决耗时较长的异步任务。
 
 # Isolate.spawn() - Creates and spawns an isolate that shares the same code as the current isolate.
 
@@ -105,7 +107,7 @@ multiThread end
 来自新线程的消息：abc
 ```
 
-Isolate之间通讯，总结就是，通过SendPort作为中介传递给要通讯的线程，然后通过ReveivePort接收或者监听消息，双向通讯其实就是在单向通讯的基础上，当单向通讯已经建立了，就可以传送自己线程的SendPort，然后用ReveivePort监听SendPort发送的消息
+Isolate之间通讯，总结就是，通过SendPort作为中介传递给要通讯的线程，然后通过ReveivePort接收或者监听消息，双向通讯其实就是在单向通讯的基础上，当单向通讯已经建立了，就可以传送自己线程的SendPort，然后用ReveivePort监听SendPort发送的消息。
 
 ```dart
 import 'dart:isolate';
