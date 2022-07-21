@@ -1,5 +1,5 @@
 ---
-title: Webassembly hello-world
+title: WebAssembly hello-world
 readmore: false
 date: 2022-07-21 12:38:55
 categories: Fuchsia
@@ -7,7 +7,7 @@ tags:
 
 ---
 
-> 在说 Webassembly hello-world 前顺带提下Flutter
+> 在说 WebAssembly hello-world 前顺带提下Flutter
 
 这 两个有个共同的特点：在js/ts统治的前端世界里的潜力股。js占领着前端的统治地位，又来了ts弥补缺陷加持统治地位，ts还有ms在强推，github被ms收购了后更加联合github一起强推。
 
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-> 代码和run流程没啥好说的，写了一个标题，写了一个Hello World文本内容。相对于Webassembly hello-world比较简单。
+> 代码和run流程没啥好说的，写了一个标题，写了一个Hello World文本内容。相对于WebAssembly hello-world比较简单。
 
 为何要重视Flutter。主要是：
 * 全端框架，一次开发，web，安卓，ios全有了
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
 
 
 
-# Webassembly hello-world
+# WebAssembly hello-world
 
 WebAssembly的出现不是完全取代js，只是为了取代js的一个应用领域：浏览器进行计算密集型应用。
 
