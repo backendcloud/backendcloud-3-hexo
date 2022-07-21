@@ -174,7 +174,7 @@ img_resize: default
 
 # 代码段高亮样式，markdown 语法 `demo`
 code:
-  theme: github
+  theme: dark-red
 # 支持主题：
 # dark-red: 红字(默认)
 # github: github样式（灰色底，黑字）
