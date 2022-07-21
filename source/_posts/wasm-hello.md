@@ -7,7 +7,7 @@ tags:
 
 ---
 
-> 在说 Webassembly hello-world 前提下Flutter
+> 在说 Webassembly hello-world 前顺带提下Flutter
 
 这 两个有个共同的特点：在js/ts统治的前端世界里的潜力股。js占领着前端的统治地位，又来了ts弥补缺陷加持统治地位，ts还有ms在强推，github被ms收购了后更加联合github一起强推。
 
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-代码和run流程没啥好说的，相对于Webassembly hello-world比较简单。
+> 代码和run流程没啥好说的，写了一个标题，写了一个Hello World文本内容。相对于Webassembly hello-world比较简单。
 
 为何要重视Flutter。主要是：
 * 全端框架，一次开发，web，安卓，ios全有了
@@ -57,6 +57,12 @@ class MyApp extends StatelessWidget {
 
 
 # Webassembly hello-world
+
+WebAssembly的出现不是完全取代js，只是为了取代js的一个应用领域：浏览器进行计算密集型应用。
+
+WebAssembly实现的目标之一是：编译一次，到处运行。这句话在java虚拟机，容器中似曾相识。
+
+WebAssembly借助云计算，区块链的东风发展起来。
 
 ## 克隆项目模板
 
@@ -184,7 +190,7 @@ Mode                 LastWriteTime         Length Name
 -a----         2022/7/21     10:23            114 wasm_game_of_life_bg.wasm.d.ts
 ```
 
-# 将其嵌入网页
+## 将其嵌入网页
 
 ```bash
 PS C:\Users\hanwei\tt\wasm-game-of-life\pkg> cd ..
@@ -319,7 +325,7 @@ Error: error:0308010C:digital envelope routines::unsupported
 Node.js v18.6.0
 ```
 
-> node版本太高了，wasm跟不上node的更新速度，降级node版本即可
+> node版本太高了，降级node版本即可。
 
 ## run
 ```bash
