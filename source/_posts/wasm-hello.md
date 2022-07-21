@@ -43,6 +43,8 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
+![](/images/wasm-hello/2022-07-21-12-05-52.png)
+![](/images/wasm-hello/2022-07-21-12-07-50.png)
 
 > 代码和run流程没啥好说的，写了一个标题，写了一个Hello World文本内容。相对于WebAssembly hello-world比较简单。
 
