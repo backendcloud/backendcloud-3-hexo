@@ -15,7 +15,7 @@ tags:
 Fuchsia具有以下特点：
 * 截至该文章发布时2022-07-21，Fuchsia还在密集开发和代码合并中。
 * 竞争如此激烈，技术变革如此之快，未来Fuchsia的成败难说。但Fuchsia用到的技术都是非常前沿的，代表未来方向的，即使Fuchsia本身不一定成功，但是兴趣投入Fuchsia一点不亏，可以用到其他项目的开发中去，且Fuchsia是非常可能成功的。
-* Fusia可以把加快Rust和Dart语言的发展和应用，虽然Rust已经是编程语言中最火的编程语言，Flutter已经是UI开发最火的框架。那就是继续火上浇油。
+* Fusia会加快Rust和Dart语言的发展和应用，虽然Rust已经是编程语言中最火的编程语言，Flutter已经是UI开发最火的框架。那就是继续火上浇油。
 * Fuchsia有很多革命性的子项目。
   * [Jiri](https://fuchsia.googlesource.com/jiri): Fuchsia的多仓库代码管理工具。
   * [Zircon](https://fuchsia.googlesource.com/fuchsia/+/refs/heads/main/zircon/): Fuchsia的内核。
