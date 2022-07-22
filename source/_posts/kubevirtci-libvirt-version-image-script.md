@@ -361,7 +361,28 @@ build_and_test_containers() {
 build_and_test_containers
 ```
 
+ 
+
 # run
+
+一次失败的执行：
+```bash
+Enabling a Copr repository. Please note that this repository is not part
+of the main distribution, and quality may vary.
+
+The Fedora Project does not exercise any power over the contents of
+this repository beyond the rules outlined in the Copr FAQ at
+<https://docs.pagure.org/copr.copr/user_documentation.html#what-i-can-build-in-copr>,
+and packages are not held to any quality or security level.
+
+Please do not file bug reports about these packages in Fedora
+Bugzilla. In case of problems, contact the owner of this repository.
+Error: This repository does not have any builds yet so you cannot enable it now.
+```
+> 估计因这种情况报的bug太多了，提示不要上传bug了，查查自己指定的dnf用的仓库是否存在。
+
+
+完整的一次正常的执行：
 ```bash
  ⚡ root@centos9  ~/libvirt   master ±  IMAGE_NAME=localhost:5000/my-libvirt ./hack/local-build.sh
 
