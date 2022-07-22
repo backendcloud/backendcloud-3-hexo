@@ -2,7 +2,7 @@
 title: KubeVirt网络源码分析（1）
 readmore: true
 date: 2022-05-26 16:19:20
-categories: KubeVirt
+categories: 云原生
 tags:
 - KubeVirt
 - virt-lancher

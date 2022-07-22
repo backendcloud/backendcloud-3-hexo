@@ -2,7 +2,7 @@
 title: KubeVirt网络源码分析（3）- 虚拟机热迁移网络
 readmore: false
 date: 2022-05-30 18:30:24
-categories: KubeVirt
+categories: 云原生
 tags:
 - KubeVirt
 - virt-lancher

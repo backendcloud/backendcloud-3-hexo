@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （10） - packer
+title: packer基本使用
 readmore: true
 date: 2022-07-18 20:23:32
 categories: 云原生

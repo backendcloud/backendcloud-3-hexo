@@ -1,7 +1,7 @@
 ---
 title: JDK bug - Encrypt Private Key failed  unrecognized algorithm name  PBEWithSHA1AndDESede
 date: 2021-11-23 14:22:24
-categories: Java
+categories: 编程
 tags:
 - JDK
 - bug

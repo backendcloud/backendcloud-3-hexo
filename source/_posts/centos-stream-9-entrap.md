@@ -2,7 +2,7 @@
 title: Centos Stream 9 git使用报错 error in libcrypto
 readmore: true
 date: 2022-06-23 18:18:14
-categories: Linux
+categories: Tools
 tags:
 - Centos Stream 9
 ---

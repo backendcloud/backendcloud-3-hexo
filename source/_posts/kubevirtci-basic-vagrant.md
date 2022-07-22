@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （5） - Vagrant
+title: Vagrant基本使用
 readmore: true
 date: 2022-07-12 19:50:45
 categories: 云原生

@@ -1,7 +1,7 @@
 title: pci-api support
 date: 2017-05-02 10:11:54
 categories:
-- 智能云
+- Openstack_op
 tags:
 - PCI
 - API

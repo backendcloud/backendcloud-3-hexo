@@ -1,7 +1,7 @@
 ---
 title: spring-boot异步的example
 date: 2022-03-25 11:24:27
-categories: Java
+categories: 编程
 tags:
 - spring-boot
 - async

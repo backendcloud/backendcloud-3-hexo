@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （6） - build CentOS Stream 8
+title: build CentOS Stream 8
 readmore: true
 date: 2022-07-12 20:08:25
 categories: 云原生

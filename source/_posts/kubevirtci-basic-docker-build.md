@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （2） - 镜像构建
+title: 几种特别的镜像构建
 readmore: true
 date: 2022-07-07 19:52:25
 categories: 云原生

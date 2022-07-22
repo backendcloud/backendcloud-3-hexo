@@ -1,7 +1,7 @@
 title: FPGA用户用例提案
 date: 2017-05-01 13:39:58
 categories:
-- 智能云
+- Openstack_op
 tags:
 - FPGA
 ---

@@ -1,7 +1,7 @@
 title: Openstack Cyborg 项目介绍
 date: 2017-01-07 00:38:19
 readmore: false
-categories: 智能云
+categories: Openstack_op
 tags:
 - Openstack
 - Cyborg

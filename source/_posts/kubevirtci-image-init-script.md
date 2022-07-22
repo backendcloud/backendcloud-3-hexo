@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （12） - 几个镜像清理初始化脚本
+title: 几个镜像清理初始化脚本
 date: 2022-07-19 19:40:13
 categories: 云原生
 tags:

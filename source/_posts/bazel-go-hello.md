@@ -5,6 +5,7 @@ date: 2022-07-13 18:33:48
 categories: Devops
 tags:
 - Bazel
+- KubeVirt CI
 ---
 
 先用Go写个hello-world源文件。执行`go mod init`和`go mod tidy`

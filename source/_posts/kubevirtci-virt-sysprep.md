@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （9） - virt-sysprep
+title: virt-sysprep基本使用
 readmore: true
 date: 2022-07-18 19:50:35
 categories: 云原生

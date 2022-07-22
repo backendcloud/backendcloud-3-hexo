@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （8） - bazelisk
+title: bazelisk简介
 readmore: true
 date: 2022-07-14 18:40:06
 categories: 云原生

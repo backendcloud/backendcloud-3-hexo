@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （3） - gosu在容器中的使用
+title: gosu在容器中的使用
 readmore: true
 date: 2022-07-08 18:40:08
 categories: 云原生

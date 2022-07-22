@@ -1,5 +1,5 @@
 ---
-title: 一步步学KubeVirt CI （11） - k8s-provision - 获取镜像
+title: k8s-provision - 获取镜像
 readmore: true
 date: 2022-07-19 19:06:52
 categories: 云原生

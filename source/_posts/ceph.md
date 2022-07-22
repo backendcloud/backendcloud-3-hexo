@@ -2,7 +2,7 @@ title: ceph数据存储的几个概念
 date: 2018-09-05 17:32:47
 readmore: false
 categories:
-- 基础篇
+- Tools
 tags:
 - vdbench
 

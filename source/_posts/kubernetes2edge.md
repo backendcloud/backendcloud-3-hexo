@@ -1,7 +1,7 @@
 ---
 title: K3S, OpenYurt, KubeEdge 主要差异
 date: 2021-01-21 16:47:45
-categories: 边缘云
+categories: 云原生
 tags:
 - Kubernetes
 - K8S

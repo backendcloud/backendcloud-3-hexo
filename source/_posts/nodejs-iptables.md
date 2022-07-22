@@ -1,7 +1,7 @@
 ---
 title: 开源一个 node.js 防火墙小工具
 readmore: false
-categories: js
+categories: 编程
 tags:
   - iptables
   - nodejs

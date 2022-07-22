@@ -1,7 +1,7 @@
 title: 云环境中GPU配置
 date: 2017-04-29 18:49:59
 categories:
-- 智能云
+- Openstack_op
 tags:
 - GPU
 - 配置
