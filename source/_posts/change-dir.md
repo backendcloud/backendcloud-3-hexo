@@ -14,13 +14,13 @@ tags:
 
 Fuchsia具有以下特点：
 * 截至该文章发布时2022-07-21，Fuchsia还在密集开发和代码合并中。
-* 竞争如此激烈，技术变革如此之快，未来Fuchsia成为大一统所有平台的通用操作系统的愿望的是否能实现还很难说。但Fuchsia中用到的技术都是非常前沿的，代表未来方向的，即使Fuchsia本身不一定成功，但是作为个人兴趣投入Fuchsia一点不亏，学到的东西可以用到其他项目的开发中去，且Fuchsia是非常有希望成功的。
+* 未来Fuchsia成为大一统所有平台的通用操作系统的愿望的是否能实现还很难说。但Fuchsia中用到的技术都是非常前沿的，代表未来方向的，即使Fuchsia本身不一定成功，但是作为个人兴趣投入Fuchsia一点不亏，学到的东西可以用到其他项目的开发中去，且Fuchsia是非常有希望成功的。
 * Fuchsia会进一步加快Rust和Dart语言的发展和应用，虽然Rust已经是编程语言中最火的编程语言，Flutter已经是UI开发最火的框架。那就算继续火上浇油吧。
 * Fuchsia有很多颠覆过往认知的疯狂项目：
   * [Jiri](https://fuchsia.googlesource.com/jiri): 相对于单仓库管理工具Git，Jiri是Fuchsia的多仓库代码管理工具。
   * [Zircon](https://fuchsia.googlesource.com/fuchsia/+/refs/heads/main/zircon/): Fuchsia的操作系统内核。
   * [Topaz](https://fuchsia.googlesource.com/topaz/): Fuchsia的用户体验层（由Flutter支持）。
-  * [Starnix](https://fuchsia.googlesource.com/fuchsia/+/refs/heads/main/src/proc/bin/starnix/): 转译来自 Linux 的底层内核架构到 Fuchsia 的 Zircon 内核。Starnix creates a Linux runtime natively in Fuchsia. Starnix 让 Fuchsia 能够原生效率运行 Linux/Android 应用和库。Starnix不是给 Linux/Android 应用和库创建Linux环境的虚拟机。
+  * [Starnix](https://fuchsia.googlesource.com/fuchsia/+/refs/heads/main/src/proc/bin/starnix/): 转译来自 Linux 的底层内核架构到 Fuchsia 的 Zircon 内核。Starnix creates a Linux runtime natively in Fuchsia. Starnix 让 Fuchsia 能够原生效率运行 Linux/Android 应用和库。
 
 > `Fuchsia`分类 是围绕Fuchsia的，是研究Fuchsia的，增加`Fuchsia`分类 和Fuchsia一样，动机不是因为Fuchsia本身百分百能成功，而是因为兴趣以及对Fuchsia的投入可以运用到其他项目上。个人能力有限，刚开始肯定只能一窥Fuchsia的一点皮毛。
 
