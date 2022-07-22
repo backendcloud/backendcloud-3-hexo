@@ -1,5 +1,5 @@
 ---
-title: 打包指定libvirt版本的镜像脚本
+title: 用于打包指定libvirt版本的镜像的脚本
 readmore: true
 date: 2022-07-22 18:42:23
 categories: 云原生
