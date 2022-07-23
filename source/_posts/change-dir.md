@@ -23,7 +23,7 @@ Fuchsia具有以下特点：
   * [Starnix](https://fuchsia.googlesource.com/fuchsia/+/refs/heads/main/src/proc/bin/starnix/): 转译来自 Linux 的底层内核架构到 Fuchsia 的 Zircon 内核。Starnix creates a Linux runtime natively in Fuchsia. Starnix 让 Fuchsia 能够原生效率运行 Linux/Android 应用和库。
 
 > 增加`Fuchsia分类` 和`Fuchsia`一样，动机不是因为Fuchsia本身百分百能成功，而是因为兴趣以及对Fuchsia的投入可以运用到其他项目上。个人能力有限，刚开始肯定只能一窥Fuchsia的一点皮毛。
-> `Fuchsia分类` 不仅仅会放关于Fuchsia的技术文章，初期可能会放有很多研究Fuchsia前学习预备知识的相关文章。
+> `Fuchsia分类` 不仅仅会放关于Fuchsia的研究学习文章，且打算把兴趣类的前沿探索全放此分类里。
 
 
 
