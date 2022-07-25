@@ -13,16 +13,16 @@ Deno的创始人和Node的创始人是同一个人。把Node的前两个字母�
 
 # Deno 和 Node 的对比
 
-|对比|Node|Deno|
-|---|---|---|
-|开发语言|C++|Rust|
-|工具链|npm，webpack，babel，typescript、eslint、prettier。。。|部分工具集成在Deno中|
-|运行时|是JS的运行时|JS，TS，WebAssembly的运行时|
-|安全控制|无|有安全控制，需要某个权限要显式打开权限才可以|
-|异步|Callback，被称为回調地獄。很多Node原生API都是使用 CallBack Function 而不是 Promise|原生使用Promise|
-|异步运行时|libuv |Tokio|
-|JS模块化规范|使用CommonJS，与 ES 模块不兼容|只支持 ES 模块，跟浏览器的模块加载规则一致，不支持 CommonJS 模块|
-|模块系统|中心化模块系统npm|去中心化模块系统，可以从任何地方加载模块。这点类似Golang|
+|对比 | Node | Deno |
+| --- | --- | --- |
+| 开发语言 | C++ | Rust |
+| 工具链 | 未集成，需要调用外部工具链npm，webpack，babel，typescript comoile、eslint、prettier。。。 | 部分工具链集成在Deno中 |
+| 运行时 | 是JS的运行时 | JS，TS，WebAssembly的运行时 |
+| 安全控制 | 无 | 有安全控制，需要获得某个权限要显式打开权限 |
+| 异步 | Callback被称为回調地獄。很多Node原生API都是使用 CallBack Function 而不是 Promise | 原生使用Promise |
+| 异步运行时 | libuv | Tokio |
+| JS模块化规范 | 使用CommonJS，与 ES 模块不兼容|只支持 ES 模块，跟浏览器的模块加载规则一致，不支持 CommonJS 模块 |
+| 模块系统 | 中心化模块系统npm | 去中心化模块系统，可以从任何地方加载模块。这点类似Golang |
 
 # install
 
