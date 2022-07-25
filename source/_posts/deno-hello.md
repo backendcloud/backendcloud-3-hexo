@@ -7,7 +7,7 @@ tags:
 ---
 
 # Deno 是什么
-现代的js和ts的运行时。
+现代JS/TS的运行时。
 
 Deno的创始人和Node的创始人是同一个人。把Node的前两个字母和后两个字母调换了下，destroy node，要用Rust重写js/ts的运行时，来解决设计Node.js之初的缺陷，并要在Deno中解决这些问题。
 
