@@ -16,7 +16,7 @@ Deno的创始人和Node的创始人是同一个人。把Node的前两个字母�
 |对比|Node|Deno|
 |---|---|---|
 |开发语言|C++|Rust|
-|工具链|外部工具层出不穷webpack，babel，typescript、eslint、prettier。。。|集成了自己的一套工具链|
+|工具链|npm，webpack，babel，typescript、eslint、prettier。。。|部分工具集成在Deno中|
 |运行时|是js的运行时|js，ts，WebAssembly的运行时|
 |安全控制|无|有安全控制，需要某个权限要显式打开权限才可以|
 |异步|Callback，被称为回調地獄。很多Node原生API都是使用 CallBack Function 而不是 Promise|原生使用Promise|
