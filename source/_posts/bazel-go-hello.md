@@ -8,6 +8,8 @@ tags:
 - KubeVirt CI
 ---
 
+> 本篇的所有代码放在 https://github.com/backendcloud/example/tree/master/bazel-go-hello/hello
+
 先用Go写个hello-world源文件。执行`go mod init`和`go mod tidy`
 
 ```bash
@@ -288,7 +290,7 @@ INFO: Build completed successfully, 1 total action
 hello world
 ```
 
-> 看了下gazalle代码仓库，17天前刚发了一个最新版本v0.26，试了下最新版BUG已经改掉，可将下面的内容替换掉WORKSPACE的相关内容
+> 看了下gazalle代码仓库，17天前（本篇发布于2022-07-13）刚发了一个最新版本v0.26，试了下最新版BUG已经改掉，可将下面的内容替换掉WORKSPACE的相关内容
 
 ```bash
 http_archive(
