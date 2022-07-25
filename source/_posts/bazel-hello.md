@@ -18,6 +18,10 @@ Bazel近来很火，因为Bazel更容易与 Docker 和 Kubernetes 集成，其�
 * 快速构建，快速测试
 
 # install bazel 的两种方式
+
+> 官方不推荐windows平台，只推荐Linux平台。所以windows下就别用Bazel了。
+
+
 ## bazel release 页面下载二进制文件
 > https://github.com/bazelbuild/bazel/releases
 
