@@ -2,7 +2,7 @@
 title: Hello, Deno
 readmore: true
 date: 2022-07-25 13:17:15
-categories:
+categories: Fuchsia
 tags:
 ---
 
