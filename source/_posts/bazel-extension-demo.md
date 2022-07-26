@@ -171,3 +171,83 @@ INFO: Elapsed time: 0.229s, Critical Path: 0.00s
 INFO: 1 process: 1 internal.
 INFO: Build completed successfully, 1 total action
 ```
+
+> 上面的代码放在： https://github.com/backendcloud/example/bazel-extension-demo
+
+上面的 bazel build 就执行一行简单的打印 DEBUG: /root/tt-bazel/printer/printer.bzl:2:10: called.
+
+下面的 bazel build 执行一次图片size的转换。
+
+```bash
+ ⚡ root@localhost  ~/tt-bazel  cat small/BUILD.bazel small/miniature.bzl 
+load("//small:miniature.bzl","miniature")
+
+miniature(
+    name = "logo_miniature",
+    src = "image.png",
+)
+
+
+def miniature(name, src, size="100x100", **kwargs):
+  """Create a miniature of the src image.
+
+  The generated file is prefixed with 'small_'.
+  """
+  native.genrule(
+    name = name,
+    srcs = [src],
+    outs = ["small_" + src],
+    cmd = "magick $< -resize " + size + " $@",
+    **kwargs
+  )
+
+ ⚡ root@localhost  ~/tt-bazel  cat small/BUILD.bazel small/BUILD.bazel  
+load("//small:miniature.bzl","miniature")
+
+miniature(
+    name = "logo_miniature",
+    src = "image.png",
+)
+
+
+load("//small:miniature.bzl","miniature")
+
+miniature(
+    name = "logo_miniature",
+    src = "image.png",
+)
+```
+
+```bash
+ ⚡ root@localhost  ~/tt-bazel  bazel build //small:logo_miniature 
+INFO: Analyzed target //small:logo_miniature (2 packages loaded, 3 targets configured).
+INFO: Found 1 target...
+ERROR: /root/tt-bazel/small/BUILD.bazel:3:10: Executing genrule //small:logo_miniature failed: (Exit 127): bash failed: error executing command /bin/bash -c 'source external/bazel_tools/tools/genrule/genrule-setup.sh; convert small/image.png -resize 100x100 bazel-out/k8-fastbuild/bin/small/small_image.png'
+
+Use --sandbox_debug to see verbose messages from the sandbox and retain the sandbox build root for debugging
+/bin/bash: line 1: convert: command not found
+Target //small:logo_miniature failed to build
+Use --verbose_failures to see the command lines of failed build steps.
+INFO: Elapsed time: 0.239s, Critical Path: 0.04s
+INFO: 2 processes: 2 internal.
+FAILED: Build did NOT complete successfully
+```
+
+> 上面的报错是因为没有magick工具，在 https://imagemagick.org/script/download.php 网址下载用于处理图片的工具magick。
+
+
+```bash
+ ⚡ root@localhost  ~/tt-bazel  bazel build //small:logo_miniature
+INFO: Analyzed target //small:logo_miniature (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+Target //small:logo_miniature up-to-date:
+  bazel-bin/small/small_image.png
+INFO: Elapsed time: 0.415s, Critical Path: 0.29s
+INFO: 2 processes: 1 internal, 1 linux-sandbox.
+INFO: Build completed successfully, 2 total actions
+```
+
+![](/images/bazel-extension-demo/2022-07-26-10-43-25.png)
+
+> 上面的代码放在： https://github.com/backendcloud/example/bazel-extension-demo
+
