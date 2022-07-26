@@ -312,6 +312,8 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 
 上面的例子是个仅有一个go文件main.go的打印一句话的最小Golang项目，下面是一个具备 内部包引用 和 go.mod第三方包引用 的 简单的生成uuid 的 完整Golang项目。
 
+> 代码放在 https://github.com/backendcloud/example/tree/master/bazel-sample/basic
+
 ```bash
  ⚡ root@localhost  ~/bazel-sample/basic   main  ls
 BUILD.bazel  cmd  deps.bzl  go.mod  go.sum  uuid  WORKSPACE
