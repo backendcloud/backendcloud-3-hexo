@@ -430,6 +430,6 @@ INFO: Build completed successfully, 1 total action
 2022/07/26 15:40:57 4940e599-0cb6-11ed-b31b-000c297cbcd1
 ```
 
-> cmd/BUILD.bazel uuid/BUILD.bazel 两个文件是用 bazelisk run //:gazelle 自动生成的
+> cmd/BUILD.bazel 和 uuid/BUILD.bazel 两个文件是用 bazelisk run //:gazelle 自动生成的
 
-> 可以在 deps.bzl 和 WORKSPACE 中手动指定go包依赖，也可以不用指定，由rules_go/gazelle指定。
+> 可以在 deps.bzl 和 WORKSPACE 中手动指定go包依赖，也可以不用指定，由rules_go/gazelle自动指定。
