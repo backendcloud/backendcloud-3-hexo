@@ -8,7 +8,9 @@ tags:
 - KubeVirt CI
 ---
 
-> 本篇的所有代码放在 https://github.com/backendcloud/example/tree/master/bazel-go-hello/hello
+# Golang hello-world
+
+> 代码放在 https://github.com/backendcloud/example/tree/master/bazel-go-hello/hello
 
 先用Go写个hello-world源文件。执行`go mod init`和`go mod tidy`
 
@@ -304,3 +306,128 @@ http_archive(
 
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 ```
+
+
+# 另一个完整的Golang项目
+
+上面的例子是个仅有一个go文件main.go的打印一句话的最小Golang项目，下面是一个具备 内部包引用 和 go.mod第三方包引用 的 简单的生成uuid 的 完整Golang项目。
+
+```bash
+ ⚡ root@localhost  ~/bazel-sample/basic   main  ls
+BUILD.bazel  cmd  deps.bzl  go.mod  go.sum  uuid  WORKSPACE
+ ⚡ root@localhost  ~/bazel-sample/basic   main  more cmd/*
+::::::::::::::
+cmd/BUILD.bazel
+::::::::::::::
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "cmd_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/jun06t/bazel-sample/basic/cmd",
+    visibility = ["//visibility:private"],
+    deps = ["//uuid"],
+)
+
+go_binary(
+    name = "cmd",
+    embed = [":cmd_lib"],
+    pure = "on",
+    visibility = ["//visibility:public"],
+)
+::::::::::::::
+cmd/main.go
+::::::::::::::
+package main
+
+import (
+        "log"
+
+        "github.com/jun06t/bazel-sample/basic/uuid"
+)
+
+func main() {
+        id, err := uuid.Generate()
+        if err != nil {
+                log.Fatal(err)
+        }
+        log.Println(id)
+}
+ ⚡ root@localhost  ~/bazel-sample/basic   main  more uuid/*
+::::::::::::::
+uuid/BUILD.bazel
+::::::::::::::
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "uuid",
+    srcs = ["uuid.go"],
+    importpath = "github.com/jun06t/bazel-sample/basic/uuid",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_google_uuid//:uuid"],
+)
+::::::::::::::
+uuid/uuid.go
+::::::::::::::
+package uuid
+
+import (
+        "github.com/google/uuid"
+)
+
+func Generate() (string, error) {
+        u, err := uuid.NewUUID()
+        if err != nil {
+                return "", err
+        }
+        return u.String(), nil
+}
+ ⚡ root@localhost  ~/bazel-sample/basic   main  more  deps.bzl 
+load("@bazel_gazelle//:deps.bzl", "go_repository")
+
+def go_dependencies():
+    go_repository(
+        name = "com_github_google_uuid",
+        importpath = "github.com/google/uuid",
+        sum = "h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=",
+        version = "v1.3.0",
+    )
+```
+
+```bash
+ ⚡ root@localhost  ~/bazel-sample/basic   main  bazelisk build //...
+INFO: SHA256 (https://golang.org/dl/?mode=json&include=all) = 5d539711d20290d769b21f137348eea164d5fd408cfc6483c9937d9e1a2a6d98
+INFO: Analyzed 3 targets (31 packages loaded, 7999 targets configured).
+INFO: Found 3 targets...
+INFO: Elapsed time: 66.214s, Critical Path: 18.44s
+INFO: 14 processes: 4 internal, 10 linux-sandbox.
+INFO: Build completed successfully, 14 total actions
+ ⚡ root@localhost  ~/bazel-sample/basic   main  tree bazel-bin
+bazel-bin
+├── cmd
+│   ├── cmd_lib.a
+│   └── cmd_lib.x
+├── external
+│   └── com_github_google_uuid
+│       ├── uuid.a
+│       └── uuid.x
+└── uuid
+    ├── uuid.a
+    └── uuid.x
+
+4 directories, 6 files
+ ⚡ root@localhost  ~/bazel-sample/basic   main  bazelisk run //cmd:cmd
+INFO: Analyzed target //cmd:cmd (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+Target //cmd:cmd up-to-date:
+  bazel-out/k8-fastbuild-ST-4c64f0b3d5c7/bin/cmd/cmd_/cmd
+INFO: Elapsed time: 0.239s, Critical Path: 0.00s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+INFO: Build completed successfully, 1 total action
+2022/07/26 15:40:57 4940e599-0cb6-11ed-b31b-000c297cbcd1
+```
+
+> cmd/BUILD.bazel uuid/BUILD.bazel 两个文件是用 bazelisk run //:gazelle 自动生成的
+
+> 可以在 deps.bzl 和 WORKSPACE 中手动指定go包依赖，也可以不用指定，由rules_go/gazelle指定。
