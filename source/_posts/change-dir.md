@@ -16,7 +16,7 @@ Fuchsia具有以下特点：
 * 截至该文章发布时2022-07-21，Fuchsia还在密集开发和代码合并中。
 * 未来Fuchsia成为大一统所有平台的通用操作系统的愿望的是否能实现还很难说。但Fuchsia中用到的技术都是非常前沿的，代表未来方向的，即使Fuchsia本身不一定成功，但是作为个人兴趣投入Fuchsia一点不亏，学到的东西可以用到其他项目的开发中去，且Fuchsia是非常有希望成功的。
 * Fuchsia会进一步加快Rust和Dart语言的发展和应用，虽然Rust已经是编程语言中最火的编程语言，Flutter已经是UI开发最火的框架。那就算继续火上浇油吧。
-* Fuchsia有很多颠覆过往认知的疯狂项目：
+* Fuchsia有很多颠覆性的疯狂项目：
   * [Jiri](https://fuchsia.googlesource.com/jiri): 相对于单仓库管理工具Git，Jiri是Fuchsia的多仓库代码管理工具。
   * [Zircon](https://fuchsia.googlesource.com/fuchsia/+/refs/heads/main/zircon/): Fuchsia的操作系统内核。
   * [Topaz](https://fuchsia.googlesource.com/topaz/): Fuchsia的用户体验层（由Flutter支持）。

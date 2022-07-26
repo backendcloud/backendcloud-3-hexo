@@ -19,7 +19,7 @@ KubeVirt + DPDK，涉及到一个intel的网络插件intel userspace cni，在�
 ├── cniovs
 │   ├── cniovs.go - ovs网络插件
 │   ├── localdb.go - ovs本地存储
-│   ├── ovsctrl.go - 各种ovs-vsctl命令
+│   └── ovsctrl.go - 各种ovs-vsctl命令
 ├── cnivpp - vpp相关，本文不涉及vpp-dpdk，只涉及ovs-dpdk
 ├── logging - 日志
 ├── pkg
