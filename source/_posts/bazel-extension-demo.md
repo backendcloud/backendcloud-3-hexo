@@ -194,7 +194,7 @@ INFO: Build completed successfully, 1 total action
 下面的 bazel build 执行一次图片size的转换。
 
 ```bash
- ⚡ root@localhost  ~/tt-bazel  cat small/BUILD.bazel small/miniature.bzl 
+ ⚡ root@localhost  ~/tt-bazel  cat small/miniature.bzl 
 
 def miniature(name, src, size="100x100", **kwargs):
   """Create a miniature of the src image.
@@ -209,7 +209,7 @@ def miniature(name, src, size="100x100", **kwargs):
     **kwargs
   )
 
- ⚡ root@localhost  ~/tt-bazel  cat small/BUILD.bazel small/BUILD.bazel  
+ ⚡ root@localhost  ~/tt-bazel  cat small/BUILD.bazel
 load("//small:miniature.bzl","miniature")
 
 miniature(
