@@ -125,7 +125,22 @@ INFO: 1 process: 1 internal.
 INFO: Build completed successfully, 1 total action
 ```
 
+上面在一个空目录，空文件上跑。下面的是一个简单的打印。
+
 ```bash
+ ⚡ root@localhost  ~/tt-bazel  cat WORKSPACE 
+workspace(name = "src")
+ ⚡ root@localhost  ~/tt-bazel  cat printer/printer.bzl 
+printer = rule(
+    implementation = None,
+)
+ ⚡ root@localhost  ~/tt-bazel  cat printer/BUILD.bazel 
+load("//printer:printer.bzl","printer")
+#load("@src//printer:printer.bzl","printer")
+
+printer(
+    name = "printer",
+)
  ⚡ root@localhost  ~/tt-bazel  bazel build //printer
 ERROR: Traceback (most recent call last):
         File "/root/tt-bazel/printer/printer.bzl", line 1, column 15, in <toplevel>
