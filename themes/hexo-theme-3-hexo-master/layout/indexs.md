@@ -18,9 +18,9 @@
 
 
 ## 免费书籍
-  * [《KubeVirt CI》](http://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。
-  * [《Bazel在企业项目中的应用》](http://book.backendcloud.cn/bazel-book/) work in process 。。。
-  * [《KubeVirt源码分析》](http://book.backendcloud.cn/kubevirt-book/) work in process 。。。
+  * [《KubeVirt CI》](http://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。40%
+  * [《Bazel在企业项目中的应用》](http://book.backendcloud.cn/bazel-book/) work in process 。。。20%
+  * [《KubeVirt源码分析》](http://book.backendcloud.cn/kubevirt-book/) work in process 。。。20%
 
 
 ## 其他

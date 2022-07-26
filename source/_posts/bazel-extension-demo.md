@@ -1,5 +1,5 @@
 ---
-title: 扩展 Bazel 的构建语言(workinprocess)
+title: 扩展 Bazel 的构建语言
 readmore: true
 date: 2022-07-26 13:03:16
 categories: Devops
@@ -100,7 +100,7 @@ cc_library(
 )
 ```
 
-# 开始一步步编写 Bazel BUILD
+# 下面开始编写几个简单 Bazel BUILD example
 
 创建一个空目录，空WORKSPACE文件，成功执行bazel build，没有报错，只是没有targets，没有做任何build。
 
@@ -172,7 +172,7 @@ INFO: 1 process: 1 internal.
 INFO: Build completed successfully, 1 total action
 ```
 
-> 上面的代码放在： https://github.com/backendcloud/example/bazel-extension-demo
+> 上面的代码放在： https://github.com/backendcloud/example/blob/master/bazel-extension-demo
 
 上面的 bazel build 就执行一行简单的打印 DEBUG: /root/tt-bazel/printer/printer.bzl:2:10: called.
 
@@ -233,7 +233,7 @@ INFO: 2 processes: 2 internal.
 FAILED: Build did NOT complete successfully
 ```
 
-> 上面的报错是因为没有magick工具，在 https://imagemagick.org/script/download.php 网址下载用于处理图片的工具magick。
+> 上面的报错是因为没有magick工具，在 https://imagemagick.org/script/download.php 下载用于处理图片的工具magick。
 
 
 ```bash
@@ -247,7 +247,9 @@ INFO: 2 processes: 1 internal, 1 linux-sandbox.
 INFO: Build completed successfully, 2 total actions
 ```
 
+执行 bazel build 后，bazel-bin/small/small_image.png 路径下生成了个小号的图片
+
 ![](/images/bazel-extension-demo/2022-07-26-10-43-25.png)
 
-> 上面的代码放在： https://github.com/backendcloud/example/bazel-extension-demo
+> 上面的代码放在： https://github.com/backendcloud/example/blob/master/bazel-extension-demo
 
