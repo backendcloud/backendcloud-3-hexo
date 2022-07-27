@@ -8,7 +8,7 @@ tags:
 ---
 
 
-> 本篇的代码放在： https://github.com/backendcloud/example/tree/master/bazel-sample/docker-go-image
+> 本篇的代码放在： https://github.com/backendcloud/example/tree/master/bazel-sample/docker
 
 
 WORKSPACE文件内容：
