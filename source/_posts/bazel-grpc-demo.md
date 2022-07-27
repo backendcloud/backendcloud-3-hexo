@@ -1,5 +1,5 @@
 ---
-title: Bazel 构建 grpc server&client
+title: Bazel 构建 gRPC server&client
 readmore: true
 date: 2022-07-27 19:01:25
 categories: Devops
