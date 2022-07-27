@@ -87,6 +87,10 @@ Storing signatures
 a37976309a6375e3107bf0c89cc373d6c0b953b6596238006aabf0ac3bcfa762
 ```
 
+> 不同Docker的配置方式： `vi /usr/lib/systemd/system/docker.service` 找到 `ExecStart`，在其末尾添加如下内容（IP 则为 registry 主机的 IP）： `--insecure-registry 192.168.60.128:5000`
+
+
+
 # DNS
 
 ```bash
