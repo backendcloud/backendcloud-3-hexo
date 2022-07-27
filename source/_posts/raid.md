@@ -28,7 +28,7 @@ RAID 50 | 先做RAID 5，后做RAID 0，能有效提高RAID 5的性能
 
 ## RAID 0 实现方式
 
-![raid-0](/images/raid/raid-0.jpg)
+![](/images/raid/raid-0.jpg)
 
 ## RAID 1 实现方式
 
