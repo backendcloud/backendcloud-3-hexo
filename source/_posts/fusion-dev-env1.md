@@ -9,6 +9,10 @@ tags:
   - Kubernetes
 date: 2022-04-24 11:00:11
 ---
+
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 Kubernetes集群的Pod使用Openstack Cinder作为后端存储，需要部署cinder-csi-plugin
 > https://github.com/kubernetes/cloud-provider-openstack
 

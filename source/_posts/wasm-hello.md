@@ -7,6 +7,9 @@ tags:
 
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 > 在说 WebAssembly hello-world 前顺带提下Flutter
 
 WebAssembly 和 Flutter 两者 有个共同的特点：潜力股。在被js/ts统治的前端世界里的另外技术方向。前端世界里js占领着统治地位，又来了ts弥补缺陷加持统治地位，ts还有ms在强推，github被ms收购了后更加联合github一起强推。

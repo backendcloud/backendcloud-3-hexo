@@ -1,7 +1,7 @@
 ---
 title: 试用Github Action CI/CD流程（创建一个React项目，并打包部署）
 date: 2022-02-25 11:54:20
-categories: Tools
+categories: Devops
 tags:
 - CI/CD
 - Github Action

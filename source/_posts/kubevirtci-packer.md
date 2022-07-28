@@ -7,6 +7,9 @@ tags:
 - KubeVirt CI
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 # packer 是什么
 Packer是一个从单一的模板文件来创建多平台一致性镜像的轻量级开源工具，它能够运行在常用的主流操作系统如Windows、Linux和Mac os上，能够高效的并行创建多平台例如AWS、Azure和Alicloud的镜像，它的目的并不是取代Puppet/Chef等配置管理工具，实际上，当制作镜像的时候，Packer可以使用Chef或者Puppet等工具来安装镜像所需要的软件。通过Packer自动化的创建各种平台的镜像是非常容易的。
 

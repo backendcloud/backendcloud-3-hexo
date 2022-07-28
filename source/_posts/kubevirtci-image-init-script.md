@@ -6,6 +6,8 @@ tags:
 - KubeVirt CI
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
 
 virt-sysprep（镜像初始化工具） 参考 {% post_link kubevirtci-virt-sysprep %} 
 

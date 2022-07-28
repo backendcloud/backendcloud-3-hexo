@@ -2,10 +2,13 @@
 title: BUILD.bazel hello-world
 readmore: true
 date: 2022-06-15 19:25:03
-categories: Tools
+categories: Devops
 tags:
 - Bazel
 ---
+
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
 
 # 简介
 Bazel是一个类似于类似于 Make、Maven 和 Gradle的构建和测试工具。使用 Java、C++、Go、Android、iOS 以及许多其他语言和平台进行构建和测试。Bazel 可在 Windows、macOS 和 Linux 上运行。

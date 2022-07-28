@@ -9,6 +9,9 @@ tags:
 - 网络
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 MACVTAP 的实现基于传统的 MACVLAN。该实验中会起两个libvirt容器，一个作为客户端去测试连接虚拟机，也就是左边这个。 右边会在容器中起虚拟机，容器的eth0做一个macvtap给虚拟机用，macvtap0会把收到的包都发给虚拟机的eth0
 ![](/images/macvtap-lab/1.png)
 

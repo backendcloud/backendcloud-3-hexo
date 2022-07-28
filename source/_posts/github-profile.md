@@ -2,7 +2,7 @@
 title: Github Releases 和 Github Badges
 readmore: false
 date: 2022-05-09 18:29:30
-categories: Tools
+categories: Devops
 tags:
 - goreleaser
 - Github
@@ -10,6 +10,9 @@ tags:
 - Profile
 - Badges
 ---
+
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
 
 # goreleaser - 一键多平台打包工具
 

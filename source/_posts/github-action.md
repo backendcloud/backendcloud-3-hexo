@@ -1,7 +1,7 @@
 ---
 title: Github Action 补充介绍
 date: 2022-04-12 13:04:03
-categories: Tools
+categories: Devops
 tags:
 - Github Action
 - CICD
@@ -9,6 +9,8 @@ tags:
 - Openstack
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
 
 # 其他补充
 继续上篇文章 {% post_link blog-cicd %} 

@@ -8,6 +8,9 @@ tags:
 - Starlark
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 # Starlark
 
 Tensorflow， Envoy， Kubernetes， KubeVirt 等等大型项目都是用 Bazel 构建的，要参与开发这些项目或者基于这些项目做开发，不能避开Bazel，且Bazel是当前开源Build System里最先进也最代表着未来方向的产品，非常有必要掌握。

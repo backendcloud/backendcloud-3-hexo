@@ -1,7 +1,7 @@
 title: 自动化测试工具Serverwalker介绍
 date: 2018-07-14 11:52:51
 categories:
-- Tools
+- Devops
 tags:
 - Serverwalker
 - 自动化测试

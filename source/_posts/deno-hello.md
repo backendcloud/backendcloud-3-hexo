@@ -6,6 +6,9 @@ categories: Fuchsia
 tags:
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 # Deno 是什么
 现代JS/TS的运行时。
 

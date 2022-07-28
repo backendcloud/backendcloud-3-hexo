@@ -9,6 +9,9 @@ tags:
 date: 2022-04-14 08:02:45
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 # 融合部署实践计划
 step1 在自己windows系统的电脑上用vmware起一个ubuntu虚拟机 或者 centos虚拟机
 

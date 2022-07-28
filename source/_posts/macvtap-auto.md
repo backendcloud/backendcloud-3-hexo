@@ -10,6 +10,9 @@ tags:
 - multus-cni
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 继续上篇 <a href="https://www.backendcloud.cn/2022/06/06/macvtap-lab/" target="_blank">https://www.backendcloud.cn/2022/06/06/macvtap-lab/</a>
 上篇是纯手动，这篇是借助Kubernetes+KubeVirt自动。
 

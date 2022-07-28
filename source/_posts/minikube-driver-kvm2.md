@@ -8,6 +8,9 @@ tags:
 - kvm2
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 > 参考： https://minikube.sigs.k8s.io/docs/drivers/kvm2/
 
 # 记录下 minikube的driver切换成kvm2遇到的问题 

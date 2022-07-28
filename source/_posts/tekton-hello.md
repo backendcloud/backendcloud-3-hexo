@@ -8,6 +8,9 @@ tags:
 - Tekton
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 本篇是关于Tekton的 Getting Started，也就是最简单的demo - helloworld
 
 # install
