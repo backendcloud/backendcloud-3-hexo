@@ -36,6 +36,7 @@ tags:
     }
 ```
 
+域名解析配置了两个A记录（* @）到阿里云主机的公网IP上。
 
 另外还改了2个小细节：
 
@@ -48,7 +49,7 @@ tags:
     }
 ```
 
-# `http(s)://backendcloud.cn/*` 的url会被自动替换成 `https://www.backendcloud.cn/*`
+# http(s)://backendcloud.cn/** 的url会被自动替换成 https://www.backendcloud.cn/**
 ```bash
     server {
       listen        80;

@@ -120,7 +120,7 @@ OK: 8 MiB in 19 packages
 > Docker out of Docker 并没有实现完全的隔离，互相之间可以看见。
 
 
-# sysbox
+# Sysbox
 
 ![](/images/docker-docker/2022-07-29-15-24-01.png)
 
