@@ -255,3 +255,4 @@ INFO: Build completed successfully, 2 total actions
 
 > 上面的代码放在： https://github.com/backendcloud/example/blob/master/bazel-extension-demo
 
+> 官方的example例子： https://github.com/bazelbuild/examples/blob/main/rules/
