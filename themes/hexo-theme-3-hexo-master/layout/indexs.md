@@ -18,14 +18,14 @@
 
 
 ## 免费书籍
-  * [《KubeVirt CI》](http://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。40%
-  * [《Bazel在企业项目中的应用》](http://book.backendcloud.cn/bazel-book/) work in process 。。。20%
-  * [《KubeVirt源码分析》](http://book.backendcloud.cn/kubevirt-book/) work in process 。。。20%
+  * [《KubeVirt CI》](http://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。
+  * [《Bazel在企业项目中的应用》](http://book.backendcloud.cn/bazel-book/) work in process 。。。
+  * [《KubeVirt源码分析》](http://book.backendcloud.cn/kubevirt-book/) work in process 。。。
 
 
 ## 其他
-* 免费视频课程
-* 免费技术文章（3个主力频道：后端云网站，微信公众号“后端云”，[腾讯云开发者社区“后端云”](https://cloud.tencent.com/developer/column/72779)。后端云网站为最初发布平台，其他都是镜像）
+* 免费视频课程（3个主力频道：国内长视频平台bilibili和西瓜视频，外加google收购的那家） 规划中 。。。
+* 免费技术文章（3个主力频道：[“后端云”网站](https://www.backendcloud.cn)，微信公众号“后端云”(底部二维码扫一扫)，[腾讯云开发者社区“后端云”](https://cloud.tencent.com/developer/column/72779)。后端云网站为最初发布平台，其他都是镜像）
 
 [//]: # (1.虚拟机技术和容器技术的融合 2.多云融合（多云（公有云私有云中心云边缘云）融合管理，分布式应用融合部署）3.在1和2融合环境上的全语言全平台CICD)
 [//]: # (* 容器和虚拟机融合技术，如KubeVirt生态)

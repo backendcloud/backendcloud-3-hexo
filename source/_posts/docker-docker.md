@@ -6,7 +6,7 @@ categories: Devops
 tags:
 ---
 
-在 云原生项目的 CI 中, 需要创建一个沙盒环境去创建和销毁CI环境用来 测试虚拟机环境或容器环境。几年前还是用vagrant+vbox，现在随着容器技术的发展，vagrant 虚拟机化的CI环境 已经基本不用了。取而代之的是容器化的CI环境。
+在 云原生项目的 CI 中, 需要创建一个沙盒环境去创建和销毁CI环境用来 测试虚拟机环境或容器环境。几年前还是用 vagrant + libvirt + kvm，现在随着容器技术的发展，vagrant 虚拟机化的CI环境 已经基本不用了。取而代之的是容器化的CI环境。
 
 # Docker in Docker
 
