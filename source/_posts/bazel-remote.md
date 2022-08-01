@@ -88,7 +88,7 @@ INFO: Build completed successfully, 8 total actions
 
 检查bazel remote server的日志：
 
-```
+```bash
  ⚡ root@backendcloud  ~/bazel-remote  docker run -u 1000:1000 -v /root/bazel-remote/dummy-remote-cache:/data -p 9090:8080 -p 9092:9092 buchgr/bazel-remote-cache
 Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
 2022/08/01 05:50:13 bazel-remote built with go1.18.4 from git commit 951cb59c415abc46a67412a6e9206fc6c00da40d.
