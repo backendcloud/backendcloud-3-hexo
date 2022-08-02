@@ -86,7 +86,7 @@ INFO: 8 processes: 4 remote cache hit, 4 internal.
 INFO: Build completed successfully, 8 total actions
 ```
 
-检查bazel remote server的日志：
+检查bazel remote server cache的日志：
 
 ```bash
  ⚡ root@backendcloud  ~/bazel-remote  docker run -u 1000:1000 -v /root/bazel-remote/dummy-remote-cache:/data -p 9090:8080 -p 9092:9092 buchgr/bazel-remote-cache
