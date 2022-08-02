@@ -7,6 +7,7 @@ tags:
 - Bazel
 ---
 
+> 本篇的所有代码放在： https://github.com/backendcloud/example/tree/master/bazel-genrule
 
 # 创建一个简单的 c hello 项目
 
