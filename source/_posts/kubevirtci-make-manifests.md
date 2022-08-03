@@ -1,5 +1,5 @@
 ---
-title: kubevirtci-make-manifests
+title: kubevirtci make manifests
 readmore: true
 date: 2022-08-03 19:33:44
 categories: 云原生
@@ -8,7 +8,7 @@ tags:
 ---
 
 
-# make manifests or manifests-no-bazel
+# make manifests with-bazel or make manifests no-bazel
 
 前者用bazel生成manifest，后者不用bazel。
 
