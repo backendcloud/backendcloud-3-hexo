@@ -1,5 +1,5 @@
 ---
-title: bazel genrule
+title: Bazel genrule
 readmore: true
 date: 2022-08-02 20:32:59
 categories: Devops
