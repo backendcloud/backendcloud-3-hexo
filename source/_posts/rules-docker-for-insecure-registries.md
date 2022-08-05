@@ -70,7 +70,7 @@ container_push(
     format = "Docker",
     image = ":image",
     #registry = "localhost:5000",
-    registry = "120.26.200.226:5000",
+    registry = "121.25.211.23:5000",
     repository = "backendcloud/bazel-sample-cmd",
     tag = "$(IMAGE_TAG)",
     insecure_repository = True,
