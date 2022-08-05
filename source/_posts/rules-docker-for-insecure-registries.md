@@ -33,7 +33,7 @@ insecure = true
 
 后者网上有很多教程，这里不说了。这里说下用前一种方式：修改bazel rule_docker代码。
 
-> 首先声明：肯定是选择后者方案，采用前者方案（支持不安全镜像仓库的标志support insecure flag）是愚蠢的行为。
+> 首先声明：肯定是选择后者方案，采用前者方案是愚蠢的行为。
 
 
 
@@ -54,11 +54,30 @@ http_archive(
 )
 ```
 
-在项目根目录的WORKSPACE中将上面的内容替换成下面的内容：（具体替换内容以发布页为准）
+step1：在项目根目录的WORKSPACE中将上面的内容替换成下面的内容：（具体替换内容以发布页为准）
 
 [rules_docker_for_insecure_registries](https://github.com/backendcloud/rules_docker_for_insecure_registries/releases/tag/rules_docker_for_insecure_registries)
 
+step2：在 Bazel BUILD文件的container_push调用中加上参数`insecure_repository = True`
 
+```bash
+ ⚡ root@backendcloud  ~/example/bazel-sample/docker   master ±  cat cmd/BUILD.bazel 
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_push")
+...
+container_push(
+    name = "image-push",
+    format = "Docker",
+    image = ":image",
+    #registry = "localhost:5000",
+    registry = "120.26.200.226:5000",
+    repository = "backendcloud/bazel-sample-cmd",
+    tag = "$(IMAGE_TAG)",
+    insecure_repository = True,
+)
+```
+
+> 再次声明：支持不安全镜像仓库的标志 support insecure flag 是愚蠢的行为。
 
 # 使用前后对比
 
