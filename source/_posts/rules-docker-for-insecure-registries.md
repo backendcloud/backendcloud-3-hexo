@@ -54,7 +54,7 @@ http_archive(
 http_archive(
     name = "io_bazel_rules_docker",
     sha256 = "4985f2084b414a281c5abf36e3dbe4be274ec93f28eca82bbf0dd42c0dfef449",
-    urls = ["https://github.com/c-hanwei/rules_docker_for_insecure_registries/releases/download/v0.02/rules_docker-v0.25.2.tar.gz"],
+    urls = ["https://github.com/backendcloud/rules_docker_for_insecure_registries/releases/download/rules_docker_for_insecure_registries/rules_docker-v0.25.2.tar.gz"],
 )
 ```
 
