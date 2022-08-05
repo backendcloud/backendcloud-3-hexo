@@ -93,7 +93,7 @@ INFO: Elapsed time: 0.264s, Critical Path: 0.01s
 INFO: 2 processes: 2 internal.
 INFO: Build completed successfully, 2 total actions
 INFO: Build completed successfully, 2 total actions
-2022/08/04 17:58:31 Error pushing image to 120.26.200.226:5000/backendcloud/bazel-sample-cmd:v1.0.0: unable to push image to 120.26.200.226:5000/backendcloud/bazel-sample-cmd:v1.0.0: Get "https://120.26.200.226:50t
+2022/08/04 17:58:31 Error pushing image to 121.25.211.23:5000/backendcloud/bazel-sample-cmd:v1.0.0: unable to push image to 121.25.211.23:5000/backendcloud/bazel-sample-cmd:v1.0.0: Get "https://121.25.211.23:50t
 make: *** [Makefile:2: docker-push] Error 1
  ✘ ⚡ root@backendcloud  ~/example/bazel-sample/docker   master ±  vi cmd/BUILD.bazel
  ⚡ root@backendcloud  ~/example/bazel-sample/docker   master ±  make docker-push  
@@ -107,7 +107,7 @@ INFO: Elapsed time: 0.222s, Critical Path: 0.01s
 INFO: 2 processes: 2 internal.
 INFO: Build completed successfully, 2 total actions
 INFO: Build completed successfully, 2 total actions
-2022/08/04 17:58:45 Successfully pushed Docker image to 120.26.200.226:5000/backendcloud/bazel-sample-cmd:v1.0.0 - 120.26.200.226@sha256:322b44c93453aaaa21bb1584caa16cb56f178230f5bb47a93d7ab4b4279dd2fe
+2022/08/04 17:58:45 Successfully pushed Docker image to 121.25.211.23:5000/backendcloud/bazel-sample-cmd:v1.0.0 - 121.25.211.23@sha256:322b44c93453aaaa21bb1584caa16cb56f178230f5bb47a93d7ab4b4279dd2fe
 ```
 
 将旧的rules_docker替换成新的，发现可以推送镜像到http的镜像仓库了。
