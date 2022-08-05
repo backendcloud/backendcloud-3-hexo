@@ -32,7 +32,7 @@ bazel run \
 
 用了内置的genrule，input是tools/manifest-templator/目录下的templator标签，该标签对应于tools/manifest-templator/ package中的BUILD.bazel文件中的name：templator（用于go build “tools/manifest-templator/”工具），output是"manifest-templator-copier"，命令是`"echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\""`。
 
-这段genrule做的事情是往output文件中打印一段shell脚本，该脚本就执行了个复制操作。讲input源（就是go编译的tools/manifest-templator/工具）复制到`$1`（即`${templator}`）。
+这段genrule做的事情是往output文件中打印一段shell脚本，该脚本就执行了个复制操作。将input源（就是go编译的tools/manifest-templator/工具）复制到`$1`（即`${templator}`）。
 
 ```bash
 genrule(
