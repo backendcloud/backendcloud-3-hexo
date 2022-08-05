@@ -29,7 +29,7 @@ insecure = true
 
 `vi /usr/lib/systemd/system/docker.service` 找到 `ExecStart`，在其末尾添加如下内容（IP 则为 registry 主机的 IP）： `--insecure-registry 192.168.60.128:5000`
 
-然后Bazel构建下上述传统的方式不管用，因为Bazel的构建环境和在命令行执行的环境不太一样，要修复上面的错误。Bazel构建官方维护的仓库目前还不支持不安全的镜像仓库，要么改bazel rule_docker代码，要么做个安全的镜像仓库 https://docs.docker.com/registry/deploying/#run-an-externally-accessible-registry
+然而Bazel构建下上述传统的方式不管用，因为Bazel的构建环境和在命令行执行的环境不太一样。Bazel构建官方维护的仓库目前还不支持不安全的镜像仓库，要修复上面的错误，要么改bazel rule_docker代码，要么做个安全的镜像仓库 https://docs.docker.com/registry/deploying/#run-an-externally-accessible-registry
 
 后者网上有很多教程，这里不说了。这里说下用前一种方式：修改bazel rule_docker代码。
 
