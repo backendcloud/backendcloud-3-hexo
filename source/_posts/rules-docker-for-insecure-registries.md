@@ -36,6 +36,8 @@ insecure = true
 # 使用方法
 
 
+在项目根目录的WORKSPACE中，原来的rules_docker配置如下：（仅举例，每个项目用的官方的rules_docker版本不尽相同）
+
 ```bash
 http_archive(
     name = "io_bazel_rules_docker",
@@ -48,15 +50,9 @@ http_archive(
 )
 ```
 
-在项目根目录的WORKSPACE中将上面的内容替换成下面的内容：
+在项目根目录的WORKSPACE中将上面的内容替换成下面的内容：（具体替换内容以发布页为准）
 
-```bash
-http_archive(
-    name = "io_bazel_rules_docker",
-    sha256 = "4985f2084b414a281c5abf36e3dbe4be274ec93f28eca82bbf0dd42c0dfef449",
-    urls = ["https://github.com/backendcloud/rules_docker_for_insecure_registries/releases/download/rules_docker_for_insecure_registries/rules_docker-v0.25.2.tar.gz"],
-)
-```
+[rules_docker_for_insecure_registries](https://github.com/backendcloud/rules_docker_for_insecure_registries/releases/tag/rules_docker_for_insecure_registries)
 
 
 # 使用前后对比
