@@ -3,15 +3,13 @@ title: jetbrains macbook m1版全家桶破解
 date: 2021-03-11 17:01:57
 categories: Tools
 tags:
-- jetbrains
-- goland
-- ideaIU
-- pycharm
-- WebStorm
+- Jetbrains
 - 破解
 
 ---
-> 写该文章的时候2020.3是最新版，于 2022.04.20 在文章末尾 更新最新版 `2022.1` 正式版 破解方法 适用于全系列系统 mac m1/x86；windows；linux（centos/ubuntu）等
+> 写该文章的时候2020.3是最新版，于 2022.04.20 在文章末尾 更新最新版 `2022.1` 正式版 破解方法 适用于Jetbrains全家桶，适用于全平台 mac m1/x86；windows；linux（centos/ubuntu）等
+
+> 于 2022.08.09 在文章末尾 更新最新版 `2022.2` 正式版 破解方法 适用于Jetbrains全家桶，适用于全平台 mac m1/x86；windows；linux（centos/ubuntu）等
 
 苹果macbook要放弃intel芯片，转而采用自家芯片，m1芯片是从intel到全系采用自家芯片的过渡期到一个芯片型号，arm架构。随着m1芯片发布以来时间的推移，越来越多越多的软件从需要rosetta转译到原生支持。jetbrains从2020年下半年开始也发布了原生支持m1的版本。
 
@@ -41,4 +39,6 @@ Jetbrains 家的产品有一个很良心的地方，他会允许你试用 30 天
 
 
 
-> [更新最新版 2022.1 正式版 破解方法 适用于全系列系统 mac m1/x86；windows；linux（centos/ubuntu）等](https://puffy-secure-2a8.notion.site/jetbrains-2022-1-windows-64-mac-m1-6dda5f1f079d41609eac7a467d7c19d4)
+> [更新 2022.1 正式版 破解方法 适用于全系列系统 mac m1/x86；windows；linux（centos/ubuntu）等](https://puffy-secure-2a8.notion.site/jetbrains-2022-1-windows-64-mac-m1-6dda5f1f079d41609eac7a467d7c19d4)
+
+> [更新 2022.2 正式版 破解方法 适用于Jetbrains全家桶，适用于全平台 mac m1/x86；windows；linux（centos/ubuntu）等](https://puffy-secure-2a8.notion.site/jetbrains-2022-2-windows-64-mac-m1-mac-x86-linux-4320ae14f4474cf48ca291d5aa03a1be)

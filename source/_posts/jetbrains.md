@@ -2,11 +2,7 @@ title: jetbrains windows版全家桶破解
 date: 2019-08-28 15:15:39
 categories: Tools
 tags:
-- jetbrains
-- goland
-- ideaIU
-- pycharm
-- WebStorm
+- Jetbrains
 - 破解
 
 ---
