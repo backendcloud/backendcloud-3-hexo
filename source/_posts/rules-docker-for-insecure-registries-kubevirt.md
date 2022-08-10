@@ -1,5 +1,5 @@
 ---
-title: rules_docker_for_insecure_registries
+title: rules_docker_for_insecure_registries for KubeVirt
 readmore: true
 date: 2022-08-10 18:56:44
 categories: Tools
@@ -9,11 +9,11 @@ tags:
 
 # 报错
 
-之前发布过一篇文章 {% post_link rules_docker_for_insecure %}
+之前发布过一篇文章 {% post_link rules-docker-for-insecure-registries %}
 
 用修改后的rule去跑kubevirt的时候，报错
 
-![](2022-08-10-15-58-39.png)
+![](/images/rules-docker-for-insecure-registries-kubevirt/2022-08-10-15-58-39.png)
 
 # 原因
 
@@ -21,7 +21,7 @@ tags:
 
 具体发生错误的地方如下：line 785 ： attr.architecture 未配置
 
-![](2022-08-10-15-56-50.png)
+![](/images/rules-docker-for-insecure-registries-kubevirt/2022-08-10-15-56-50.png)
 
 # 对策
 
