@@ -56,7 +56,9 @@ http_archive(
 
 step1：在项目根目录的WORKSPACE中将上面的内容替换成下面的内容：（具体替换内容以发布页为准）
 
-[rules_docker_for_insecure_registries](https://github.com/backendcloud/rules_docker_for_insecure_registries/releases/tag/rules_docker_for_insecure_registries)
+* [Releases - rules_docker_for_insecure_registries](https://github.com/backendcloud/rules_docker_for_insecure_registries/releases/tag/rules_docker_for_insecure_registries)
+
+* [Releases - kubevirt_rules_docker_for_insecure_registries](https://github.com/backendcloud/rules_docker_for_insecure_registries/releases/tag/kubevirt_rules_docker_for_insecure_registries)
 
 step2：在 Bazel BUILD文件的container_push调用中加上参数`insecure_repository = True`
 
