@@ -69,7 +69,7 @@ sub   rsa2048 2022-08-12 [E] [expires: 2024-08-11]
 [root@c63843475281 x86_64]# 
 ```
 
-# generate a GPG file
+## generate a GPG file
 
 ```bash
 [root@c63843475281 x86_64]# gpg --export -a HANWEI > RPM-GPG-KEY-HANWEI
@@ -90,7 +90,7 @@ libvirt-daemon-driver-nodedev-debuginfo-8.1.0-1.el8.x86_64.rpm    libvirt-daemon
 libvirt-daemon-driver-nwfilter-8.1.0-1.el8.x86_64.rpm             libvirt-daemon-driver-storage-iscsi-debuginfo-8.1.0-1.el8.x86_64.rpm    libvirt-devel-8.1.0-1.el8.x86_64.rpm
 ```
 
-# Add the GPG signing details to your rpm environment
+## Add the GPG signing details to your rpm environment
 
 ```bash
 [root@c63843475281 x86_64]# rpm --import RPM-GPG-KEY-HANWEI
@@ -107,9 +107,9 @@ gpg-pubkey-a35a0504-62f64af4    gpg(HANWEI)
 %_gpg_name HANWEI
 ```
 
-# sign RPMs with the GPG key
+## sign RPMs with the GPG key
 
-## before sign
+### before sign
 
 ```bash
 [root@c63843475281 x86_64]# rpm -qpi *.rpm | awk '/Signature/'
@@ -166,7 +166,7 @@ Signature   : (none)
 Signature   : (none)
 ```
 
-## sign process
+### sign process
 
 ```bash
 [root@c63843475281 x86_64]# rpm --resign *.rpm
@@ -258,7 +258,7 @@ libvirt-wireshark-debuginfo-8.1.0-1.el8.x86_64.rpm:
 >
 > 缺少rpmsign工具，yum install -y rpm-sign 解决
 
-## after sign (check)
+### after sign (check)
 ```bash
 [root@c63843475281 x86_64]# rpm -qpi *.rpm | awk '/Signature/'
 Signature   : RSA/SHA256, Fri 12 Aug 2022 12:51:25 PM UTC, Key ID a8191698a35a0504
@@ -314,7 +314,7 @@ Signature   : RSA/SHA256, Fri 12 Aug 2022 12:51:40 PM UTC, Key ID a8191698a35a05
 Signature   : RSA/SHA256, Fri 12 Aug 2022 12:51:40 PM UTC, Key ID a8191698a35a0504
 ```
 
-# set /etc/yum.rep.d/xxx.repo or repo.list or other...
+## set /etc/yum.rep.d/xxx.repo or repo.list or other...
 
 ```bash
 [root@kubevirtci bazeldnf]# cat rpm/repo.yaml 
