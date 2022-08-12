@@ -1,5 +1,5 @@
 ---
-title: 编译libvirt源码并创建yum源
+title: 编译 Libvirt 源码 并 创建yum源
 readmore: true
 date: 2022-08-12 18:40:38
 categories: 云原生
@@ -7,7 +7,7 @@ tags:
 ---
 
 
-# 背景
+# 需求背景
 
 有时候需要测试特定版本的libvirt或者需要测试自己修改过的libvirt。这时候就需要重新编译libvirt，并做成yum源
 
@@ -3037,15 +3037,17 @@ libvirt-daemon-driver-nodedev-8.1.0-1.el8.x86_64.rpm              libvirt-daemon
 libvirt-daemon-driver-nodedev-debuginfo-8.1.0-1.el8.x86_64.rpm    libvirt-daemon-driver-storage-gluster-debuginfo-8.1.0-1.el8.x86_64.rpm  libvirt-daemon-kvm-8.1.0-1.el8.x86_64.rpm                                    repodata
 ```
 
-# 创建yum源的http服务 
+# step5：创建yum源的http服务 
 
 ```bash
 [root@kubevirtci ~]# docker run -dit --name rpms-http-server -p 80 -v rpms:/usr/local/apache2/htdocs/ httpd:latest
 Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
 db859853729b5cc7c46d28b023146b08cf7f440ce139e25b84f82a7a75bb48c5
-[root@kubevirtci ~]# docker run -dit --name rpms-http-server -p 80 -v rpms:/usr/local/apache2/htdocs/ httpd:latest
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Error: error creating container storage: the container name "rpms-http-server" is already in use by "db859853729b5cc7c46d28b023146b08cf7f440ce139e25b84f82a7a75bb48c5". You have to remove that container to be able to reuse that name.: that name is already in use
+```
+
+# 测试yum源的http服务
+
+```bash
 [root@kubevirtci ~]# docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' rpms-http-server
 Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
 10.88.0.214
