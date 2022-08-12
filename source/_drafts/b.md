@@ -112,228 +112,94 @@ make: *** [Makefile:120: rpm-deps] Error 1
 ```
 
 ```bash
-[root@kubevirtci kubevirt]# make push
-hack/dockerized "export BUILD_ARCH= && hack/bazel-fmt.sh && DOCKER_PREFIX=100.73.54.12:80/test DOCKER_TAG=mybuild8 DOCKER_TAG_ALT= IMAGE_PREFIX= IMAGE_PREFIX_ALT= KUBEVIRT_PROVIDER= PUSH_TARGETS='' ./hack/bazel-push-images.sh"
+[root@kubevirtci ~]# docker volume create rpms
 Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+rpms
+[root@kubevirtci ~]# docker run -td -w /libvirt-src --security-opt label=disable --name libvirt-build -v $(pwd):/libvirt-src -v rpms:/root/rpmbuild/RPMS registry.gitlab.com/libvirt/libvirt/ci-centos-stream-8
 Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-go version go1.17.8 linux/amd64
+Trying to pull registry.gitlab.com/libvirt/libvirt/ci-centos-stream-8:latest...
+Getting image source signatures
+Copying blob 741a9542e264 done  
+Copying blob 545277d80005 done  
+Copying blob f70d60810c69 done  
+Copying blob c0ffde05962c done  
+Copying blob cae420f94528 done  
+Copying config a19c77cd0c done  
+Writing manifest to image destination
+Storing signatures
+94f7d255d315369b2ae0a5802548f93eeecfd7b4e96f244d99c7a6706a20430d
+[root@kubevirtci ~]# docker exec -ti libvirt-build bash
 Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+[root@94f7d255d315 libvirt-src]# dnf update -y
+...
+  Verifying        : libverto-libevent-0.3.2-2.el8.x86_64                                                                                                                                                                                                           122/167 
+  Verifying        : libverto-libevent-0.3.0-5.el8.x86_64                                                                                                                                                                                                           123/167 
+  Verifying        : lvm2-8:2.03.14-5.el8.x86_64                                                                                                                                                                                                                    124/167 
+  Verifying        : lvm2-8:2.03.14-3.el8.x86_64                                                                                                                                                                                                                    125/167 
+  Verifying        : lvm2-libs-8:2.03.14-5.el8.x86_64                                                                                                                                                                                                               126/167 
+  Verifying        : lvm2-libs-8:2.03.14-3.el8.x86_64                                                                                                                                                                                                               127/167 
+  Verifying        : pam-1.3.1-22.el8.x86_64                                                                                                                                                                                                                        128/167 
+  Verifying        : pam-1.3.1-21.el8.x86_64                                                                                                                                                                                                                        129/167 
+  Verifying        : pam-devel-1.3.1-22.el8.x86_64                                                                                                                                                                                                                  130/167 
+  Verifying        : pam-devel-1.3.1-21.el8.x86_64                                                                                                                                                                                                                  131/167 
+  Verifying        : procps-ng-3.3.15-8.el8.x86_64                                                                                                                                                                                                                  132/167 
+  Verifying        : procps-ng-3.3.15-7.el8.x86_64                                                                                                                                                                                                                  133/167 
+  Verifying        : python3-dnf-4.7.0-11.el8.noarch                                                                                                                                                                                                                134/167 
+  Verifying        : python3-dnf-4.7.0-10.el8.noarch                                                                                                                                                                                                                135/167 
+  Verifying        : python3-dnf-plugins-core-4.0.21-14.el8.noarch                                                                                                                                                                                                  136/167 
+  Verifying        : python3-dnf-plugins-core-4.0.21-12.el8.noarch                                                                                                                                                                                                  137/167 
+  Verifying        : python3-hawkey-0.63.0-11.el8.x86_64                                                                                                                                                                                                            138/167 
+  Verifying        : python3-hawkey-0.63.0-10.el8.x86_64                                                                                                                                                                                                            139/167 
+  Verifying        : python3-libdnf-0.63.0-11.el8.x86_64                                                                                                                                                                                                            140/167 
+  Verifying        : python3-libdnf-0.63.0-10.el8.x86_64                                                                                                                                                                                                            141/167 
+  Verifying        : python3-librepo-1.14.2-3.el8.x86_64                                                                                                                                                                                                            142/167 
+  Verifying        : python3-librepo-1.14.2-1.el8.x86_64                                                                                                                                                                                                            143/167 
+  Verifying        : sanlock-lib-3.8.4-4.el8.x86_64                                                                                                                                                                                                                 144/167 
+  Verifying        : sanlock-lib-3.8.4-3.el8.x86_64                                                                                                                                                                                                                 145/167 
+  Verifying        : setup-2.12.2-7.el8.noarch                                                                                                                                                                                                                      146/167 
+  Verifying        : setup-2.12.2-6.el8.noarch                                                                                                                                                                                                                      147/167 
+  Verifying        : shadow-utils-2:4.6-17.el8.x86_64                                                                                                                                                                                                               148/167 
+  Verifying        : shadow-utils-2:4.6-16.el8.x86_64                                                                                                                                                                                                               149/167 
+  Verifying        : systemd-239-62.el8.x86_64                                                                                                                                                                                                                      150/167 
+  Verifying        : systemd-239-59.el8.x86_64                                                                                                                                                                                                                      151/167 
+  Verifying        : systemd-devel-239-62.el8.x86_64                                                                                                                                                                                                                152/167 
+  Verifying        : systemd-devel-239-59.el8.x86_64                                                                                                                                                                                                                153/167 
+  Verifying        : systemd-libs-239-62.el8.x86_64                                                                                                                                                                                                                 154/167 
+  Verifying        : systemd-libs-239-59.el8.x86_64                                                                                                                                                                                                                 155/167 
+  Verifying        : systemd-pam-239-62.el8.x86_64                                                                                                                                                                                                                  156/167 
+  Verifying        : systemd-pam-239-59.el8.x86_64                                                                                                                                                                                                                  157/167 
+  Verifying        : systemd-udev-239-62.el8.x86_64                                                                                                                                                                                                                 158/167 
+  Verifying        : systemd-udev-239-59.el8.x86_64                                                                                                                                                                                                                 159/167 
+  Verifying        : tar-2:1.30-6.el8.x86_64                                                                                                                                                                                                                        160/167 
+  Verifying        : tar-2:1.30-5.el8.x86_64                                                                                                                                                                                                                        161/167 
+  Verifying        : yum-4.7.0-11.el8.noarch                                                                                                                                                                                                                        162/167 
+  Verifying        : yum-4.7.0-10.el8.noarch                                                                                                                                                                                                                        163/167 
+  Verifying        : device-mapper-devel-8:1.02.181-5.el8.x86_64                                                                                                                                                                                                    164/167 
+  Verifying        : device-mapper-devel-8:1.02.181-3.el8.x86_64                                                                                                                                                                                                    165/167 
+  Verifying        : sanlock-devel-3.8.4-4.el8.x86_64                                                                                                                                                                                                               166/167 
+  Verifying        : sanlock-devel-3.8.4-3.el8.x86_64                                                                                                                                                                                                               167/167 
 
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-go version go1.17.8 linux/amd64
-Sandbox is up to date
-INFO: Build option --define has changed, discarding analysis cache.
-INFO: Analyzed target //vendor/mvdan.cc/sh/v3/cmd/shfmt:shfmt (75 packages loaded, 8347 targets configured).
-INFO: Found 1 target...
-Target //vendor/mvdan.cc/sh/v3/cmd/shfmt:shfmt up-to-date:
-  bazel-bin/vendor/mvdan.cc/sh/v3/cmd/shfmt/shfmt_/shfmt
-INFO: Elapsed time: 2.627s, Critical Path: 0.36s
-INFO: 1 process: 1 internal.
-INFO: Build completed successfully, 1 total action
-INFO: Build completed successfully, 1 total action
-INFO: Analyzed target //:gazelle (35 packages loaded, 301 targets configured).
-INFO: Found 1 target...
-Target //:gazelle up-to-date:
-  bazel-bin/gazelle-runner.bash
-  bazel-bin/gazelle
-INFO: Elapsed time: 0.422s, Critical Path: 0.05s
-INFO: 1 process: 1 internal.
-INFO: Build completed successfully, 1 total action
-INFO: Build completed successfully, 1 total action
-INFO: Analyzed target //:goimports (10 packages loaded, 44 targets configured).
-INFO: Found 1 target...
-Target //:goimports up-to-date:
-  bazel-bin/goimports.bash
-INFO: Elapsed time: 0.197s, Critical Path: 0.05s
-INFO: 1 process: 1 internal.
-INFO: Build completed successfully, 1 total action
-INFO: Build completed successfully, 1 total action
-INFO: Analyzed target //:buildifier (62 packages loaded, 291 targets configured).
-INFO: Found 1 target...
-Target //:buildifier up-to-date:
-  bazel-bin/buildifier.bash
-INFO: Elapsed time: 0.255s, Critical Path: 0.07s
-INFO: 1 process: 1 internal.
-INFO: Build completed successfully, 1 total action
-INFO: Build completed successfully, 1 total action
-Sandbox is up to date
-INFO: Build option --define has changed, discarding analysis cache.
-INFO: Analyzed target //:push-other-images (698 packages loaded, 14054 targets configured).
-INFO: Found 1 target...
-Target //:push-other-images up-to-date:
-  bazel-bin/push-other-images
-INFO: Elapsed time: 3.010s, Critical Path: 0.10s
-INFO: 1 process: 1 internal.
-INFO: Build completed successfully, 1 total action
-INFO: Build completed successfully, 1 total action
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/example-hook-sidecar:mybuild8: unable to push image to 100.73.54.12:80/test/example-hook-sidecar:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/example-cloudinit-hook-sidecar:mybuild8: unable to push image to 100.73.54.12:80/test/example-cloudinit-hook-sidecar:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/alpine-with-test-tooling-container-disk:mybuild8: unable to push image to 100.73.54.12:80/test/alpine-with-test-tooling-container-disk:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/subresource-access-test:mybuild8: unable to push image to 100.73.54.12:80/test/subresource-access-test:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/alpine-ext-kernel-boot-demo:mybuild8: unable to push image to 100.73.54.12:80/test/alpine-ext-kernel-boot-demo:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/winrmcli:mybuild8: unable to push image to 100.73.54.12:80/test/winrmcli:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/disks-images-provider:mybuild8: unable to push image to 100.73.54.12:80/test/disks-images-provider:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/alpine-container-disk-demo:mybuild8: unable to push image to 100.73.54.12:80/test/alpine-container-disk-demo:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/fedora-with-test-tooling-container-disk:mybuild8: unable to push image to 100.73.54.12:80/test/fedora-with-test-tooling-container-disk:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/virtio-container-disk:mybuild8: unable to push image to 100.73.54.12:80/test/virtio-container-disk:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/cirros-custom-container-disk-demo:mybuild8: unable to push image to 100.73.54.12:80/test/cirros-custom-container-disk-demo:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/fedora-realtime-container-disk:mybuild8: unable to push image to 100.73.54.12:80/test/fedora-realtime-container-disk:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS client
-2022/08/11 07:22:57 Error pushing image to 100.73.54.12:80/test/cirros-container-disk-demo:mybuild8: unable to push image to 100.73.54.12:80/test/cirros-container-disk-demo:mybuild8: Get "https://100.73.54.12:80/v2/": http: server gave HTTP response to HTTPS clientmake: *** [Makefile:31: bazel-push-images] Error 1
-[root@kubevirtci kubevirt]# 
-```
+Upgraded:
+  alsa-lib-1.2.7.2-1.el8.x86_64                          annobin-10.67-3.el8.x86_64                        cpp-8.5.0-15.el8.x86_64                           cups-libs-1:2.2.6-50.el8.x86_64                               curl-7.61.1-25.el8.x86_64                       
+  dbus-1:1.12.8-19.el8.x86_64                            dbus-common-1:1.12.8-19.el8.noarch                dbus-daemon-1:1.12.8-19.el8.x86_64                dbus-libs-1:1.12.8-19.el8.x86_64                              dbus-tools-1:1.12.8-19.el8.x86_64               
+  device-mapper-8:1.02.181-5.el8.x86_64                  device-mapper-devel-8:1.02.181-5.el8.x86_64       device-mapper-event-8:1.02.181-5.el8.x86_64       device-mapper-event-libs-8:1.02.181-5.el8.x86_64              device-mapper-libs-8:1.02.181-5.el8.x86_64      
+  device-mapper-persistent-data-0.9.0-7.el8.x86_64       dnf-4.7.0-11.el8.noarch                           dnf-data-4.7.0-11.el8.noarch                      dnf-plugins-core-4.0.21-14.el8.noarch                         gcc-8.5.0-15.el8.x86_64                         
+  gcc-c++-8.5.0-15.el8.x86_64                            gcc-plugin-annobin-8.5.0-15.el8.x86_64            gdbm-1:1.18-2.el8.x86_64                          gdbm-libs-1:1.18-2.el8.x86_64                                 glibc-2.28-208.el8.x86_64                       
+  glibc-common-2.28-208.el8.x86_64                       glibc-devel-2.28-208.el8.x86_64                   glibc-gconv-extra-2.28-208.el8.x86_64             glibc-headers-2.28-208.el8.x86_64                             glibc-langpack-en-2.28-208.el8.x86_64           
+  glibc-minimal-langpack-2.28-208.el8.x86_64             grub2-common-1:2.02-129.el8.noarch                grub2-tools-1:2.02-129.el8.x86_64                 grub2-tools-minimal-1:2.02-129.el8.x86_64                     gssproxy-0.8.0-21.el8.x86_64                    
+  kernel-headers-4.18.0-408.el8.x86_64                   krb5-devel-1.18.2-21.el8.x86_64                   krb5-libs-1.18.2-21.el8.x86_64                    libarchive-3.3.3-4.el8.x86_64                                 libatomic-8.5.0-15.el8.x86_64                   
+  libcurl-7.61.1-25.el8.x86_64                           libcurl-devel-7.61.1-25.el8.x86_64                libdnf-0.63.0-11.el8.x86_64                       libgcc-8.5.0-15.el8.x86_64                                    libgomp-8.5.0-15.el8.x86_64                     
+  libkadm5-1.18.2-21.el8.x86_64                          libnl3-3.7.0-1.el8.x86_64                         libnl3-cli-3.7.0-1.el8.x86_64                     libnl3-devel-3.7.0-1.el8.x86_64                               librepo-1.14.2-3.el8.x86_64                     
+  libstdc++-8.5.0-15.el8.x86_64                          libstdc++-devel-8.5.0-15.el8.x86_64               libverto-0.3.2-2.el8.x86_64                       libverto-devel-0.3.2-2.el8.x86_64                             libverto-libevent-0.3.2-2.el8.x86_64            
+  lvm2-8:2.03.14-5.el8.x86_64                            lvm2-libs-8:2.03.14-5.el8.x86_64                  pam-1.3.1-22.el8.x86_64                           pam-devel-1.3.1-22.el8.x86_64                                 procps-ng-3.3.15-8.el8.x86_64                   
+  python-rpm-macros-3-43.el8.noarch                      python-srpm-macros-3-43.el8.noarch                python3-dnf-4.7.0-11.el8.noarch                   python3-dnf-plugins-core-4.0.21-14.el8.noarch                 python3-hawkey-0.63.0-11.el8.x86_64             
+  python3-libdnf-0.63.0-11.el8.x86_64                    python3-librepo-1.14.2-3.el8.x86_64               python3-rpm-macros-3-43.el8.noarch                ruby-libs-2.5.9-110.module_el8.6.0+1187+541216eb.x86_64       sanlock-devel-3.8.4-4.el8.x86_64                
+  sanlock-lib-3.8.4-4.el8.x86_64                         setup-2.12.2-7.el8.noarch                         shadow-utils-2:4.6-17.el8.x86_64                  systemd-239-62.el8.x86_64                                     systemd-devel-239-62.el8.x86_64                 
+  systemd-libs-239-62.el8.x86_64                         systemd-pam-239-62.el8.x86_64                     systemd-udev-239-62.el8.x86_64                    tar-2:1.30-6.el8.x86_64                                       unbound-libs-1.16.0-2.el8.x86_64                
+  yum-4.7.0-11.el8.noarch                               
+Installed:
+  grub2-tools-efi-1:2.02-129.el8.x86_64                grub2-tools-extra-1:2.02-129.el8.x86_64                python3-unbound-1.16.0-2.el8.x86_64                rpm-plugin-systemd-inhibit-4.14.3-23.el8.x86_64                sqlite-3.26.0-15.el8.x86_64               
 
-```bash
-[root@kubevirtci kubevirt]# export DOCKER_PREFIX=117.226.132.83:5000/test
-[root@kubevirtci kubevirt]# docker push
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Error: accepts between 1 and 2 arg(s), received 0
-[root@kubevirtci kubevirt]# make push
-hack/dockerized "export BUILD_ARCH= && hack/bazel-fmt.sh && DOCKER_PREFIX=117.226.132.83:5000/test DOCKER_TAG=mybuild8 DOCKER_TAG_ALT= IMAGE_PREFIX= IMAGE_PREFIX_ALT= KUBEVIRT_PROVIDER= PUSH_TARGETS='' ./hack/bazel-push-images.sh"
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-go version go1.17.8 linux/amd64
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-go version go1.17.8 linux/amd64
-Sandbox is up to date
-INFO: Build option --define has changed, discarding analysis cache.
-INFO: Analyzed target //vendor/mvdan.cc/sh/v3/cmd/shfmt:shfmt (75 packages loaded, 8347 targets configured).
-INFO: Found 1 target...
-Target //vendor/mvdan.cc/sh/v3/cmd/shfmt:shfmt up-to-date:
-  bazel-bin/vendor/mvdan.cc/sh/v3/cmd/shfmt/shfmt_/shfmt
-INFO: Elapsed time: 1.852s, Critical Path: 0.33s
-INFO: 1 process: 1 internal.
-INFO: Build completed successfully, 1 total action
-INFO: Build completed successfully, 1 total action
-INFO: Analyzed target //:gazelle (35 packages loaded, 301 targets configured).
-INFO: Found 1 target...
-Target //:gazelle up-to-date:
-  bazel-bin/gazelle-runner.bash
-  bazel-bin/gazelle
-INFO: Elapsed time: 0.421s, Critical Path: 0.06s
-INFO: 1 process: 1 internal.
-INFO: Build completed successfully, 1 total action
-INFO: Build completed successfully, 1 total action
-INFO: Analyzed target //:goimports (10 packages loaded, 44 targets configured).
-INFO: Found 1 target...
-Target //:goimports up-to-date:
-  bazel-bin/goimports.bash
-INFO: Elapsed time: 0.214s, Critical Path: 0.06s
-INFO: 1 process: 1 internal.
-INFO: Build completed successfully, 1 total action
-INFO: Build completed successfully, 1 total action
-INFO: Analyzed target //:buildifier (62 packages loaded, 291 targets configured).
-INFO: Found 1 target...
-Target //:buildifier up-to-date:
-  bazel-bin/buildifier.bash
-INFO: Elapsed time: 0.247s, Critical Path: 0.07s
-INFO: 1 process: 1 internal.
-INFO: Build completed successfully, 1 total action
-INFO: Build completed successfully, 1 total action
-Sandbox is up to date
-INFO: Build option --define has changed, discarding analysis cache.
-INFO: Analyzed target //:push-other-images (830 packages loaded, 14054 targets configured).
-INFO: Found 1 target...
-Target //:push-other-images up-to-date:
-  bazel-bin/push-other-images
-INFO: Elapsed time: 2.471s, Critical Path: 0.10s
-INFO: 16 processes: 16 internal.
-INFO: Build completed successfully, 16 total actions
-INFO: Build completed successfully, 16 total actions
-2022/08/11 08:29:02 Successfully pushed Docker image to 117.226.132.83:5000/test/cirros-custom-container-disk-demo:mybuild8
-2022/08/11 08:29:03 Successfully pushed Docker image to 117.226.132.83:5000/test/subresource-access-test:mybuild8
-2022/08/11 08:29:07 Successfully pushed Docker image to 117.226.132.83:5000/test/cirros-container-disk-demo:mybuild8
-2022/08/11 08:29:29 Successfully pushed Docker image to 117.226.132.83:5000/test/example-cloudinit-hook-sidecar:mybuild8
-2022/08/11 08:29:30 Successfully pushed Docker image to 117.226.132.83:5000/test/alpine-with-test-tooling-container-disk:mybuild8
-2022/08/11 08:29:36 Successfully pushed Docker image to 117.226.132.83:5000/test/nfs-server:mybuild8
-2022/08/11 08:29:51 Successfully pushed Docker image to 117.226.132.83:5000/test/vm-killer:mybuild8
-2022/08/11 08:29:52 Successfully pushed Docker image to 117.226.132.83:5000/test/winrmcli:mybuild8
-2022/08/11 08:29:53 Successfully pushed Docker image to 117.226.132.83:5000/test/alpine-ext-kernel-boot-demo:mybuild8
-2022/08/11 08:29:57 Successfully pushed Docker image to 117.226.132.83:5000/test/disks-images-provider:mybuild8
-2022/08/11 08:30:11 Successfully pushed Docker image to 117.226.132.83:5000/test/alpine-container-disk-demo:mybuild8
-2022/08/11 08:30:12 Successfully pushed Docker image to 117.226.132.83:5000/test/example-hook-sidecar:mybuild8
-2022/08/11 08:31:00 Successfully pushed Docker image to 117.226.132.83:5000/test/fedora-with-test-tooling-container-disk:mybuild8
-2022/08/11 08:31:03 Successfully pushed Docker image to 117.226.132.83:5000/test/virtio-container-disk:mybuild8
-2022/08/11 08:32:27 Successfully pushed Docker image to 117.226.132.83:5000/test/fedora-realtime-container-disk:mybuild8
-INFO: Analyzed target //:push-virt-operator (245 packages loaded, 1710 targets configured).
-INFO: Found 1 target...
-Target //:push-virt-operator up-to-date:
-  bazel-bin/push-virt-operator.digest
-  bazel-bin/push-virt-operator
-INFO: Elapsed time: 4.569s, Critical Path: 3.77s
-INFO: 13 processes: 6 internal, 7 processwrapper-sandbox.
-INFO: Build completed successfully, 13 total actions
-INFO: Build completed successfully, 13 total actions
-2022/08/11 08:32:36 Successfully pushed Docker image to 117.226.132.83:5000/test/virt-operator:mybuild8
-INFO: Analyzed target //:push-virt-api (20 packages loaded, 316 targets configured).
-INFO: Found 1 target...
-Target //:push-virt-api up-to-date:
-  bazel-bin/push-virt-api.digest
-  bazel-bin/push-virt-api
-INFO: Elapsed time: 2.638s, Critical Path: 2.35s
-INFO: 9 processes: 4 internal, 5 processwrapper-sandbox.
-INFO: Build completed successfully, 9 total actions
-INFO: Build completed successfully, 9 total actions
-2022/08/11 08:32:42 Successfully pushed Docker image to 117.226.132.83:5000/test/virt-api:mybuild8
-INFO: Analyzed target //:push-virt-controller (22 packages loaded, 76 targets configured).
-INFO: Found 1 target...
-Target //:push-virt-controller up-to-date:
-  bazel-bin/push-virt-controller.digest
-  bazel-bin/push-virt-controller
-INFO: Elapsed time: 2.739s, Critical Path: 2.54s
-INFO: 9 processes: 4 internal, 5 processwrapper-sandbox.
-INFO: Build completed successfully, 9 total actions
-INFO: Build completed successfully, 9 total actions
-2022/08/11 08:32:48 Successfully pushed Docker image to 117.226.132.83:5000/test/virt-controller:mybuild8
-INFO: Analyzed target //:push-virt-handler (135 packages loaded, 1004 targets configured).
-INFO: Found 1 target...
-Target //:push-virt-handler up-to-date:
-  bazel-bin/push-virt-handler.digest
-  bazel-bin/push-virt-handler
-INFO: Elapsed time: 8.759s, Critical Path: 8.32s
-INFO: 9 processes: 4 internal, 5 processwrapper-sandbox.
-INFO: Build completed successfully, 9 total actions
-INFO: Build completed successfully, 9 total actions
-2022/08/11 08:33:08 Successfully pushed Docker image to 117.226.132.83:5000/test/virt-handler:mybuild8
-INFO: Analyzed target //:push-virt-launcher (90 packages loaded, 311 targets configured).
-INFO: Found 1 target...
-Target //:push-virt-launcher up-to-date:
-  bazel-bin/push-virt-launcher.digest
-  bazel-bin/push-virt-launcher
-INFO: Elapsed time: 12.097s, Critical Path: 11.82s
-INFO: 9 processes: 4 internal, 5 processwrapper-sandbox.
-INFO: Build completed successfully, 9 total actions
-INFO: Build completed successfully, 9 total actions
-2022/08/11 08:33:35 Successfully pushed Docker image to 117.226.132.83:5000/test/virt-launcher:mybuild8
-INFO: Analyzed target //:push-conformance (113 packages loaded, 856 targets configured).
-INFO: Found 1 target...
-Target //:push-conformance up-to-date:
-  bazel-bin/push-conformance.digest
-  bazel-bin/push-conformance
-INFO: Elapsed time: 14.488s, Critical Path: 13.17s
-INFO: 44 processes: 6 internal, 38 processwrapper-sandbox.
-INFO: Build completed successfully, 44 total actions
-INFO: Build completed successfully, 44 total actions
-2022/08/11 08:33:57 Successfully pushed Docker image to 117.226.132.83:5000/test/conformance:mybuild8
-INFO: Analyzed target //:push-libguestfs (63 packages loaded, 131 targets configured).
-INFO: Found 1 target...
-Target //:push-libguestfs up-to-date:
-  bazel-bin/push-libguestfs.digest
-  bazel-bin/push-libguestfs
-INFO: Elapsed time: 16.198s, Critical Path: 15.94s
-INFO: 9 processes: 4 internal, 5 processwrapper-sandbox.
-INFO: Build completed successfully, 9 total actions
-INFO: Build completed successfully, 9 total actions
-2022/08/11 08:34:31 Successfully pushed Docker image to 117.226.132.83:5000/test/libguestfs-tools:mybuild8
+Complete!
+[root@94f7d255d315 libvirt-src]# 
 ```

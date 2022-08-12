@@ -1,7 +1,7 @@
 ---
 title: rules_docker_for_insecure_registries for KubeVirt
 readmore: true
-date: 2022-08-10 18:56:44
+date: 2022-08-11 18:56:44
 categories: Tools
 tags:
 - 后端云小项目
