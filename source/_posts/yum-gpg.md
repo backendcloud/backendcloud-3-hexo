@@ -1,5 +1,5 @@
 ---
-title: 创建一个带GPG-signed的yum源
+title: 创建一个带GPG-signed(gpgkey)的yum源
 readmore: true
 date: 2022-08-12 20:41:57
 categories: 云原生
