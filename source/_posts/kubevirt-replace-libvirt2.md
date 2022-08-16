@@ -68,6 +68,7 @@ make CUSTOM_REPO=rpm/custom-repo.yaml LIBVIRT_VERSION=0:6.0.0-1.el8 SINGLE_ARCH=
 
 ## after replace libvirt v8.0.0 to v6.0.0 build kubevirt process ok：
 
+```bash
 [root@kubevirtci kubevirt]# make
 ./hack/dockerized "hack/bazel-fmt.sh"
 Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
@@ -335,4 +336,4 @@ INFO: Build completed successfully, 26 total actions
 digest files not found: won't use shasums, falling back to tags
 Done hack/manifests.sh
 [root@kubevirtci kubevirt]#
-
+```
