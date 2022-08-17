@@ -99,7 +99,7 @@ F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
 
 > 注意在客户端，我们在屏幕上看到的所有字符都来自于远程服务器。包括我们输入的内容，也是远程服务器上的 line discipline 应用 echo 规则的结果，将这些字符回显了回来。
 
-> 想进一步探究，可以阅读 TTY驱动的源码(https://github.com/torvalds/linux/blob/master/drivers/tty/tty_io.c) 和 line discipline的源码(https://github.com/torvalds/linux/blob/master/drivers/tty/n_tty.c)
+> 想进一步探究，可以阅读 [TTY驱动的源码](https://github.com/torvalds/linux/blob/master/drivers/tty/tty_io.c) 和 [line discipline的源码](https://github.com/torvalds/linux/blob/master/drivers/tty/n_tty.c)
 
 # 用go语言实现的对PTY master/slave的读写
 
@@ -197,7 +197,7 @@ func main() {
 
 有了前面的铺垫，我们很容易基于WebSocket来实现WebConsole了，具体的架构图如下所示：
 
-![](2022-08-17-16-46-32.png)
+![](/images/web-terminal/2022-08-17-16-46-32.png)
 
 实现 Web Terminal 现在比较主流的实现方案是：在浏览器端，需要嵌入xterm.js插件，实现对终端的输入输出支持能力。服务端使用 node-pty 做 PTY 的操作工具。而通讯方面，SSH 用的是 TCP，Web 上能用的也就是 WebSocket 了。
 
