@@ -6,6 +6,9 @@ categories: 云原生
 tags:
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 yum源的搭建参考之前发布的文章 {% post_link libvirt-compile %}
 
 # Create a yum repository with custom GPG-signed RPM packages

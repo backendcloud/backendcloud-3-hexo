@@ -16,6 +16,22 @@ KubeVirt替换virt-lantch中的libvirt的版本 参考之前发布的文章{% po
 
 > 编译 Libvirt 源码 并 创建yum源 参考之前发布的文章 {% post_link libvirt-compile %} (v6.0.0 的编译 自行 google)
 
+```bash
+# docker run libvirt-build container
+docker volume create rpms
+docker run -td -w /libvirt-src --security-opt label=disable --name libvirt-build -v $(pwd):/libvirt-src -v rpms:/root/rpmbuild/RPMS registry.gitlab.com/libvirt/libvirt/ci-centos-stream-8
+docker exec -it libvirt-build bash
+mkdir build
+cd build
+../autogen.sh 
+make
+# 若要构建rpm
+rpmbuild -ba libvirt.spec
+# 执行完后可以在/root/rpmbuild/RPMS查看生成的rpm包，执行createrepo创建rpm索引
+# 若要安装
+make install
+```
+
 ## custom-repo.yaml 需要加上 libvirt v6.0.0 的yum源 以及epel
 
 ```bash
