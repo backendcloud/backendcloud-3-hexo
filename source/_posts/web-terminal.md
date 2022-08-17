@@ -101,11 +101,105 @@ F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
 
 > 想进一步探究，可以阅读 TTY驱动的源码(https://github.com/torvalds/linux/blob/master/drivers/tty/tty_io.c) 和 line discipline的源码(https://github.com/torvalds/linux/blob/master/drivers/tty/n_tty.c)
 
+# 用go语言实现的对PTY master/slave的读写
+
+> 代码放在： https://github.com/backendcloud/example/tree/master/pts
+
+```go
+package main
+
+import (
+    "fmt"
+    "os"
+    "strconv"
+    "syscall"
+    "unsafe"
+)
+
+func ioctl(fd, cmd, ptr uintptr) error {
+    _, _, e := syscall.Syscall(syscall.SYS_IOCTL, fd, cmd, ptr)
+    if e != 0 {
+        return e
+    }
+    return nil
+}
+
+
+func ptsname(f *os.File) (string, error) {
+    var n uint32
+    err := ioctl(f.Fd(), syscall.TIOCGPTN, uintptr(unsafe.Pointer(&n)))
+    if err != nil {
+        return "", err
+    }
+    return "/dev/pts/" + strconv.Itoa(int(n)), nil
+}
+
+func unlockpt(f *os.File) error {
+    var u int32
+    // use TIOCSPTLCK with a zero valued arg to clear the slave pty lock
+    return ioctl(f.Fd(), syscall.TIOCSPTLCK, uintptr(unsafe.Pointer(&u)))
+}
+
+func StartPty() (pty, tty *os.File, err error) {
+    p, err := os.OpenFile("/dev/ptmx", os.O_RDWR | syscall.O_NOCTTY, 0)
+    if err != nil {
+        return nil, nil, err
+    }
+
+    sname, err := ptsname(p)
+    if err != nil {
+        return nil, nil, err
+    }
+
+    err = unlockpt(p)
+    if err != nil {
+        return nil, nil, err
+    }
+
+    fmt.Println("sname is :", sname)
+    t, err := os.OpenFile(sname, os.O_RDWR|syscall.O_NOCTTY, 0)
+    if err != nil {
+        return nil, nil, err
+    }
+
+
+    return p, t, nil
+}
+
+
+func main() {
+    m, s, err := StartPty()
+    if  err != nil {
+        fmt.Printf("start pty: " , err)
+        os.Exit(-1)
+    }
+    defer m.Close()
+    defer s.Close()
+
+    n, err := m.Write([]byte("hello world!\n")) ;
+    fmt.Printf("write master, %d:%v\n", n, err)
+
+    buf := make([]byte, 256)
+    n, err = s.Read(buf)
+    fmt.Println("read from slave:", string(buf[0:n]))
+
+
+    n, err = s.Write([]byte("slave!\n"))
+    fmt.Printf("write slave, %d:%v\n", n, err)
+    n, err = m.Read(buf[:])
+    fmt.Println("read from master:", string(buf[0:n]))
+}
+```
+
 # Web Terminal
 
-> 首先明确一下，这里说的 Web Terminal 是指再网页中实现的，类似于终端客户端软件的东西。
+> 首先明确一下，这里说的 Web Terminal 是指在网页中实现的，类似于终端客户端软件的东西。
 
-实现 Web Terminal 现在比较主流的实现方案是：前端使用 xterm.js 作 HTML5 中的终端组件，服务端使用 node-pty 做 PTY 的操作工具。而通讯方面，SSH 用的是 TCP，Web 上能用的也就是 WebSocket 了。
+有了前面的铺垫，我们很容易基于WebSocket来实现WebConsole了，具体的架构图如下所示：
+
+![](2022-08-17-16-46-32.png)
+
+实现 Web Terminal 现在比较主流的实现方案是：在浏览器端，需要嵌入xterm.js插件，实现对终端的输入输出支持能力。服务端使用 node-pty 做 PTY 的操作工具。而通讯方面，SSH 用的是 TCP，Web 上能用的也就是 WebSocket 了。
 
 > * https://github.com/xtermjs/xterm.js
 > * https://github.com/microsoft/node-pty
