@@ -99,7 +99,7 @@ F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
 
 > 注意在客户端，我们在屏幕上看到的所有字符都来自于远程服务器。包括我们输入的内容，也是远程服务器上的 line discipline 应用 echo 规则的结果，将这些字符回显了回来。
 
-> 想进一步探究，可以阅读 [TTY驱动的源码](https://github.com/torvalds/linux/blob/master/drivers/tty/tty_io.c) 和 [line discipline的源码](https://github.com/torvalds/linux/blob/master/drivers/tty/n_tty.c)
+> 想进一步探究，可以阅读 [TTY驱动的源码 https://github.com/torvalds/linux/blob/master/drivers/tty/tty_io.c](https://github.com/torvalds/linux/blob/master/drivers/tty/tty_io.c) 和 [line discipline的源码 https://github.com/torvalds/linux/blob/master/drivers/tty/n_tty.c](https://github.com/torvalds/linux/blob/master/drivers/tty/n_tty.c)
 
 # 用go语言实现的对PTY master/slave的读写
 
@@ -189,6 +189,19 @@ func main() {
     n, err = m.Read(buf[:])
     fmt.Println("read from master:", string(buf[0:n]))
 }
+```
+
+执行结果：
+```bash
+[root@kubevirtci pts]# go run main.go 
+sname is : /dev/pts/3
+write master, 13:<nil>
+read from slave: hello world!
+
+write slave, 7:<nil>
+read from master: hello world!
+
+[root@kubevirtci pts]# 
 ```
 
 # Web Terminal

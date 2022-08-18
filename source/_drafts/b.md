@@ -111,95 +111,43 @@ FAILED: Build did NOT complete successfully (8 packages loaded, 2 targets config
 make: *** [Makefile:120: rpm-deps] Error 1
 ```
 
-```bash
-[root@kubevirtci ~]# docker volume create rpms
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-rpms
-[root@kubevirtci ~]# docker run -td -w /libvirt-src --security-opt label=disable --name libvirt-build -v $(pwd):/libvirt-src -v rpms:/root/rpmbuild/RPMS registry.gitlab.com/libvirt/libvirt/ci-centos-stream-8
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-Trying to pull registry.gitlab.com/libvirt/libvirt/ci-centos-stream-8:latest...
-Getting image source signatures
-Copying blob 741a9542e264 done  
-Copying blob 545277d80005 done  
-Copying blob f70d60810c69 done  
-Copying blob c0ffde05962c done  
-Copying blob cae420f94528 done  
-Copying config a19c77cd0c done  
-Writing manifest to image destination
-Storing signatures
-94f7d255d315369b2ae0a5802548f93eeecfd7b4e96f244d99c7a6706a20430d
-[root@kubevirtci ~]# docker exec -ti libvirt-build bash
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-[root@94f7d255d315 libvirt-src]# dnf update -y
-...
-  Verifying        : libverto-libevent-0.3.2-2.el8.x86_64                                                                                                                                                                                                           122/167 
-  Verifying        : libverto-libevent-0.3.0-5.el8.x86_64                                                                                                                                                                                                           123/167 
-  Verifying        : lvm2-8:2.03.14-5.el8.x86_64                                                                                                                                                                                                                    124/167 
-  Verifying        : lvm2-8:2.03.14-3.el8.x86_64                                                                                                                                                                                                                    125/167 
-  Verifying        : lvm2-libs-8:2.03.14-5.el8.x86_64                                                                                                                                                                                                               126/167 
-  Verifying        : lvm2-libs-8:2.03.14-3.el8.x86_64                                                                                                                                                                                                               127/167 
-  Verifying        : pam-1.3.1-22.el8.x86_64                                                                                                                                                                                                                        128/167 
-  Verifying        : pam-1.3.1-21.el8.x86_64                                                                                                                                                                                                                        129/167 
-  Verifying        : pam-devel-1.3.1-22.el8.x86_64                                                                                                                                                                                                                  130/167 
-  Verifying        : pam-devel-1.3.1-21.el8.x86_64                                                                                                                                                                                                                  131/167 
-  Verifying        : procps-ng-3.3.15-8.el8.x86_64                                                                                                                                                                                                                  132/167 
-  Verifying        : procps-ng-3.3.15-7.el8.x86_64                                                                                                                                                                                                                  133/167 
-  Verifying        : python3-dnf-4.7.0-11.el8.noarch                                                                                                                                                                                                                134/167 
-  Verifying        : python3-dnf-4.7.0-10.el8.noarch                                                                                                                                                                                                                135/167 
-  Verifying        : python3-dnf-plugins-core-4.0.21-14.el8.noarch                                                                                                                                                                                                  136/167 
-  Verifying        : python3-dnf-plugins-core-4.0.21-12.el8.noarch                                                                                                                                                                                                  137/167 
-  Verifying        : python3-hawkey-0.63.0-11.el8.x86_64                                                                                                                                                                                                            138/167 
-  Verifying        : python3-hawkey-0.63.0-10.el8.x86_64                                                                                                                                                                                                            139/167 
-  Verifying        : python3-libdnf-0.63.0-11.el8.x86_64                                                                                                                                                                                                            140/167 
-  Verifying        : python3-libdnf-0.63.0-10.el8.x86_64                                                                                                                                                                                                            141/167 
-  Verifying        : python3-librepo-1.14.2-3.el8.x86_64                                                                                                                                                                                                            142/167 
-  Verifying        : python3-librepo-1.14.2-1.el8.x86_64                                                                                                                                                                                                            143/167 
-  Verifying        : sanlock-lib-3.8.4-4.el8.x86_64                                                                                                                                                                                                                 144/167 
-  Verifying        : sanlock-lib-3.8.4-3.el8.x86_64                                                                                                                                                                                                                 145/167 
-  Verifying        : setup-2.12.2-7.el8.noarch                                                                                                                                                                                                                      146/167 
-  Verifying        : setup-2.12.2-6.el8.noarch                                                                                                                                                                                                                      147/167 
-  Verifying        : shadow-utils-2:4.6-17.el8.x86_64                                                                                                                                                                                                               148/167 
-  Verifying        : shadow-utils-2:4.6-16.el8.x86_64                                                                                                                                                                                                               149/167 
-  Verifying        : systemd-239-62.el8.x86_64                                                                                                                                                                                                                      150/167 
-  Verifying        : systemd-239-59.el8.x86_64                                                                                                                                                                                                                      151/167 
-  Verifying        : systemd-devel-239-62.el8.x86_64                                                                                                                                                                                                                152/167 
-  Verifying        : systemd-devel-239-59.el8.x86_64                                                                                                                                                                                                                153/167 
-  Verifying        : systemd-libs-239-62.el8.x86_64                                                                                                                                                                                                                 154/167 
-  Verifying        : systemd-libs-239-59.el8.x86_64                                                                                                                                                                                                                 155/167 
-  Verifying        : systemd-pam-239-62.el8.x86_64                                                                                                                                                                                                                  156/167 
-  Verifying        : systemd-pam-239-59.el8.x86_64                                                                                                                                                                                                                  157/167 
-  Verifying        : systemd-udev-239-62.el8.x86_64                                                                                                                                                                                                                 158/167 
-  Verifying        : systemd-udev-239-59.el8.x86_64                                                                                                                                                                                                                 159/167 
-  Verifying        : tar-2:1.30-6.el8.x86_64                                                                                                                                                                                                                        160/167 
-  Verifying        : tar-2:1.30-5.el8.x86_64                                                                                                                                                                                                                        161/167 
-  Verifying        : yum-4.7.0-11.el8.noarch                                                                                                                                                                                                                        162/167 
-  Verifying        : yum-4.7.0-10.el8.noarch                                                                                                                                                                                                                        163/167 
-  Verifying        : device-mapper-devel-8:1.02.181-5.el8.x86_64                                                                                                                                                                                                    164/167 
-  Verifying        : device-mapper-devel-8:1.02.181-3.el8.x86_64                                                                                                                                                                                                    165/167 
-  Verifying        : sanlock-devel-3.8.4-4.el8.x86_64                                                                                                                                                                                                               166/167 
-  Verifying        : sanlock-devel-3.8.4-3.el8.x86_64                                                                                                                                                                                                               167/167 
+# 容器生命周期
 
-Upgraded:
-  alsa-lib-1.2.7.2-1.el8.x86_64                          annobin-10.67-3.el8.x86_64                        cpp-8.5.0-15.el8.x86_64                           cups-libs-1:2.2.6-50.el8.x86_64                               curl-7.61.1-25.el8.x86_64                       
-  dbus-1:1.12.8-19.el8.x86_64                            dbus-common-1:1.12.8-19.el8.noarch                dbus-daemon-1:1.12.8-19.el8.x86_64                dbus-libs-1:1.12.8-19.el8.x86_64                              dbus-tools-1:1.12.8-19.el8.x86_64               
-  device-mapper-8:1.02.181-5.el8.x86_64                  device-mapper-devel-8:1.02.181-5.el8.x86_64       device-mapper-event-8:1.02.181-5.el8.x86_64       device-mapper-event-libs-8:1.02.181-5.el8.x86_64              device-mapper-libs-8:1.02.181-5.el8.x86_64      
-  device-mapper-persistent-data-0.9.0-7.el8.x86_64       dnf-4.7.0-11.el8.noarch                           dnf-data-4.7.0-11.el8.noarch                      dnf-plugins-core-4.0.21-14.el8.noarch                         gcc-8.5.0-15.el8.x86_64                         
-  gcc-c++-8.5.0-15.el8.x86_64                            gcc-plugin-annobin-8.5.0-15.el8.x86_64            gdbm-1:1.18-2.el8.x86_64                          gdbm-libs-1:1.18-2.el8.x86_64                                 glibc-2.28-208.el8.x86_64                       
-  glibc-common-2.28-208.el8.x86_64                       glibc-devel-2.28-208.el8.x86_64                   glibc-gconv-extra-2.28-208.el8.x86_64             glibc-headers-2.28-208.el8.x86_64                             glibc-langpack-en-2.28-208.el8.x86_64           
-  glibc-minimal-langpack-2.28-208.el8.x86_64             grub2-common-1:2.02-129.el8.noarch                grub2-tools-1:2.02-129.el8.x86_64                 grub2-tools-minimal-1:2.02-129.el8.x86_64                     gssproxy-0.8.0-21.el8.x86_64                    
-  kernel-headers-4.18.0-408.el8.x86_64                   krb5-devel-1.18.2-21.el8.x86_64                   krb5-libs-1.18.2-21.el8.x86_64                    libarchive-3.3.3-4.el8.x86_64                                 libatomic-8.5.0-15.el8.x86_64                   
-  libcurl-7.61.1-25.el8.x86_64                           libcurl-devel-7.61.1-25.el8.x86_64                libdnf-0.63.0-11.el8.x86_64                       libgcc-8.5.0-15.el8.x86_64                                    libgomp-8.5.0-15.el8.x86_64                     
-  libkadm5-1.18.2-21.el8.x86_64                          libnl3-3.7.0-1.el8.x86_64                         libnl3-cli-3.7.0-1.el8.x86_64                     libnl3-devel-3.7.0-1.el8.x86_64                               librepo-1.14.2-3.el8.x86_64                     
-  libstdc++-8.5.0-15.el8.x86_64                          libstdc++-devel-8.5.0-15.el8.x86_64               libverto-0.3.2-2.el8.x86_64                       libverto-devel-0.3.2-2.el8.x86_64                             libverto-libevent-0.3.2-2.el8.x86_64            
-  lvm2-8:2.03.14-5.el8.x86_64                            lvm2-libs-8:2.03.14-5.el8.x86_64                  pam-1.3.1-22.el8.x86_64                           pam-devel-1.3.1-22.el8.x86_64                                 procps-ng-3.3.15-8.el8.x86_64                   
-  python-rpm-macros-3-43.el8.noarch                      python-srpm-macros-3-43.el8.noarch                python3-dnf-4.7.0-11.el8.noarch                   python3-dnf-plugins-core-4.0.21-14.el8.noarch                 python3-hawkey-0.63.0-11.el8.x86_64             
-  python3-libdnf-0.63.0-11.el8.x86_64                    python3-librepo-1.14.2-3.el8.x86_64               python3-rpm-macros-3-43.el8.noarch                ruby-libs-2.5.9-110.module_el8.6.0+1187+541216eb.x86_64       sanlock-devel-3.8.4-4.el8.x86_64                
-  sanlock-lib-3.8.4-4.el8.x86_64                         setup-2.12.2-7.el8.noarch                         shadow-utils-2:4.6-17.el8.x86_64                  systemd-239-62.el8.x86_64                                     systemd-devel-239-62.el8.x86_64                 
-  systemd-libs-239-62.el8.x86_64                         systemd-pam-239-62.el8.x86_64                     systemd-udev-239-62.el8.x86_64                    tar-2:1.30-6.el8.x86_64                                       unbound-libs-1.16.0-2.el8.x86_64                
-  yum-4.7.0-11.el8.noarch                               
-Installed:
-  grub2-tools-efi-1:2.02-129.el8.x86_64                grub2-tools-extra-1:2.02-129.el8.x86_64                python3-unbound-1.16.0-2.el8.x86_64                rpm-plugin-systemd-inhibit-4.14.3-23.el8.x86_64                sqlite-3.26.0-15.el8.x86_64               
+之前讲了Pod中容器的生命周期的两个钩子函数，PostStart与PreStop，其中PostStart是在容器创建后立即执行的，而PreStop这个钩子函数则是在容器终止之前执行的。除了上面这两个钩子函数以外，还有一项配置会影响到容器的生命周期的，那就是健康检查的探针。
 
-Complete!
-[root@94f7d255d315 libvirt-src]# 
+在Kubernetes集群当中，我们可以通过配置liveness probe（存活探针）和readiness probe（可读性探针）来影响容器的生存周期。
+
+* exec：执行一段命令
+* http：检测某个 http 请求
+* tcpSocket：使用此配置， kubelet 将尝试在指定端口上打开容器的套接字。如果可以建立连接，容器被认为是健康的，如果不能就认为是失败的。实际上就是检查端口
+
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-exec
+  labels:
+    test: liveness
+spec:
+  containers:
+  - name: liveness
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
 ```
+
+kubectl describe pod liveness-exec
+
+我们可以观察到容器是正常启动的，在隔一会儿，比如40s后，再查看下Pod的Event，在最下面有一条信息显示 liveness probe失败了，容器被删掉并重新创建。
+
+然后通过kubectl get pod liveness-exec可以看到RESTARTS值加1了。
