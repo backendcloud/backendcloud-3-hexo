@@ -120,7 +120,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: hexo-theme-3-hexo-master
+theme: hexo-theme-3-hexo-2022
 
 # baidu analytics
 baidu_analytics: 2858b2d509d28416712739c9a6a31204
