@@ -1,7 +1,7 @@
 version: 1.1.0
 # 你的头像url
-avatar: /img/avatar.jpg
-favicon: /img/avatar.jpg
+avatar: /img/avatar-for3hexo.png
+favicon: /img/avatar-for3hexo.png
 
 #如果博客放置位置不是根目录，则可以通过配置此路径解决静态文件路径错误问题
 # 比如访问地址为 yelog.org/blog 那就需要配置为 blog_path: /blog 才能正常访问
@@ -11,30 +11,29 @@ blog_path: /
 link:
   theme: color # 链接样式，color: 彩色图标  white: 黑白图标
   items:
-    rss: /atom.xml
-    github: https://github.com/yelog
-    facebook: https://www.facebook.com/faker.tops
-    twitter:
-    linkedin:
-    instagram: https://www.facebook.com/faker.tops
-    reddit: https://www.reddit.com/user/yelog/
-    weibo: http://weibo.com/u/2307534817
-    jianshu: https://www.jianshu.com/u/ff56736de7cf
-    zhihu: https://www.zhihu.com/people/jaytp/activities
-    csdn:
-    oschina: https://my.oschina.net/yelog
-    juejin:
-    email: jaytp@qq.com
-    qq: 872336115
-    kugou: https://www.kugou.com/
-    neteasemusic: https://music.163.com/#/user/home?id=88151013
+    # rss: /atom.xml
+    # github: https://github.com/yelog
+    # facebook: https://www.facebook.com/faker.tops
+    # twitter:
+    # linkedin:
+    # instagram: https://www.facebook.com/faker.tops
+    # reddit: https://www.reddit.com/user/yelog/
+    # weibo: http://weibo.com/u/2307534817
+    # jianshu: https://www.jianshu.com/u/ff56736de7cf
+    # zhihu: https://www.zhihu.com/people/jaytp/activities
+    # csdn:
+    # oschina: https://my.oschina.net/yelog
+    # juejin:
+    # email: jaytp@qq.com
+    # qq: 872336115
+    # kugou: https://www.kugou.com/
+    # neteasemusic: https://music.163.com/#/user/home?id=88151013
 
 ##########多作者模式############
 author:
   on: false
   authors:
-    author1: 阁主
-    author2: 小马哥
+    author1: 后端云
 ##############################
 
 # 文章分类设置
@@ -84,20 +83,20 @@ menu:
       type: 3  # 跳转类型 3：打开新的tab页
 
 # 文末声明
-article_txt: 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com
+article_txt: 转载请注明来源，欢迎指出任何有错误或不够清晰的表达。可以邮件至 backendcloud@gmail.com
 
-bottom_text: ©2016-2020 Yelog
+bottom_text: ©2017-2022 后端云
 # 自定义页面最下方的站点版权信息
 # 如果不填，则自定义为 ©2017 author (这个author为hexo根目录_config.yml中配置的)
 
 # 底部备案号
 miit:
-  on: false
-  info: 京ICP证030173号
+  on: true
+  info: 苏ICP备15031601-2号
   url: http://beian.miit.gov.cn/ # 默认链接为 http://beian.miit.gov.cn/
 
 
-reward: true
+reward: false
 # true 开启打赏功能
 
 searchAll: false
