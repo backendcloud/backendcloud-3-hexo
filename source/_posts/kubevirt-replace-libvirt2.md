@@ -353,3 +353,55 @@ digest files not found: won't use shasums, falling back to tags
 Done hack/manifests.sh
 [root@kubevirtci kubevirt]#
 ```
+
+# 替换qemu类似
+
+```bash
+make CUSTOM_REPO=rpm/custom-repo.yaml QEMU_VERSION=15:4.2.0-29.15.el8_2.bclinux.7 SINGLE_ARCH="x86_64" rpm-deps 
+```
+
+## 验证
+
+```bash
+kubectl apply -f https://kubevirt.io/labs/manifests/vm.yaml
+virtctl start testvm
+```
+
+```bash
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  make && make push && make manifests
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl create -f _out/manifests/release/kubevirt-operator.yaml
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl create -f _out/manifests/release/kubevirt-cr.yaml
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl get pod -A
+NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              virt-launcher-testvm-wqgt5                   2/2     Running   0          4m23s
+kube-system          coredns-6d4b75cb6d-gdkmf                     1/1     Running   0          19h
+kube-system          coredns-6d4b75cb6d-rxgdr                     1/1     Running   0          19h
+kube-system          etcd-kind-control-plane                      1/1     Running   0          19h
+kube-system          kindnet-9nxgd                                1/1     Running   0          19h
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          19h
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          19h
+kube-system          kube-proxy-n9cp4                             1/1     Running   0          19h
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          19h
+kubevirt             virt-api-5c4989cb59-2pccn                    1/1     Running   0          82m
+kubevirt             virt-api-5c4989cb59-kp448                    1/1     Running   0          82m
+kubevirt             virt-controller-9dbc6fdb4-7nmwj              1/1     Running   0          78m
+kubevirt             virt-controller-9dbc6fdb4-k8zp4              1/1     Running   0          78m
+kubevirt             virt-handler-v8mkd                           1/1     Running   0          78m
+kubevirt             virt-operator-548486b468-8h9cd               1/1     Running   0          83m
+kubevirt             virt-operator-548486b468-cjkts               1/1     Running   0          83m
+local-path-storage   local-path-provisioner-9cd9bd544-mzsb8       1/1     Running   0          19h
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl apply -f https://kubevirt.io/labs/manifests/vm.yaml
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  virtctl start testvm
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl get vmi
+NAME     AGE   PHASE     IP            NODENAME             READY
+testvm   93m   Running   10.244.0.62   kind-control-plane   True
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl get pod                                    
+NAME                         READY   STATUS    RESTARTS   AGE
+virt-launcher-testvm-wqgt5   2/2     Running   0          3m43s
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl exec -it virt-launcher-testvm-wqgt5 -- bash
+bash-4.4# qemu-img -V
+qemu-img version 4.2.0 (qemu-kvm-4.2.0-29.15.el8_2.bclinux.7)
+Copyright (c) 2003-2019 Fabrice Bellard and the QEMU Project developers
+bash-4.4# exit
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl delete vms testvm
+```

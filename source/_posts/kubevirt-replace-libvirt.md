@@ -96,5 +96,67 @@ rpm(
 )
 ```
 
+上面是替换libvirt，下面同时替换qemu和libvirt。部署新的KubeVirt并检查能否创建vm，virt-launtcher里的qemu版本和libvirt版本是否被替换。
 
+```bash
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  make CUSTOM_REPO=rpm/custom-repo.yaml QEMU_VERSION=15:4.2.0-29.15.el8_2.bclinux.7 LIBVIRT_VERSION=0:8.1.0-1.el8 SINGLE_ARCH="x86_64" rpm-deps
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  make && make push && make manifests
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl create -f _out/manifests/release/kubevirt-operator.yaml
+namespace/kubevirt created
+customresourcedefinition.apiextensions.k8s.io/kubevirts.kubevirt.io created
+priorityclass.scheduling.k8s.io/kubevirt-cluster-critical created
+clusterrole.rbac.authorization.k8s.io/kubevirt.io:operator created
+serviceaccount/kubevirt-operator created
+role.rbac.authorization.k8s.io/kubevirt-operator created
+rolebinding.rbac.authorization.k8s.io/kubevirt-operator-rolebinding created
+clusterrole.rbac.authorization.k8s.io/kubevirt-operator created
+clusterrolebinding.rbac.authorization.k8s.io/kubevirt-operator created
+deployment.apps/virt-operator created
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl create -f _out/manifests/release/kubevirt-cr.yaml
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl get pod -A
+NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+kube-system          coredns-6d4b75cb6d-gdkmf                     1/1     Running   0          24h
+kube-system          coredns-6d4b75cb6d-rxgdr                     1/1     Running   0          24h
+kube-system          etcd-kind-control-plane                      1/1     Running   0          24h
+kube-system          kindnet-9nxgd                                1/1     Running   0          24h
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          24h
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          24h
+kube-system          kube-proxy-n9cp4                             1/1     Running   0          24h
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          24h
+kubevirt             virt-api-67c99849b9-m7c5f                    1/1     Running   0          7m22s
+kubevirt             virt-api-67c99849b9-mmxzp                    1/1     Running   0          7m22s
+kubevirt             virt-controller-7b995c7c79-gmdjv             1/1     Running   0          3m7s
+kubevirt             virt-controller-7b995c7c79-q2wmr             1/1     Running   0          3m7s
+kubevirt             virt-handler-46c4m                           1/1     Running   0          3m7s
+kubevirt             virt-operator-cfc9cf895-dsjzh                1/1     Running   0          7m48s
+kubevirt             virt-operator-cfc9cf895-nggq6                1/1     Running   0          7m48s
+local-path-storage   local-path-provisioner-9cd9bd544-mzsb8       1/1     Running   0          24h
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl apply -f https://kubevirt.io/labs/manifests/vm.yaml
+virtualmachine.kubevirt.io/testvm created
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  virtctl start testvm
+VM testvm was scheduled to start
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl get vmis
+NAME     AGE    PHASE     IP            NODENAME             READY
+testvm   5m3s   Running   10.244.0.71   kind-control-plane   True
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  virtctl console testvm
+Successfully connected to testvm console. The escape sequence is ^]
+                                                                   #                                                                                                                                                                                              
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  virtctl console testvm
+Successfully connected to testvm console. The escape sequence is ^]
+
+login as 'cirros' user. default password: 'gocubsgo'. use 'sudo' for root.
+testvm login: #                                                                                                                                                                                                                                                   
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl get pod
+NAME                         READY   STATUS    RESTARTS   AGE
+virt-launcher-testvm-lwmc9   2/2     Running   0          5m44s
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl exec -it virt-launcher-testvm-lwmc9 -- bash
+bash-4.4# qemu-img -V
+qemu-img version 4.2.0 (qemu-kvm-4.2.0-29.15.el8_2.bclinux.7)
+Copyright (c) 2003-2019 Fabrice Bellard and the QEMU Project developers
+bash-4.4# libvirtd -V
+libvirtd (libvirt) 8.1.0
+bash-4.4# exit
+ ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl delete vms testvm
+virtualmachine.kubevirt.io "testvm" deleted
+```
 
