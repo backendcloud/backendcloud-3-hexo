@@ -405,3 +405,73 @@ Copyright (c) 2003-2019 Fabrice Bellard and the QEMU Project developers
 bash-4.4# exit
  ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl delete vms testvm
 ```
+
+# 目前kubevirt官方用的是8.0.0，替换libvirt到低版本6.0.0遇到了几个坑
+
+## kubevirt部署阶段报错：virt-launcher pod初始化阶段报错 unknown feature amd-sev-es
+
+virt-launcher pod初始化会启动一个virt-launtcher container，这个阶段报错如下：
+
+```bash
+⚡ root@centos9  ~  kubectl get pod -A
+NAMESPACE            NAME                                         READY   STATUS                  RESTARTS        AGE
+kube-system          coredns-6d4b75cb6d-gdkmf                     1/1     Running                 0               2d13h
+kube-system          coredns-6d4b75cb6d-rxgdr                     1/1     Running                 0               2d13h
+kube-system          etcd-kind-control-plane                      1/1     Running                 0               2d13h
+kube-system          kindnet-9nxgd                                1/1     Running                 0               2d13h
+kube-system          kube-apiserver-kind-control-plane            1/1     Running                 0               2d13h
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running                 6 (25m ago)     2d13h
+kube-system          kube-proxy-n9cp4                             1/1     Running                 0               2d13h
+kube-system          kube-scheduler-kind-control-plane            1/1     Running                 5 (27m ago)     2d13h
+kubevirt             virt-api-85d7dd8964-fzrrk                    1/1     Running                 0               35h
+kubevirt             virt-api-85d7dd8964-scsn6                    1/1     Running                 0               35h
+kubevirt             virt-controller-7cf7978d86-978nn             1/1     Running                 4 (27m ago)     35h
+kubevirt             virt-controller-7cf7978d86-jbq8r             1/1     Running                 2 (25m ago)     35h
+kubevirt             virt-handler-jr9nv                           0/1     Init:CrashLoopBackOff   415 (43s ago)   35h
+kubevirt             virt-operator-689fcf46b5-88x9b               1/1     Running                 4 (27m ago)     35h
+kubevirt             virt-operator-689fcf46b5-wzwmx               1/1     Running                 2 (38m ago)     35h
+local-path-storage   local-path-provisioner-9cd9bd544-mzsb8       1/1     Running                 0               2d13h
+ ⚡ root@centos9  ~  kubectl logs -n kubevirt virt-handler-jr9nv -c virt-launcher
+error: failed to get emulator capabilities
+error: internal error: unknown feature amd-sev-es
+ ⚡ root@centos9  ~  kubectl logs -n kubevirt virt-handler-jr9nv                 
+Defaulted container "virt-handler" out of: virt-handler, virt-launcher (init)
+Error from server (BadRequest): container "virt-handler" in pod "virt-handler-jr9nv" is waiting to start: PodInitializing
+```
+
+原因： Open Virtual Machine Firmware 和 libvirt 不兼容。
+
+对策：libvirt6.0.0 版本太老了，替换个老版本的 Open Virtual Machine Firmware 即可。
+
+## kubevirt部署成功，启动vm报错 virt-handler server error. command SyncVMI failed: "LibvirtError(Code=38, Domain=0, Message='Cannot set interface MTU on 'tap0': Operation not permitted')"
+
+部署kubevirt
+```bash
+make CUSTOM_REPO=rpm/custom-repo.yaml QEMU_VERSION=15:4.2.0-29.15.el8_2.bclinux.7 LIBVIRT_VERSION=0:6.0.0-25.19.el8_2.bclinux EDK2_VERSION=0:20200602gitca407c7246bf-4.el8 LIBGUESTFS_VERSION=1:1.40.2-27.module_el8.5.0+746+bbd5d70c SINGLE_ARCH="x86_64" rpm-deps
+make && make push && make manifests
+kubectl create -f _out/manifests/release/kubevirt-operator.yaml
+kubectl create -f _out/manifests/release/kubevirt-cr.yaml
+```
+
+创建虚拟机
+```bash
+kubectl apply -f https://kubevirt.io/labs/manifests/vm.yaml
+virtctl start testvm
+```
+
+虚拟机一直处于调度状态，登录virt-launtcher pod 执行virsh list --all发现vm没有启动成功，看了下libvert qemu日志没有啥有用的信息。describe virt-launtcher pod 发现如下信息：
+```bash
+Events:
+  Type     Reason            Age                   From                       Message
+  ----     ------            ----                  ----                       -------
+  Normal   SuccessfulCreate  2m49s                 virtualmachine-controller  Created virtual machine pod virt-launcher-testvm-grxs5
+  Warning  SyncFailed        79s (x16 over 2m42s)  virt-handler               server error. command SyncVMI failed: "LibvirtError(Code=38, Domain=0, Message='Cannot set interface MTU on 'tap0': Operation not permitted')"
+```
+
+不确定，就是感觉是下面的原因： 新版本的libvirt已经修复  Patches have been pushed upstream to support an unprivileged libvirtd using pre-created standard tap and macvtap devices
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1905929
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1723367
+
+> kubevirt就别用libvirt6.0.0了，官方就没支持过，问题层出不穷。可以考虑替换官方支持过的版本或者和官方跨度不大的版本或者更高的版本，就别用老掉牙的老版本了。

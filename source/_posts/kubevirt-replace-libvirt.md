@@ -138,10 +138,7 @@ VM testvm was scheduled to start
  ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl get vmis
 NAME     AGE    PHASE     IP            NODENAME             READY
 testvm   5m3s   Running   10.244.0.71   kind-control-plane   True
- ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  virtctl console testvm
-Successfully connected to testvm console. The escape sequence is ^]
-                                                                   #                                                                                                                                                                                              
- ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  virtctl console testvm
+  ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  virtctl console testvm
 Successfully connected to testvm console. The escape sequence is ^]
 
 login as 'cirros' user. default password: 'gocubsgo'. use 'sudo' for root.
