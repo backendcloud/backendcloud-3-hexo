@@ -362,10 +362,11 @@ make CUSTOM_REPO=rpm/custom-repo.yaml QEMU_VERSION=15:4.2.0-29.15.el8_2.bclinux.
 
 ## 验证
 
-```bash
-kubectl apply -f https://kubevirt.io/labs/manifests/vm.yaml
-virtctl start testvm
-```
+分四步验证：
+1. 修改过代码后make检查有没有出错
+2. 部署kubevirt，有没有报错
+3. 运行vm，是否正常
+4. 检查虚拟化组件版本是否成功替换
 
 ```bash
  ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  make && make push && make manifests
@@ -398,6 +399,11 @@ testvm   93m   Running   10.244.0.62   kind-control-plane   True
  ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl get pod                                    
 NAME                         READY   STATUS    RESTARTS   AGE
 virt-launcher-testvm-wqgt5   2/2     Running   0          3m43s
+  ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  virtctl console testvm
+Successfully connected to testvm console. The escape sequence is ^]
+
+login as 'cirros' user. default password: 'gocubsgo'. use 'sudo' for root.
+testvm login: #                                                                                                                                                                                                                                                   
  ⚡ root@centos9  ~/my-github/kubevirt   release-0.53 ±  kubectl exec -it virt-launcher-testvm-wqgt5 -- bash
 bash-4.4# qemu-img -V
 qemu-img version 4.2.0 (qemu-kvm-4.2.0-29.15.el8_2.bclinux.7)
@@ -468,10 +474,12 @@ Events:
   Warning  SyncFailed        79s (x16 over 2m42s)  virt-handler               server error. command SyncVMI failed: "LibvirtError(Code=38, Domain=0, Message='Cannot set interface MTU on 'tap0': Operation not permitted')"
 ```
 
-不确定，就是感觉是下面的原因： 新版本的libvirt已经修复  Patches have been pushed upstream to support an unprivileged libvirtd using pre-created standard tap and macvtap devices
+不确定，就是感觉是下面的原因： 新版本的libvirt(fixed in 7.0.0)已经修复  Patches have been pushed upstream to support an unprivileged libvirtd using pre-created standard tap and macvtap devices
 
 https://bugzilla.redhat.com/show_bug.cgi?id=1905929
 
 https://bugzilla.redhat.com/show_bug.cgi?id=1723367
+
+https://listman.redhat.com/archives/libvir-list/2019-August/msg01256.html
 
 > kubevirt就别用libvirt6.0.0了，官方就没支持过，问题层出不穷。可以考虑替换官方支持过的版本或者和官方跨度不大的版本或者更高的版本，就别用老掉牙的老版本了。
