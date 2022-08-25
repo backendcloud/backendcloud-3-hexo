@@ -154,9 +154,11 @@ kube-system   svclb-traefik-66c6ef70-m6pgz              2/2     Running     0   
 
 > k3s的部署很简单，但用k3sup工具更快，特别是k3sup工具可以指定ip远程部署到任意一台远程的服务器或云主机上。
 
-> 部署k8s和k3s上，对比用kind创建k8s集群，k3sup创建k3s集群是快多了。这个快也主要是因为k3s下载文件小多了，十分之一左右。若有镜像的情况下，k3s还要更慢些，因为还要执行些helm install软件包。
+> 部署k8s和k3s上，对比用kind创建k8s集群，k3sup创建k3s集群是快多了。这个快也主要是因为k3s下载文件小多了，十分之一左右。但实际上k3s集群好了后还要执行些helm install软件包，到集群可用k3s会更慢些。
 
-# 部署单节点server/agent命令对比
+# k3s直接部署和用k3sup工具部署命令对比
+
+## 部署单节点server/agent命令对比
 
 ```bash
 curl -sfL https://get.k3s.io | sh -
@@ -173,7 +175,7 @@ kubectl get node  -o wide
 kubectl get pod -A
 ```
 
-# agent join server命令对比
+## agent join server命令对比
 ```bash
 # 下载k3s - 最新版本, 支持x86_64, ARMv7, and ARM64 
 # 运行k3s server
