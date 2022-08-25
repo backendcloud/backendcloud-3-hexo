@@ -214,3 +214,153 @@ kubectl get pod -A
 要从 agent 节点卸载 K3s，请运行：
 
 /usr/local/bin/k3s-agent-uninstall.sh
+
+# 简单使用
+
+## 创建挂载 local-path 存储的 pod
+```bash
+[root@centos9 tt]# cat pvc.yaml 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: local-path-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 2Gi
+[root@centos9 tt]# cat pod.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-test
+  namespace: default
+spec:
+  containers:
+  - name: volume-test
+    image: nginx:stable-alpine
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - name: volv
+      mountPath: /data
+    ports:
+    - containerPort: 80
+  volumes:
+  - name: volv
+    persistentVolumeClaim:
+      claimName: local-path-pvc
+[root@centos9 tt]# kubectl create -f pvc.yaml
+persistentvolumeclaim/local-path-pvc created
+[root@centos9 tt]# kubectl create -f pod.yaml 
+pod/volume-test created
+[root@centos9 tt]# kubectl get pod -A
+NAMESPACE     NAME                                      READY   STATUS      RESTARTS   AGE
+kube-system   coredns-b96499967-x277m                   1/1     Running     0          2m6s
+kube-system   local-path-provisioner-7b7dc8d6f5-qxscd   1/1     Running     0          2m6s
+kube-system   metrics-server-668d979685-k7wl7           1/1     Running     0          2m6s
+kube-system   helm-install-traefik-crd-2lt5l            0/1     Completed   0          2m6s
+kube-system   helm-install-traefik-zm77d                0/1     Completed   1          2m6s
+kube-system   svclb-traefik-089ff14b-pf7b9              2/2     Running     0          56s
+kube-system   traefik-7cd4fcff68-ddr6q                  0/1     Running     0          56s
+default       volume-test                               1/1     Running     0          85s
+[root@centos9 tt]# kubectl get pod
+NAME          READY   STATUS    RESTARTS   AGE
+volume-test   1/1     Running   0          94s
+```
+
+## 创建挂载 longhorn 存储的 pod
+```bash
+[root@centos9 tt]# kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/master/deploy/longhorn.yaml
+namespace/longhorn-system created
+Warning: policy/v1beta1 PodSecurityPolicy is deprecated in v1.21+, unavailable in v1.25+
+podsecuritypolicy.policy/longhorn-psp created
+serviceaccount/longhorn-service-account created
+configmap/longhorn-default-setting created
+configmap/longhorn-storageclass created
+customresourcedefinition.apiextensions.k8s.io/backingimagedatasources.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/backingimagemanagers.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/backingimages.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/backups.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/backuptargets.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/backupvolumes.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/engineimages.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/engines.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/instancemanagers.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/nodes.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/orphans.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/recurringjobs.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/replicas.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/settings.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/sharemanagers.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/snapshots.longhorn.io created
+customresourcedefinition.apiextensions.k8s.io/volumes.longhorn.io created
+clusterrole.rbac.authorization.k8s.io/longhorn-role created
+clusterrolebinding.rbac.authorization.k8s.io/longhorn-bind created
+role.rbac.authorization.k8s.io/longhorn-psp-role created
+rolebinding.rbac.authorization.k8s.io/longhorn-psp-binding created
+service/longhorn-backend created
+service/longhorn-frontend created
+service/longhorn-conversion-webhook created
+service/longhorn-admission-webhook created
+service/longhorn-engine-manager created
+service/longhorn-replica-manager created
+daemonset.apps/longhorn-manager created
+deployment.apps/longhorn-driver-deployer created
+deployment.apps/longhorn-ui created
+deployment.apps/longhorn-conversion-webhook created
+deployment.apps/longhorn-admission-webhook created
+[root@centos9 tt]# kubectl get pod -A
+NAMESPACE         NAME                                           READY   STATUS      RESTARTS   AGE
+kube-system       coredns-b96499967-x277m                        1/1     Running     0          38m
+kube-system       local-path-provisioner-7b7dc8d6f5-qxscd        1/1     Running     0          38m
+kube-system       metrics-server-668d979685-k7wl7                1/1     Running     0          38m
+kube-system       helm-install-traefik-crd-2lt5l                 0/1     Completed   0          38m
+kube-system       helm-install-traefik-zm77d                     0/1     Completed   1          38m
+kube-system       svclb-traefik-089ff14b-pf7b9                   2/2     Running     0          37m
+kube-system       traefik-7cd4fcff68-ddr6q                       1/1     Running     0          37m
+longhorn-system   longhorn-conversion-webhook-7b98d5c6cf-kjh9b   1/1     Running     0          33m
+longhorn-system   longhorn-conversion-webhook-7b98d5c6cf-g2q5v   1/1     Running     0          33m
+longhorn-system   longhorn-admission-webhook-6df4465d84-574qs    1/1     Running     0          33m
+longhorn-system   longhorn-admission-webhook-6df4465d84-tl6gh    1/1     Running     0          33m
+longhorn-system   longhorn-manager-j5n4z                         1/1     Running     0          33m
+longhorn-system   longhorn-driver-deployer-7cc677fb4f-zqxdg      1/1     Running     0          33m
+longhorn-system   csi-resizer-7c5bb5fd65-mx9b2                   1/1     Running     0          29m
+longhorn-system   csi-resizer-7c5bb5fd65-xxrpv                   1/1     Running     0          29m
+longhorn-system   csi-resizer-7c5bb5fd65-xknnl                   1/1     Running     0          29m
+longhorn-system   longhorn-csi-plugin-r4fqz                      2/2     Running     0          29m
+longhorn-system   csi-attacher-dcb85d774-w8j24                   1/1     Running     0          29m
+longhorn-system   csi-attacher-dcb85d774-9c4cc                   1/1     Running     0          29m
+longhorn-system   csi-attacher-dcb85d774-rnglx                   1/1     Running     0          29m
+longhorn-system   csi-provisioner-5d8dd96b57-zq57d               1/1     Running     0          29m
+longhorn-system   csi-provisioner-5d8dd96b57-dqdnf               1/1     Running     0          29m
+longhorn-system   csi-provisioner-5d8dd96b57-pkpwq               1/1     Running     0          29m
+longhorn-system   longhorn-ui-6bf766d6d6-jp79l                   1/1     Running     0          28m
+longhorn-system   csi-snapshotter-5586bc7c79-7zdzv               1/1     Running     0          29m
+longhorn-system   csi-snapshotter-5586bc7c79-g4w4b               1/1     Running     0          29m
+longhorn-system   csi-snapshotter-5586bc7c79-nfcd7               1/1     Running     0          29m
+longhorn-system   engine-image-ei-b907910b-flzfw                 1/1     Running     0          29m
+longhorn-system   instance-manager-r-a3c8b5e8                    1/1     Running     0          15m
+longhorn-system   instance-manager-e-615fda27                    1/1     Running     0          11m
+[root@centos9 tt]# kubectl create -f pvc.yaml 
+persistentvolumeclaim/longhorn-volv-pvc created
+[root@centos9 tt]# kubectl get pvc
+NAME                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+longhorn-volv-pvc   Bound    pvc-7b491458-267d-4359-a078-5cc270a2bb5f   2Gi        RWO            longhorn       5s
+[root@centos9 tt]# kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                       STORAGECLASS   REASON   AGE
+pvc-7b491458-267d-4359-a078-5cc270a2bb5f   2Gi        RWO            Delete           Bound    default/longhorn-volv-pvc   longhorn                5s
+[root@centos9 tt]# kubectl create -f pod.yaml 
+pod/volume-test created
+[root@centos9 tt]# kubectl get pod
+NAME          READY   STATUS              RESTARTS   AGE
+volume-test   0/1     ContainerCreating   0          7s
+[root@centos9 tt]# kubectl get pod
+NAME          READY   STATUS              RESTARTS   AGE
+volume-test   0/1     ContainerCreating   0          10s
+[root@centos9 tt]# kubectl get pod
+NAME          READY   STATUS    RESTARTS   AGE
+volume-test   1/1     Running   0          23s
+```
