@@ -143,6 +143,9 @@ hello-00001-deployment-8cfd5879-bttrq   2/2     Running             0          1
 ```
 
 ## Traffic splitting
+
+只有1个版本的时候，流量100%进入该版本。update一个新的版本，这时候有两个版本，默认latest版本流量100%，可以通过配置不同版本的流量百分比。
+
 ```bash
  ⚡ root@centos9  ~/tt  kn revisions list
 NAME          SERVICE   TRAFFIC   TAGS   GENERATION   AGE     CONDITIONS   READY   REASON
@@ -202,6 +205,8 @@ Hello Knative!
  ⚡ root@centos9  ~/tt  curl "$(kn service describe hello -o url)"
 Hello Knative!
 ```
+
+> 上面可以看出当两个版本的流量各配置50%后，访问服务被导向的两个版本的概率分别是50%。
 
 # Using Knative Eventing
 
