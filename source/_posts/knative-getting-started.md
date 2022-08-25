@@ -144,7 +144,7 @@ hello-00001-deployment-8cfd5879-bttrq   2/2     Running             0          1
 
 ## Traffic splitting
 
-只有1个版本的时候，流量100%进入该版本。update一个新的版本，这时候有两个版本，默认latest版本流量100%，可以通过配置不同版本的流量百分比。
+只有1个版本的时候，流量100%进入该版本。update一个新的版本，这时候有两个版本，默认latest版本流量100%，可以通过配置设定不同版本的流量百分比。
 
 ```bash
  ⚡ root@centos9  ~/tt  kn revisions list
@@ -253,7 +253,7 @@ hello                http://hello.default.127.0.0.1.sslip.io                hell
 
 ## Using Triggers and sinks
 ```bash
- ⚡ root@centos9  ~/tt  kkn trigger create cloudevents-trigger --sink cloudevents-player  --broker example-broker
+ ⚡ root@centos9  ~/tt  kn trigger create cloudevents-trigger --sink cloudevents-player  --broker example-broker
 Trigger 'cloudevents-trigger' successfully created in namespace 'default'.
 ```
 
