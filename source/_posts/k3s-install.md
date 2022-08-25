@@ -201,3 +201,14 @@ k3sup join --user root --server-ip $SERVER1 --ip $AGENT1
 kubectl get node  -o wide
 kubectl get pod -A
 ```
+
+# 卸载 K3s
+如果您使用安装脚本安装了 K3s，那么在安装过程中会生成一个卸载 K3s 的脚本。
+
+要从 server 节点卸载 K3s，请运行：
+
+/usr/local/bin/k3s-uninstall.sh
+
+要从 agent 节点卸载 K3s，请运行：
+
+/usr/local/bin/k3s-agent-uninstall.sh
