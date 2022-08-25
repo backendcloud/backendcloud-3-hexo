@@ -204,6 +204,16 @@ Hello Knative!
 ```
 
 # Using Knative Eventing
+
+![](/images/knative-getting-started/20220825223005.png)
+
+| Component|	Basic Definition|
+|---|---|
+|Source|	A Kubernetes Custom Resource which emits events to the Broker.|
+| Broker|	A "hub" for events in your infrastructure; a central location to send events for delivery.|
+| Trigger|	Acts as a filter for events entering the broker, can be configured with desired event attributes.|
+| Sink|	A destination for events.|
+
 ## Using a Knative Service as a source
 ```bash
  ⚡ root@centos9  ~/tt  cat cloudevents-player.yaml 
