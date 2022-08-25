@@ -344,6 +344,38 @@ longhorn-system   csi-snapshotter-5586bc7c79-nfcd7               1/1     Running
 longhorn-system   engine-image-ei-b907910b-flzfw                 1/1     Running     0          29m
 longhorn-system   instance-manager-r-a3c8b5e8                    1/1     Running     0          15m
 longhorn-system   instance-manager-e-615fda27                    1/1     Running     0          11m
+[root@centos9 tt]# cat pvc.yaml 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: longhorn-volv-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 2Gi
+[root@centos9 tt]# cat pod.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-test
+  namespace: default
+spec:
+  containers:
+  - name: volume-test
+    image: nginx:stable-alpine
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - name: volv
+      mountPath: /data
+    ports:
+    - containerPort: 80
+  volumes:
+  - name: volv
+    persistentVolumeClaim:
+      claimName: longhorn-volv-pvc
 [root@centos9 tt]# kubectl create -f pvc.yaml 
 persistentvolumeclaim/longhorn-volv-pvc created
 [root@centos9 tt]# kubectl get pvc
@@ -354,12 +386,6 @@ NAME                                       CAPACITY   ACCESS MODES   RECLAIM POL
 pvc-7b491458-267d-4359-a078-5cc270a2bb5f   2Gi        RWO            Delete           Bound    default/longhorn-volv-pvc   longhorn                5s
 [root@centos9 tt]# kubectl create -f pod.yaml 
 pod/volume-test created
-[root@centos9 tt]# kubectl get pod
-NAME          READY   STATUS              RESTARTS   AGE
-volume-test   0/1     ContainerCreating   0          7s
-[root@centos9 tt]# kubectl get pod
-NAME          READY   STATUS              RESTARTS   AGE
-volume-test   0/1     ContainerCreating   0          10s
 [root@centos9 tt]# kubectl get pod
 NAME          READY   STATUS    RESTARTS   AGE
 volume-test   1/1     Running   0          23s
