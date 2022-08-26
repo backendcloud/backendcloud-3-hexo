@@ -65,3 +65,35 @@ Autoscaler 收到 Activator 发送的指标后，会立即启动扩容的逻辑�
 
 Activator 最终会监测到 private service 对应的endpoints的产生，并对 endpoints 进行健康检查。健康检查通过后，Activator 会将之前缓存的请求转发到健康的实例上。
 最终 revison 完成了冷启动（从零扩容）。
+
+
+# API
+## PodAutoscaler (PA,KPA)
+API: podautoscalers.autoscaling.internal.knative.dev
+
+PodAutoscaler 是对扩缩容的一个抽象，简写是 KPA 或 PA ，每个 revision
+
+会对应生成一个 PodAutoscaler。
+
+可通过下面的指令查看
+
+kubectl get kpa -n xxx
+
+## ServerlessServices (SKS)
+API: serverlessservices.networking.internal.knative.dev
+
+ServerlessServices 是 KPA 产生的，一个 KPA 生成一个 SKS，SKS 是对 k8s service 之上的一个抽象，
+主要是用来控制数据流是直接流向服务 revision（实例数不为零） 还是经过 Activator（实例数为0）。
+
+对于每个 revision，会对应生成两个k8s service ，一个public service，一个 private service.
+
+private service 是标准的 k8s service，通过label selector 来筛选对应的deploy 产生的pod，即 svc 对应的 endpoints 由 k8s 自动管控。
+
+public service 是不受 k8s 管控的，它没有 label selector，不会像 private service 一样 自动生成 endpoints。public service 对应的 endpoints
+由 Knative SKS reconciler 来控制。
+
+SKS 有两种模式：proxy 和 serve
+* serve 模式下 public service 后端 endpoints 跟 private service一样， 所有流量都会直接指向 revision 对应的 pod。
+* proxy 模式下 public service 后端 endpoints 指向的是 系统中 Activator 对应的 pod，所有流量都会流经 Activator。
+
+> 跟 queue-proxy 不同，Activator 是通过 websocket 主动上报指标给 Autoscaler，这种设计当然是为了应用实例尽可能快的冷启动。queue-proxy 是被动的拉取：Autoscaler去 queue-proxy指定端口拉取指标。
