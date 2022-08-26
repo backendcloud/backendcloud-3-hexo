@@ -26,7 +26,7 @@ Knative 从设计之初就考虑到了其扩展性，通过抽象出来 Knative 
 
 ![](/images/knative-serving-flowchart/2022-08-26-16-25-21.png)
 
-稳定状态下的工作流程如下：
+**稳定状态下的工作流程如下：**
 
 请求通过 ingress 路由到 public service ，此时 public service 对应的 endpoints 是 revision 对应的 pod
 
@@ -41,7 +41,7 @@ SKS 模式是 serve, 它会监控 private service 的状态，保持 public serv
 
 ![](/images/knative-serving-flowchart/2022-08-26-16-25-30.png)
 
-缩容到零过程的工作流程如下：
+**缩容到零过程的工作流程如下：**
 
 AutoScaler 通过 queue-proxy 获取 revision 实例的请求指标
 
@@ -57,7 +57,7 @@ AutoScaler 会通过 Decider 确定出当前所需的实例数为 0，通过 Pod
 
 ![](/images/knative-serving-flowchart/2022-08-26-16-25-38.png)
 
-冷启动过程的工作流程如下：
+**冷启动过程的工作流程如下：**
 
 当 revision 缩容到零之后，此时如果有请求进来，则系统需要扩容。因为 SKS 在 proxy 模式，流量会直接请求到 Activator 。Activator 会统计请求量并将 指标主动上报到 Autoscaler， 同时 Activator 会缓存请求，并 watch SKS 的 private service， 直到 private service 对应的endpoints产生。
 
