@@ -8,6 +8,9 @@ tags:
 - KubeVirt
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 KubeVirt替换virt-lantch中的libvirt的版本 参考之前发布的文章{% post_link kubevirt-replace-libvirt %}
 
 上面的文章是替换到更高的版本，替换高版本比较简单，直接加上yum repo，但有时候需要替换成低版本的libvirt，可能会遇到些坑。

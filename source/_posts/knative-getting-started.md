@@ -7,6 +7,9 @@ tags:
 - Knative
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 # 部署Kubernetes+Knative
 ```bash
  ⚡ root@centos9  ~  kn quickstart kind

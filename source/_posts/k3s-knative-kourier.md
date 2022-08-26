@@ -9,6 +9,9 @@ tags:
 - Kourier
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 # Since Knative has its own network layer, we need to disable k3s' Traefik during its installation
 ```bash
 [root@centos9 tt]# export KUBECONFIG="/var/lib/rancher/k3s/server/cred/admin.kubeconfig"
