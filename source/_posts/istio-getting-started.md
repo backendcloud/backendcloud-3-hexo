@@ -7,6 +7,8 @@ tags:
 - Istio
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
 
 # 创建集群
 ```bash
@@ -200,11 +202,14 @@ deployment.apps/prometheus created
 [root@centos7 istio-1.14.3]# kubectl rollout status deployment/kiali -n istio-system
 Waiting for deployment "kiali" rollout to finish: 0 of 1 updated replicas are available...
 deployment "kiali" successfully rolled out
-istioctl dashboard kiali
+[root@centos7 istio-1.14.3]# istioctl dashboard kiali
+http://localhost:20001/kiali
 ```
 
 # 访问 Kiali 仪表板
 
+浏览器访问 http://172.18.0.2:31309/productpage 产生流量：
 ![](/images/istio-getting-started/2022-08-30-16-57-15.png)
 
+隔了一段时间，没有流量，节点空闲：
 ![](/images/istio-getting-started/2022-08-30-16-53-28.png)
