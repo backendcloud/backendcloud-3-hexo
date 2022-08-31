@@ -13,10 +13,10 @@
 * 开源项目[KubeFusion](https://github.com/kubefusion)（该Github账号下的主项目KubeFusion是包含多种融合技术的集成和定制以及KubeFusion自身特有功能，其他项目是关于fusion scheme以及主项目的关联小项目。在筹备中，可能2022年会上几个小项目，2023年上半年发布KubeFusion v0.1版）
 
 >KubeFusion参考的开源项目：
->* 云原生基础设施层：Kubernetes（网络插件：Multus，Flannel，Calico，userspace-cni，Cilium（Cilium基于高性能的eBPF（相对于iptables的netfilter），Cilium可以替换kube-proxy，Cilium和>Istio结合））） + KubeVirt + service mesh（linkerd2 和 Istio（Istio含Envoy）二选一，linkerd2轻量，Istio功能更完备））
->* Assembly，Serverless（focus on business and everything else is a headache of a cloud provider）（下一代微服务框架spin）（Dapr+KEDA和 Knative serving+event 二选一，Dapr>+KEDA优于Knative serving+event）(Tekton，Cloud Native Buildpacks，Shipwright)
+>* 云原生基础设施生态：Kubernetes（网络插件：Multus，Flannel，Calico，userspace-cni，Cilium（Cilium基于高性能的eBPF（相对于iptables的netfilter），Cilium可以替换kube-proxy，Cilium和>Istio结合））） + KubeVirt + service mesh（linkerd2 和 Istio（Istio含Envoy）二选一，linkerd2轻量，Istio功能更完备））
+>* Assembly，Serverless，FaaS生态：（focus on business and everything else is a headache of a cloud provider）（下一代微服务框架spin）（Dapr+KEDA和 Knative serving+event 二选一，Dapr>+KEDA优于Knative serving+event）(Tekton，Cloud Native Buildpacks，Shipwright)
 >
->KubeFusion实现：整合上述开源项目，根据需要裁剪不需要的功能和重叠功能，根据需要开发实现特定功能的模块。根据定制需求的部署脚本和Operator。e2e test。案例。Telemetry（logs，metrics，traces）。>UI界面。Devops。等等。
+>KubeFusion开发的内容：整合上述开源项目，根据需要裁剪不需要的功能和重叠功能，根据需要开发实现特定功能的模块。根据定制需求的部署脚本和Operator。e2e test。案例。Telemetry（logs，metrics，traces）。UI界面。Devops。等等。
 
 ## 免费书籍
   * [《KubeVirt CI》](https://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。
