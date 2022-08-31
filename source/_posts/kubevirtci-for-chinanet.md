@@ -7,7 +7,7 @@ tags:
 - KubeVirt CI
 ---
 
-不加修改，按照KubeVirt getting-started文档执行make && make push && make manifests是会报错的。
+不加修改，按照KubeVirt getting-started文档执行`make && make push && make manifests`是会报错的。
 
 原因是国内的网络环境。
 
@@ -23,4 +23,4 @@ go env -w GOPROXY=${GO_PROXY}
 
 # 项目根目录的`WORKSPACE`文件的gcr.io上的镜像换成国内可以访问的镜像。
 
-> 因为有大量内容需要访问Github，国内针对github.com没有封掉，但让其有一定的概率访问不了，所以make && make push && make manifests流程即使按上面的修改后还是有一定的失败概率。
+> 因为有大量内容需要访问Github，国内针对github.com没有封掉，但让其有一定的概率访问不了，所以`make && make push && make manifests`流程即使按上面的修改后还是有一定的失败概率。

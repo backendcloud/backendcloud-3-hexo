@@ -1,5 +1,3 @@
-[//]: # (This may be the most platform independent comment![](/images/index/29fa8cc3.png))
-
 # 后端云网站专注领域
 
 * 云原生基础设施生态：Kubernetes，KubeVirt，Istio。
@@ -31,10 +29,7 @@ KubeFusion实现：整合上述开源项目，根据需要裁剪不需要的功�
 * 免费技术文章（3个主力平台：[“后端云”网站](https://www.backendcloud.cn)，微信公众号“后端云”(底部二维码扫一扫)，[腾讯云开发者社区“后端云”](https://cloud.tencent.com/developer/column/72779)。“后端云”网站为最初文章发布平台，其他都是镜像，为了“后端云”网站的文章先被google收录从而判定为原创，镜像平台会晚几天~几周同步。）
 
 
-[//]: # (1.虚拟机技术和容器技术的融合 2.多云融合（多云（公有云私有云中心云边缘云）融合管理，分布式应用融合部署）3.在1和2融合环境上的全语言全平台CICD)
-[//]: # (* 容器和虚拟机融合技术，如KubeVirt生态)
-[//]: # (* 多集群管理：公有云私有云边缘云等多云管理，分布式应用在分布式云上的管理)
-[//]: # (* 自动化：CICD；bash、golang脚本工具)
+
 
 [//]: # (This may be the most platform independent comment)
 
