@@ -23,4 +23,15 @@ go env -w GOPROXY=${GO_PROXY}
 
 # 项目根目录的`WORKSPACE`文件的gcr.io上的镜像换成国内可以访问的镜像。
 
+例如`release-0.53`版本的KubeVirt，只需要修改`WORKSPACE`下面的一处内容：
+```bash
+# Pull go_image_base
+container_pull(
+    name = "go_image_base",
+    digest = "sha256:f65536ce108fcc41cdcd5cb101006fcb82b9a1527409263feb9e34032f00bda0",
+    registry = "gcr.io",
+    repository = "distroless/base",
+)
+```
+
 > 因为有大量内容需要访问Github，国内针对github.com没有封掉，但让其有一定的概率访问不了，所以`make && make push && make manifests`流程即使按上面的修改后还是有一定的失败概率。
