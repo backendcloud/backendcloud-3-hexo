@@ -15,6 +15,17 @@ tags:
 
 # 记录下 minikube的driver切换成kvm2遇到的问题 
 
+## docker: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post http://%2Fvar%2Frun%2Fdocker.sock/v1.35/containers/create: dial unix /var/run/docker.sock: connect: permission denied. See 'docker run --help'.
+```bash
+$ sudo groupadd docker
+$ sudo usermod -aG docker $USER
+$ newgrp docker
+Check if docker can be run without root
+$ docker run hello-world
+# Reboot if still got error
+$ reboot
+```
+
 ## PROVIDER_KVM2_NOT_FOUND: The 'kvm2' provider was not found: exec: "virsh": executable file not found in $PATH
 ```bash
 developer@localhost ~]$ minikube config set vm-driver kvm2
