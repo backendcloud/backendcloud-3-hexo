@@ -221,6 +221,14 @@ Cluster health:              1/2 reachable   (2022-09-01T05:56:12Z)
   minikube                   192.168.49.2    reachable   unreachable
 ```
 
+>  Services:
+>  - ClusterIP:      Enabled
+>  - NodePort:       Enabled (Range: 30000-32767) 
+>  - LoadBalancer:   Enabled 
+>  - externalIPs:    Enabled 
+>  - HostPort:       Enabled
+> 因为kube-proxy已经被删除，Cilium 开启了 kube-proxy 的ClusterIP, NodePort, HostPort, ExternalIPs 和 LoadBalancer 功能。实现了Cilium对kube-proxy的完全替换。
+
 ## 启动nginx deployment 和 service，验证cilium 服务列表信息 和 nginx服务
 ```bash
 [dev@centos9 ~]$ cd tt
@@ -271,7 +279,9 @@ ID   Frontend             Service Type   Backend
                                          2 => 10.244.0.3:80       
 6    0.0.0.0:31683        NodePort       1 => 10.244.1.2:80       
                                          2 => 10.244.0.3:80       
+# 可以看到 192.168.49.3 节点上的 cilium pod 查询的service信息，节点的nodeport的访问被loadbalance到两个后端pod，分别对应创建的 nginx deployment 的 2个pod
 [dev@centos9 tt]$ minikube ssh
+# 访问第一个节点的 nodeport，可以访问
 docker@minikube:~$ curl 192.168.49.2:31683
 <!DOCTYPE html>
 <html>
@@ -296,6 +306,7 @@ Commercial support is available at
 <p><em>Thank you for using nginx.</em></p>
 </body>
 </html>
+# 访问第二个节点的 nodeport，可以访问
 docker@minikube:~$ curl 192.168.49.3:31683
 <!DOCTYPE html>
 <html>
