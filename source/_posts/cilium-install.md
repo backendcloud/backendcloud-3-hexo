@@ -7,6 +7,18 @@ tags:
 - Cilium
 ---
 
+# 背景
+现代数据中心应用程序的开发已经转向微服务，微服务应用程序往往是高度动态的，高度不稳定的容器生命周期让传统的 Linux 网络安全方法（例如 iptables）应付不断更新的负载均衡表和访问控制列表劣势显现出来。
+
+得利于Linux eBPF的发展，Cilium 利用 Linux eBPF，Cilium 保留了透明地插入安全可视性 + 强制执行的能力，但这种方式基于服务 /pod/ 容器标识（与传统系统中的 IP 地址识别相反），并且可以根据应用层进行过滤 （例如 HTTP）。因此，通过将安全性与寻址分离，Cilium 不仅可以在高度动态的环境中应用安全策略，而且除了提供传统的第 3 层和第 4 层分割之外，还可以通过在 HTTP 层运行来提供更强的安全隔离。
+
+不止Cilium，其实Calico也有eBPF模式。Calico 从 v3.13 开始，集成了 eBPF 数据平面。
+
+因为iptables的netfilter的低性能，Kubernetes的kube-proxy组件一直被诟病，Cilium和Calico都全面实现 kube-proxy 的功能，包括ClusterIP, NodePort, ExternalIPs 和 LoadBalancer，可以完全取代它的位置，同时提供更好的性能，Cilium和Calico都支持把Kubernetes的kube-proxy组件给替换掉。
+
+另外Cilium的ClusterMesh可以跨多个集群，跨VPC，跨多数据中心，甚至跨Openstack，K8S集群 互联和配置网络策略。
+
+
 # 启动2节点的Kubernetes集群
 ```bash
 [dev@centos9 ~]$ minikube start --vm-driver=podman --network-plugin=cni --nodes=2
@@ -195,6 +207,14 @@ pod-to-b-multi-node-headless-6bbc875466-78b5t            1/1     Running   1 (3m
 pod-to-b-multi-node-nodeport-f977df4b-wdzr6              1/1     Running   1 (3m22s ago)   4m46s
 pod-to-external-1111-6d55c9d55b-w62r7                    1/1     Running   0               4m47s
 pod-to-external-fqdn-allow-google-cnp-7b9b79d54b-qgh9b   0/1     Running   3 (9s ago)      4m47s
+```
+
+# Enable Hubble for Cluster
+
+Hubble，它是专门为网络可视化设计，能够利用 Cilium 提供的 eBPF 数据路径，获得对 Kubernetes 应用和服务的网络流量的深度可见性。这些网络流量信息可以对接 Hubble CLI、UI 工具，可以通过交互式的方式快速进行问题诊断。除了 Hubble 自身的监控工具，还可以对接主流的云原生监控体系——Prometheus 和 Grafana，实现可扩展的监控策略。
+
+## Hubble UI
+```bash
 [dev@centos9 ~]$ export CILIUM_NAMESPACE=kube-system
 [dev@centos9 ~]$ kubectl apply -f https://raw.githubusercontent.com/cilium/cilium/v1.9/install/kubernetes/quick-hubble-install.yaml
 serviceaccount/hubble-generate-certs created
@@ -248,6 +268,10 @@ kube-system   storage-provisioner                                      1/1     R
 [dev@centos9 ~]$ kubectl port-forward -n $CILIUM_NAMESPACE svc/hubble-ui --address 0.0.0.0 --address :: 12000:80
 Forwarding from 0.0.0.0:12000 -> 8081
 Forwarding from [::]:12000 -> 8081
+```
+
+## Hubble CLI
+```bash
 [dev@centos9 ~]$ export HUBBLE_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/hubble/master/stable.txt)
 [dev@centos9 ~]$ curl -LO "https://github.com/cilium/hubble/releases/download/$HUBBLE_VERSION/hubble-linux-amd64.tar.gz"
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
