@@ -103,4 +103,4 @@ istio-proxy每当配置或服务的 pod 发生更改时，Istio 控制平面都�
 
 # 总结
 
-综上，所以Istio不是取代 Kubernetes内部服务 的，Istio 使用现有的 Kubernetes 服务来获取其所有端点/pod IP 地址。Istio 是可以取代Kubernetes Ingress的，Istio 提供了新的资源，例如 Gateway 和 VirtualService，甚至还附带了 ingress 转换器istioctl convert-ingress。
+综上，所以Istio不是取代 Kubernetes内部服务 的，Istio 使用现有的 Kubernetes内部服务 来获取其所有端点/pod IP 地址。Istio 是可以取代Kubernetes Ingress的，Istio 提供了新的资源，例如 Gateway 和 VirtualService，甚至还附带了 ingress 转换器istioctl convert-ingress。
