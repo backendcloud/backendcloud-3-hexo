@@ -1,16 +1,16 @@
 ---
 title: Rook Deploy
 readmore: true
-date: 2022-09-03 06:59:35
+date: 2022-09-02 18:59:35
 categories: 云原生
 tags:
 - Rook
 - Ceph
 ---
 
-云原生存储比较或的是Rook和Longhorn，本篇是关于运行在Kubernetes之上的rook ceph云原生存储的部署。
+云原生存储现在比较火的是Rook和Longhorn，本篇是关于 运行在Kubernetes之上的rook ceph云原生存储的部署。
 
-过去ceph的部署都是用官方的ceph-deploy工具部署，最近的新版ceph，ceph-deploy已经不不再支持，取而代之的是两种部署方式：
+过去ceph的部署都是用官方的ceph-deploy工具部署，最近的新版ceph，ceph-deploy工具已经不不再支持，取而代之的是两种部署方式：
 1. Cephadm 传统方式部署
 2. Rook 云原生方式部署
 
@@ -164,6 +164,50 @@ local-path-storage   local-path-provisioner-9cd9bd544-v27p7       1/1     Runnin
 rook-ceph            rook-ceph-csi-detect-version-6djth           0/1     Init:0/1   0          71s
 rook-ceph            rook-ceph-detect-version-f5dr5               0/1     Init:0/1   0          71s
 rook-ceph            rook-ceph-operator-b5c96c99b-nsz4q           1/1     Running    0          2m39s
+ ⚡ root@centos9  ~/rook   master  kubectl get pod -A
+NAMESPACE            NAME                                                     READY   STATUS      RESTARTS   AGE
+kube-system          coredns-6d4b75cb6d-2tmfm                                 1/1     Running     0          12m
+kube-system          coredns-6d4b75cb6d-4s27g                                 1/1     Running     0          12m
+kube-system          etcd-kind-control-plane                                  1/1     Running     0          12m
+kube-system          kindnet-2522d                                            1/1     Running     0          12m
+kube-system          kindnet-h95c6                                            1/1     Running     0          11m
+kube-system          kindnet-q2t4q                                            1/1     Running     0          11m
+kube-system          kindnet-sn57p                                            1/1     Running     0          11m
+kube-system          kube-apiserver-kind-control-plane                        1/1     Running     0          12m
+kube-system          kube-controller-manager-kind-control-plane               1/1     Running     0          12m
+kube-system          kube-proxy-gj7qp                                         1/1     Running     0          11m
+kube-system          kube-proxy-nnvd6                                         1/1     Running     0          11m
+kube-system          kube-proxy-vf6qk                                         1/1     Running     0          12m
+kube-system          kube-proxy-xbc6f                                         1/1     Running     0          11m
+kube-system          kube-scheduler-kind-control-plane                        1/1     Running     0          12m
+local-path-storage   local-path-provisioner-9cd9bd544-v27p7                   1/1     Running     0          12m
+rook-ceph            csi-cephfsplugin-gczrh                                   2/2     Running     0          5m53s
+rook-ceph            csi-cephfsplugin-provisioner-5c788447dd-rdv5r            5/5     Running     0          5m53s
+rook-ceph            csi-cephfsplugin-provisioner-5c788447dd-s5754            5/5     Running     0          5m53s
+rook-ceph            csi-cephfsplugin-rgscz                                   2/2     Running     0          5m53s
+rook-ceph            csi-cephfsplugin-s5pfz                                   2/2     Running     0          5m53s
+rook-ceph            csi-rbdplugin-lrp48                                      2/2     Running     0          5m54s
+rook-ceph            csi-rbdplugin-provisioner-75885879dc-dswsl               5/5     Running     0          5m54s
+rook-ceph            csi-rbdplugin-provisioner-75885879dc-vpc9p               5/5     Running     0          5m53s
+rook-ceph            csi-rbdplugin-vbbgn                                      2/2     Running     0          5m54s
+rook-ceph            csi-rbdplugin-vgvwf                                      2/2     Running     0          5m54s
+rook-ceph            rook-ceph-crashcollector-kind-worker-86774b8649-lgsg9    1/1     Running     0          98s
+rook-ceph            rook-ceph-crashcollector-kind-worker2-6c785f9c65-jbkqs   1/1     Running     0          75s
+rook-ceph            rook-ceph-crashcollector-kind-worker3-d47b86944-mqntp    1/1     Running     0          68s
+rook-ceph            rook-ceph-mgr-a-6b5f955c46-k9hz9                         2/2     Running     0          98s
+rook-ceph            rook-ceph-mgr-b-8468f5bf98-ggsls                         2/2     Running     0          98s
+rook-ceph            rook-ceph-mon-a-7d8c47b49-xchqn                          1/1     Running     0          6m11s
+rook-ceph            rook-ceph-mon-b-547b8b66c8-7hfn8                         1/1     Running     0          5m17s
+rook-ceph            rook-ceph-mon-c-66fffd4685-gwvcz                         1/1     Running     0          2m4s
+rook-ceph            rook-ceph-operator-b5c96c99b-nsz4q                       1/1     Running     0          9m48s
+rook-ceph            rook-ceph-osd-1-77646bc88-lzqhc                          1/1     Running     0          68s
+rook-ceph            rook-ceph-osd-prepare-kind-worker-9sktq                  0/1     Completed   0          19s
+rook-ceph            rook-ceph-osd-prepare-kind-worker2-phzzk                 0/1     Completed   0          16s
+rook-ceph            rook-ceph-osd-prepare-kind-worker3-qrf6z                 0/1     Completed   0          13s
+```
+
+# 部署 rook-ceph-tools 检查 ceph 状态
+```bash
  ⚡ root@centos9  ~/rook/deploy/examples   master  cd ../..
  ⚡ root@centos9  ~/rook   master  kubectl create -f deploy/examples/toolbox.yaml
 deployment.apps/rook-ceph-tools created
@@ -208,10 +252,6 @@ rook-ceph            rook-ceph-osd-prepare-kind-worker-l6n65                  0/
 rook-ceph            rook-ceph-osd-prepare-kind-worker2-d88n9                 0/1     Completed   0          4m42s
 rook-ceph            rook-ceph-osd-prepare-kind-worker3-pkj4s                 0/1     Completed   0          4m39s
 rook-ceph            rook-ceph-tools-79bc54b8d8-mjqzz                         1/1     Running     0          3m1s
-```
-
-# 部署 rook-ceph-tools 检查 ceph 状态
-```bash
  ⚡ root@centos9  ~/rook   master  kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- bash
 bash-4.4$ ceph status
   cluster:
