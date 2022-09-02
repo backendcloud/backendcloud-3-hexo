@@ -36,9 +36,14 @@ ClusterIP, NodePort, ExternalIPs 和 LoadBalancer服务是由kube-proxy或者CNI
 
 Kubernetes Ingress 不是 Kubernetes 服务。它是一个将请求重定向到其他内部（ClusterIP）服务的 Nginx Pod。
 
+**Ingress-nginx组成：**
+* ingress-nginx-controller：根据用户编写的ingress规则（创建的ingress的yaml文件），动态的去更改nginx服务的配置文件，并且reload重载使其生效（是自动化的，通过lua脚本来实现）；
+* ingress资源对象：将Nginx的配置抽象成一个Ingress对象，每添加一个新的Service资源对象只需写一个新的Ingress规则的yaml文件即可（或修改已存在的ingress规则的yaml文件）
+
+
 **Kubernetes Ingress 能做什么：**
 
-和 Kubernetes Service 的工作有点类似。和传统的Nginx工作内容一样，HTTP 协议接收对特定文件路径的请求 和 将 HTTP 协议的请求进行重定向转发并返回他们的响应。
+和 Kubernetes Service 的工作有点类似。和传统的Nginx工作内容一样，HTTP 协议接收对特定文件路径的请求 和 将 HTTP 协议的请求进行重定向转发并返回他们的响应。实现动态配置服务和减少不必要的端口映射。
 
 例如可以配置不同的 url /folder /other转发到不同的 Kubernetes Service。
 
