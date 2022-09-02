@@ -1,5 +1,5 @@
 ---
-title: k3s 部署 和 简单使用
+title: k3s 部署 和 简单使用 以及 Longhorn的部署和使用
 readmore: true
 date: 2022-08-25 13:09:48
 categories: 云原生
