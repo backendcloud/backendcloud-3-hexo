@@ -103,4 +103,106 @@ istio-proxy每当配置或服务的 pod 发生更改时，Istio 控制平面都�
 
 # 总结
 
-综上，所以Istio不是取代 Kubernetes内部服务 的，Istio 使用现有的 Kubernetes内部服务 来获取其所有端点/pod IP 地址。Istio 是可以取代Kubernetes Ingress的，Istio 提供了新的资源，例如 Gateway 和 VirtualService，甚至还附带了 ingress 转换器istioctl convert-ingress。
+综上，ingress是k8s集群的请求入口，可以理解为对多个service的再次抽象，通常说的ingress一般包括ingress资源对象及ingress-controller两部分组成。Istio不是取代 Kubernetes内部服务 的，Istio 使用现有的 Kubernetes内部服务 来获取其所有端点/pod IP 地址。Istio 是可以取代Kubernetes Ingress的，Istio 提供了新的资源，例如 Gateway 和 VirtualService，甚至还附带了 ingress 转换器istioctl convert-ingress。
+
+# 附： ingress-nginx deploy&test
+
+```bash
+# 创建集群
+[root@centos7 ~]# kind create cluster
+Creating cluster "kind" ...
+ ✓ Ensuring node image (kindest/node:v1.24.0) 🖼
+ ✓ Preparing nodes 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+Set kubectl context to "kind-kind"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-kind
+
+Thanks for using kind! 😊
+# 检查集群状态
+[root@centos7 ~]# kubectl get node -o wide
+NAME                 STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION               CONTAINER-RUNTIME
+kind-control-plane   Ready    control-plane   32s   v1.24.0   172.18.0.2    <none>        Ubuntu 21.10   5.19.5-1.el7.elrepo.x86_64   containerd://1.6.4
+[root@centos7 ~]# kubectl get po -A -o wide
+NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE   IP           NODE                 NOMINATED NODE   READINESS GATES
+kube-system          coredns-6d4b75cb6d-4ck55                     1/1     Running   0          19s   10.244.0.3   kind-control-plane   <none>           <none>
+kube-system          coredns-6d4b75cb6d-ps5sf                     1/1     Running   0          19s   10.244.0.2   kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running   0          34s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kindnet-fbjj6                                1/1     Running   0          19s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          34s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          34s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-proxy-rz9vk                             1/1     Running   0          19s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          34s   172.18.0.2   kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-9cd9bd544-xddpx       1/1     Running   0          19s   10.244.0.4   kind-control-plane   <none>           <none>
+# 部署 ingress-nginx
+[root@centos7 ~]# kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
+namespace/ingress-nginx created
+serviceaccount/ingress-nginx created
+serviceaccount/ingress-nginx-admission created
+role.rbac.authorization.k8s.io/ingress-nginx created
+role.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+configmap/ingress-nginx-controller created
+service/ingress-nginx-controller created
+service/ingress-nginx-controller-admission created
+deployment.apps/ingress-nginx-controller created
+job.batch/ingress-nginx-admission-create created
+job.batch/ingress-nginx-admission-patch created
+ingressclass.networking.k8s.io/nginx created
+validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+# 检查 ingress-nginx 状态
+[root@centos7 ~]# kubectl get po -A -o wide
+NAMESPACE            NAME                                         READY   STATUS      RESTARTS   AGE     IP           NODE                 NOMINATED NODE   READINESS GATES
+ingress-nginx        ingress-nginx-admission-create-ddgdc         0/1     Completed   0          59s     10.244.0.5   kind-control-plane   <none>           <none>
+ingress-nginx        ingress-nginx-admission-patch-6tfbk          0/1     Completed   0          59s     10.244.0.6   kind-control-plane   <none>           <none>
+ingress-nginx        ingress-nginx-controller-6bf7bc7f94-k94c4    1/1     Running     0          59s     10.244.0.7   kind-control-plane   <none>           <none>
+kube-system          coredns-6d4b75cb6d-4ck55                     1/1     Running     0          2m55s   10.244.0.3   kind-control-plane   <none>           <none>
+kube-system          coredns-6d4b75cb6d-ps5sf                     1/1     Running     0          2m55s   10.244.0.2   kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running     0          3m10s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kindnet-fbjj6                                1/1     Running     0          2m55s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running     0          3m10s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running     0          3m10s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-proxy-rz9vk                             1/1     Running     0          2m55s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            1/1     Running     0          3m10s   172.18.0.2   kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-9cd9bd544-xddpx       1/1     Running     0          2m55s   10.244.0.4   kind-control-plane   <none>           <none>
+[root@centos7 ~]# kubectl get pods --namespace=ingress-nginx
+NAME                                        READY   STATUS      RESTARTS   AGE
+ingress-nginx-admission-create-ddgdc        0/1     Completed   0          73s
+ingress-nginx-admission-patch-6tfbk         0/1     Completed   0          73s
+ingress-nginx-controller-6bf7bc7f94-k94c4   1/1     Running     0          73s
+# 测试 ingress-nginx
+[root@centos7 ~]# kubectl create deployment demo --image=httpd --port=80
+deployment.apps/demo created
+[root@centos7 ~]# kubectl expose deployment demo
+service/demo exposed
+[root@centos7 ~]# kubectl get svc -A
+NAMESPACE       NAME                                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+default         demo                                 ClusterIP      10.96.179.60    <none>        80/TCP                       56s
+default         kubernetes                           ClusterIP      10.96.0.1       <none>        443/TCP                      4m40s
+ingress-nginx   ingress-nginx-controller             LoadBalancer   10.96.170.222   <pending>     80:32137/TCP,443:30208/TCP   2m27s
+ingress-nginx   ingress-nginx-controller-admission   ClusterIP      10.96.139.192   <none>        443/TCP                      2m27s
+kube-system     kube-dns                             ClusterIP      10.96.0.10      <none>        53/UDP,53/TCP,9153/TCP       4m38s
+[root@centos7 ~]# kubectl get po
+NAME                    READY   STATUS    RESTARTS   AGE
+demo-6486d57d96-j65cf   1/1     Running   0          94s
+[root@centos7 ~]# kubectl create ingress demo-localhost --class=nginx \
+>   --rule="demo.localdev.me/*=demo:80"
+ingress.networking.k8s.io/demo-localhost created
+[root@centos7 ~]# kubectl get ingress -A
+NAMESPACE   NAME             CLASS   HOSTS              ADDRESS   PORTS   AGE
+default     demo-localhost   nginx   demo.localdev.me             80      8s
+[root@centos7 ~]# kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8080:80
+Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+[root@centos7 ~]# curl http://demo.localdev.me:8080/
+<html><body><h1>It works!</h1></body></html>
+```
