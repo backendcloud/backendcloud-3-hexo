@@ -12,11 +12,13 @@
 ## 开源项目
 * 开源项目[KubeFusion](https://github.com/kubefusion)（该Github账号下的主项目KubeFusion是包含多种融合技术的集成和定制以及KubeFusion自身特有功能，其他项目是关于fusion scheme以及主项目的关联小项目。在筹备中，可能2022年会上几个小项目，2023年上半年发布KubeFusion v0.1版）
 
-> KubeFusion参考的开源项目：
+> **背景：**
+> 互联网大潮期间，开发者可能三成时间开发业务，七成时间折腾服务器；云计算大潮，服务器资源虚拟化后成为云服务商集中提供的服务，开发者除了开发业务，只需要折腾应用的服务器环境配置，这时候资源是动态按需的，但是还不是高度动态的，还是需要按照云服务的资源（算力存储网络资源）配置进行收费，就是说成本没有显著降低，资源闲置还是普遍；云原生大潮，FaaS，BaaS大潮，让开发者只需要关注开发业务，这时候的资源是高度动态，真正的按资源的使用量来付费，成本和效率有质的飞跃，所以必然是大势所趋。
+> **KubeFusion参考的开源项目：**
 > * 云原生基础设施生态：Kubernetes（网络插件：Multus，Flannel，Calico，userspace-cni，Cilium（Cilium基于高性能的eBPF（相对于iptables的netfilter），Cilium可以替换kube-proxy，Cilium和Istio结合））） + KubeVirt + service mesh（linkerd2 和 Istio（Istio含Envoy）二选一，linkerd2轻量，Istio功能更完备））
 > * Assembly，Serverless，FaaS生态：（focus on business and everything else is a headache of a cloud provider）（下一代微服务框架spin）（Dapr+KEDA 和 Knative serving+event 二选一，Dapr+KEDA优于Knative serving+event）(Tekton，Cloud Native Buildpacks，Shipwright)
-> 
-> KubeFusion开发的内容：整合上述开源项目，根据需要裁剪不需要的功能和重叠功能（无侵入修改，后续可以随着上游项目升级而升级），根据需要开发实现特定功能的模块。模块化的可配置的部署脚本和Operator。e2e test。案例。Telemetry（logs，metrics，traces）。UI界面。Devops。等等。
+> **KubeFusion开发的内容：**
+> 整合上述开源项目，根据需要裁剪不需要的功能和重叠功能（无侵入修改，后续可以随着上游项目升级而升级），根据需要开发实现特定功能的模块。模块化的可配置的部署脚本和Operator。e2e test。案例。Telemetry（logs，metrics，traces）。UI界面。Devops。等等。
 
 ## 免费书籍
   * [《KubeVirt CI》](https://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。
