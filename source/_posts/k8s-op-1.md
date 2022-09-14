@@ -17,7 +17,7 @@ ssh进入集群节点，telnet 本机的 kubelete 的 服务端口 10250，可�
 
 测试环境中若集群所在节点是vm，可以通过Openstack关闭port-security解决：neutron port-update port-id-zzzzz --port-security_enabled=False
 
-# 任务：修改pod-cidr-range（CNI：calico）
+# Issue：修改pod-cidr-range（CNI：calico）
 
 1. 安装calicoctl as a Kubernetes pod
 
@@ -141,3 +141,72 @@ ssh fd15:4ba5:5a2b:1008:20c:29ff:fe7c:bcd1 -p 30022
 
 > istio就是通过把iptables把所有出方向的流量引到本地的15001，可以在host上也通过类似的配置进行测试，所有出方向到30022的流量，引到本地22. 原理和istio是一样的。
 
+# Issue： 证书处理
+
+```bash
+# 检查证书有效期
+[root@kubevirt ~]# kubeadm certs check-expiration
+[check-expiration] Reading configuration from the cluster...
+[check-expiration] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
+W0914 16:43:35.868627   31135 utils.go:69] The recommended value for "clusterDNS" in "KubeletConfiguration" is: [10.233.0.10]; the provided value is: [169.254.25.10]
+
+CERTIFICATE                EXPIRES                  RESIDUAL TIME   CERTIFICATE AUTHORITY   EXTERNALLY MANAGED
+admin.conf                 May 25, 2023 09:01 UTC   253d                                    no      
+apiserver                  May 25, 2023 09:01 UTC   253d            ca                      no      
+apiserver-kubelet-client   May 25, 2023 09:01 UTC   253d            ca                      no      
+controller-manager.conf    May 25, 2023 09:01 UTC   253d                                    no      
+front-proxy-client         May 25, 2023 09:01 UTC   253d            front-proxy-ca          no      
+scheduler.conf             May 25, 2023 09:01 UTC   253d                                    no      
+
+CERTIFICATE AUTHORITY   EXPIRES                  RESIDUAL TIME   EXTERNALLY MANAGED
+ca                      May 22, 2032 09:01 UTC   9y              no      
+front-proxy-ca          May 22, 2032 09:01 UTC   9y              no      
+# 检查证书是否做自动续期
+[root@kubevirt ~]# kubectl get cm -o yaml -n kube-system kubeadm-config | grep RotateKubeletServerCertificate
+        feature-gates: RotateKubeletServerCertificate=true,TTLAfterFinished=true,ExpandCSIVolumes=true,CSIStorageCapacity=true
+        feature-gates: RotateKubeletServerCertificate=true,TTLAfterFinished=true,ExpandCSIVolumes=true,CSIStorageCapacity=true
+        feature-gates: RotateKubeletServerCertificate=true,TTLAfterFinished=true,ExpandCSIVolumes=true,CSIStorageCapacity=true
+[root@kubevirt ~]# kubectl get no
+NAME       STATUS   ROLES                         AGE    VERSION
+kubevirt   Ready    control-plane,master,worker   111d   v1.21.5
+# 更新证书有效期(下面的方法只适用于 Kubernetes 1.21和以上版本)
+[root@kubevirt ~]# kubeadm certs renew all
+[renew] Reading configuration from the cluster...
+[renew] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
+W0914 16:45:30.798557   46420 utils.go:69] The recommended value for "clusterDNS" in "KubeletConfiguration" is: [10.233.0.10]; the provided value is: [169.254.25.10]
+
+certificate embedded in the kubeconfig file for the admin to use and for kubeadm itself renewed
+certificate for serving the Kubernetes API renewed
+certificate for the API server to connect to kubelet renewed
+certificate embedded in the kubeconfig file for the controller manager to use renewed
+certificate for the front proxy client renewed
+certificate embedded in the kubeconfig file for the scheduler manager to use renewed
+
+Done renewing certificates. You must restart the kube-apiserver, kube-controller-manager, kube-scheduler and etcd, so that they can use the new certificates.
+[root@kubevirt ~]# kubeadm certs check-expiration
+[check-expiration] Reading configuration from the cluster...
+[check-expiration] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
+W0914 16:45:44.191471   48482 utils.go:69] The recommended value for "clusterDNS" in "KubeletConfiguration" is: [10.233.0.10]; the provided value is: [169.254.25.10]
+
+CERTIFICATE                EXPIRES                  RESIDUAL TIME   CERTIFICATE AUTHORITY   EXTERNALLY MANAGED
+admin.conf                 Sep 14, 2023 08:45 UTC   364d                                    no      
+apiserver                  Sep 14, 2023 08:45 UTC   364d            ca                      no      
+apiserver-kubelet-client   Sep 14, 2023 08:45 UTC   364d            ca                      no      
+controller-manager.conf    Sep 14, 2023 08:45 UTC   364d                                    no      
+front-proxy-client         Sep 14, 2023 08:45 UTC   364d            front-proxy-ca          no      
+scheduler.conf             Sep 14, 2023 08:45 UTC   364d                                    no      
+
+CERTIFICATE AUTHORITY   EXPIRES                  RESIDUAL TIME   EXTERNALLY MANAGED
+ca                      May 22, 2032 09:01 UTC   9y              no      
+front-proxy-ca          May 22, 2032 09:01 UTC   9y              no  
+# 发现一年内到期证书已经更新到一年后的今天
+
+# 更新配置为证书到期自动续期
+[root@kubevirt manifests]# pwd
+/etc/kubernetes/manifests
+[root@kubevirt manifests]# grep RotateKubeletServerCertificate *
+kube-apiserver.yaml:    - --feature-gates=RotateKubeletServerCertificate=true,TTLAfterFinished=true,ExpandCSIVolumes=true,CSIStorageCapacity=true
+kube-controller-manager.yaml:    - --feature-gates=RotateKubeletServerCertificate=true,TTLAfterFinished=true,ExpandCSIVolumes=true,CSIStorageCapacity=true
+kube-scheduler.yaml:    - --feature-gates=RotateKubeletServerCertificate=true,TTLAfterFinished=true,ExpandCSIVolumes=true,CSIStorageCapacity=true
+# 检查配置文件，是否为`--feature-gates=RotateKubeletServerCertificate=true`,不是修改成这样。
+```
