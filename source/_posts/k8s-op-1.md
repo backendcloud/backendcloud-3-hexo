@@ -208,5 +208,26 @@ front-proxy-ca          May 22, 2032 09:01 UTC   9y              no
 kube-apiserver.yaml:    - --feature-gates=RotateKubeletServerCertificate=true,TTLAfterFinished=true,ExpandCSIVolumes=true,CSIStorageCapacity=true
 kube-controller-manager.yaml:    - --feature-gates=RotateKubeletServerCertificate=true,TTLAfterFinished=true,ExpandCSIVolumes=true,CSIStorageCapacity=true
 kube-scheduler.yaml:    - --feature-gates=RotateKubeletServerCertificate=true,TTLAfterFinished=true,ExpandCSIVolumes=true,CSIStorageCapacity=true
-# 检查配置文件，是否为`--feature-gates=RotateKubeletServerCertificate=true`,不是修改成这样。
+# 检查配置文件，是否为`--feature-gates=RotateKubeletServerCertificate=true`,不是就修改。
 ```
+
+# 问题：[emerg] bind() to 0.0.0.0:801 failed (13: Permission denied)
+
+kubectl logs -f pod-xxx 报错：
+
+[emerg] bind() to 0.0.0.0:801 failed (13: Permission denied)
+
+检查异常pod日志，提示权限不足。
+
+进入pod发现是以非root用户启动的：
+
+```bash
+[root@centos7 ~]# kubectl exec  ingress-nginx-controller-7b768967bc-fd2hg -ningress-nginx -- id
+uid=101(www-data) gid=82(www-data)
+```
+
+`sysctl -a|grep unprivileged_port`没有搜到任何信息，说明该参数的值是默认值1024 (1到1023的进程号预留给root用户使用，默认值1024)，所以801端口报权限不足。
+
+2个对策（2选1）：
+1. `sysctl -w net.ipv4.ip_unprivileged_port_start=400` （通过sysctl -w的方式只能使参数立即生效（临时生效），如果要永久生效需要将参数配置到/etc/sysctl.conf）
+2. 容器用1024或更大的端口
