@@ -117,3 +117,27 @@ systemctl status
 
 pod中路由丢失，重启CNI网络插件，恢复pod路由信息。
 
+# 问题：容器内访问不了集群节点的v6地址
+
+calicoctl edit ippool default-ipv6-ippool
+
+添加参数 natOutgoing: true
+
+# Istio ipv4v6双栈部署有的环境ok，有的环境有问题（从客户端curl服务端）
+
+通过抓取sidecar的15001端口，有问题的环境15001端口tcp握手会失败，不会有ack响应，但ok的环境tcp握手成功，请求正常处理。
+
+有问题的环境内核版本不支持ipv6的iptables转发。ok的环境支持。
+
+在host上也尝试类似的规则，如：
+
+ip6tables -t nat -I OUTPUT -p tcp --dport 30022 -j REDIRECT --to-ports 22
+
+然后验证
+
+ssh fd15:4ba5:5a2b:1008:20c:29ff:fe7c:bcd1 -p 30022
+
+如果转发正确，则可以ssh，否则就不行。
+
+> istio就是通过把iptables把所有出方向的流量引到本地的15001，可以在host上也通过类似的配置进行测试，所有出方向到30022的流量，引到本地22. 原理和istio是一样的。
+
