@@ -15,6 +15,8 @@ Linux提供了一种叫做联合文件系统的文件系统，它具备如下特
 * 联合挂载：将多个目录按层次组合，一并挂载到一个联合挂载点。
 * 写时复制：对联合挂载点的修改不会影响到底层的多个目录，而是使用其他目录记录修改的操作。
 
+OverlayFS是一种堆叠文件系统，它依赖并建立在其它的文件系统之上（例如ext4fs和xfs等等），并不直接参与磁盘空间结构的划分，仅仅将原来底层文件系统中不同的目录进行“合并”，然后向用户呈现，这也就是联合挂载技术。
+
 目前有多种文件系统可以被当作联合文件系统，实现如上的功能：overlay2，aufs，devicemapper，btrfs，zfs，vfs等等。而overlay2是docker目前推荐的文件系统：https://docs.docker.com/storage/storagedriver/select-storage-driver/
 
 overlay2包括lowerdir，upperdir和merged三个层次，其中：
