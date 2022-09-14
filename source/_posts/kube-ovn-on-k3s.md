@@ -326,13 +326,13 @@ JOIN_CIDR="100.64.0.0/16"              # Do NOT overlap with NODE/POD/SVC CIDR
 ...
 ```
 
-> 发现装好Kube-OVN后默认有一个subnet，且改subnet的CIDR范围和部署脚本中的配置一致。
+> 发现装好Kube-OVN后默认有一个subnet，且该subnet的CIDR范围和部署脚本中的配置一致。
 
 至此 k3s 和 kube-ovn 就安装完成了，下面简单体验下 kube-ovn 的功能。
 
-# Kube-OVN 的简单使用 - 创建一个子网并在改子网上创建一个pod
+# Kube-OVN 的简单使用 - 创建一个子网并在该子网上创建一个pod
 
-创建一个新的namespace：another，并让改namespace归属于新创建的子网another-subnet  10.66.0.0/16 下。
+创建一个新的namespace：another，并让该namespace归属于新创建的子网another-subnet  10.66.0.0/16 下。
 
 ```bash
 [root@centos7 ~]# kubectl apply -f - <<EOF
@@ -366,7 +366,7 @@ ovn-default      ovn        ovn-cluster   IPv4       10.16.0.0/16              t
 another-subnet   ovn        ovn-cluster   IPv4       10.66.0.0/16              true             distributed   0        65533         0        0             ["10.66.0.1"]
 ```
 
-可以查看到刚刚创建的子网，ipv4的使用数还是0，下面在改子网下创建一个pod（curl客户端）。并在default命名空间（对应着默认的子网ovn-default  10.16.0.0/16创建一个pod（python的httpd服务端））。
+可以查看到刚刚创建的子网，ipv4的使用数还是0，下面在该子网下创建一个pod（curl客户端）。并在default命名空间（对应着默认的子网ovn-default  10.16.0.0/16创建一个pod（python的httpd服务端））。
 
 ```bash
 [root@centos7 ~]# kubectl run curl --image rancher/curl --command sleep 1d -n another
