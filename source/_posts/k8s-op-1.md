@@ -1,7 +1,7 @@
 ---
 title: Kubernetes 运维遇到的问题记录（1）
 readmore: true
-date: 2099-09-13 18:14:49
+date: 2022-09-13 18:14:49
 categories: 云原生
 tags:
 - 运维
@@ -17,7 +17,7 @@ ssh进入集群节点，telnet 本机的 kubelete 的 服务端口 10250，可�
 
 测试环境中若集群所在节点是vm，可以通过Openstack关闭port-security解决：neutron port-update port-id-zzzzz --port-security_enabled=False
 
-# 修改pod-cidr-range（CNI：calico）
+# 任务：修改pod-cidr-range（CNI：calico）
 
 1. 安装calicoctl as a Kubernetes pod
 
