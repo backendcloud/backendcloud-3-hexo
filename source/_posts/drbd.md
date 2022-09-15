@@ -9,7 +9,7 @@ tags:
 
 > DRBD 是早就淘汰的技术了。对于接触的都是新架构系统的读者可以直接跳过，本篇对象是仍需运维老系统的读者。
 
-本篇安装的DRBD版本竟然是第53个用户，我也是无语了。
+本篇安装的DRBD版本竟然是第53个用户。
 
 ```bash
   --==  Thank you for participating in the global usage survey  ==--
@@ -93,11 +93,6 @@ Permissive
 # step3（两节点都要执行）：安装和配置DRBD
 [root@node1 ~]# yum install -y epel-release
 [root@node1 ~]# yum install -y drbd
-[root@node1 ~]# dd if=/dev/zero of=/dev/sdb1 bs=2024k count=1024
-dd: error writing ‘/dev/sdb1’: No space left on device
-989+0 records in
-988+0 records out
-2048978944 bytes (2.0 GB) copied, 1.48152 s, 1.4 GB/s
 [root@node1 drbd.d]# mv /etc/drbd.d/global_common.conf /etc/drbd.d/global_common.conf.orig
 [root@node1 drbd.d]# vi /etc/drbd.d/global_common.conf
 [root@node1 drbd.d]# cat /etc/drbd.d/global_common.conf
@@ -236,6 +231,8 @@ test role:Secondary suspended:no
         received:0 sent:0 out-of-sync:3144572 pending:0 unacked:0
 ```
 
+> 因为还未配置主节点，不知道数据该从哪里往哪里同步，所以现在还未同步，两边数据不一致。
+
 # 使用DRBD
 
 > 之前的部署步骤都是两个节点都需要执行的，下面的步骤都是单节点执行
@@ -247,7 +244,7 @@ test role:Primary
   disk:UpToDate
   peer role:Secondary
     replication:SyncSource peer-disk:Inconsistent done:0.34
-# 现在两节点正在同步，完成0.34%，等待一段时间，完成98.96%
+# 现在两节点正在同步，完成0.34%，数据仍然不一致。等待一段时间，完成98.96%
 [root@node1 ~]# drbdadm status test
 test role:Primary
   disk:UpToDate
@@ -313,11 +310,13 @@ a  b  c  d  e  f  lost+found
 
 云主机的系统盘是放在本地存储上的（用的是所在节点的硬盘），一旦云主机所在节点硬盘故障了，可以通过nova的疏散命令，将云主机疏散至DRBD的备份从节点上，从而实现云主机的高可用。
 
-例如：两个计算节点compute313或compute314，compute313的多块硬盘一块为主设备，compute314的多块硬盘一块为从设备，组成一对设备。compute313节点的硬盘坏了，且宕机且系统无法恢复。
+例如：两个计算节点compute313或compute314，compute313的多块硬盘其中一块为主设备，compute314的多块硬盘其中一块为从设备，组成一对设备。compute313节点的硬盘坏了，且宕机且系统无法恢复。
 
 将需要恢复的云主机的目录（目录名是云主机的uuid），cp 6fceaf2f-e201-4165-ba3a-f5d9c78160ab /var/lib/nova/instances/，多个云主机就复制多个目录。然后执行疏散命令 nova evacuate [instance uuid] [目的计算节点] –on-shared-storage 。
 
 将上面的步骤写成程序就是云主机的高可用组件比如Openstack Masakari等。
+
+> 过去分布式存储方案还不成熟，DRBD还有一定的市场，现在处了少量老的需要维护的云计算中心还在使用，DRBD技术方案已经淘汰了。
 
 # 附
 
