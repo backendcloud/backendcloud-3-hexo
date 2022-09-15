@@ -123,11 +123,11 @@ calicoctl edit ippool default-ipv6-ippool
 
 添加参数 natOutgoing: true
 
-# Istio ipv4v6双栈部署有的环境ok，有的环境有问题（从客户端curl服务端）
+# Istio ipv4 v6 双栈部署有的环境ok，有的环境有问题（从客户端curl服务端）
 
 通过抓取sidecar的15001端口，有问题的环境15001端口tcp握手会失败，不会有ack响应，但ok的环境tcp握手成功，请求正常处理。
 
-有问题的环境内核版本不支持ipv6的iptables转发。ok的环境支持。
+有问题的环境内核版本不支持ipv6的iptables转发。ok的环境内核支持。所以可以通过升级内核版本解决。
 
 在host上也尝试类似的规则，如：
 
