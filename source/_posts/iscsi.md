@@ -163,4 +163,4 @@ sr0              11:0    1 1024M  0 rom
 [3:0:0:1]    disk    LIO-ORG  sdb2             4.0   /dev/sdc 
 ```
 
-> 至此从服务端（target）map过来的新磁盘已分区，并且创建了文件系统，切挂载到客户端（initiator）并且能被使用。
+> 至此从服务端（target）map过来的新磁盘已经传到客户端（initiator）并且能被使用。
