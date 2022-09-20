@@ -7,6 +7,9 @@ tags:
 - DPDK
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
+
 > 本篇用的DPDK版本是较老的版本DPDK 18.05，在centos7 3.10.0-1160.el7.x86_64内核下编译，最新的版本是DPDK 22.07，从DPDK 20.11 开始 不再支持 make 方式, 只支持使用 meson 作为构建工具。以后有时间再写篇在centos stream 9 和更高内核 用 meson 编译 DPDK 22版本的文章。
 
 # 准备工作
@@ -50,7 +53,7 @@ DPDK是C语言写的，编译需要gcc，DPDK自带很多工具脚本，会调�
 [root@backendcloud-centos7 ~]# tar -zxvf  dpdk-18.05.1.tar.gz
 ```
 
-# DPDK编译
+# DPDK编译和DPDK环境配置
 
 ```bash
 [root@backendcloud-centos7 ~]# cd  dpdk-stable-18.05.1/usertools
@@ -357,7 +360,7 @@ Enter name of kernel driver to bind the device to: igb_uio
 OK
 ```
 
-重启电脑。
+重启node生效。
 
 # DPDK简单测试
 
