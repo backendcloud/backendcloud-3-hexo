@@ -438,13 +438,3 @@ hello from core 1
 hello from core 0
 ```
 
-> 要使用 ovs-dpdk，需要在node上构建 DPDK 并使用相应的 DPDK flag重新构建 ovs。 OVS-DPDK需要从源码编译，因为高度依赖内核等所在机器的环境，并需要配置很多参数以达到高性能。这意味着很难提供一个ovs-dpdk docker镜像来满足所有情况。
->
-> OVS-DPDK需要大页内存作为资源。
->
-> 由于 DPDK 会剥夺系统对 nic 的控制权，我们需要一个 ovs-dpdk 专用的 nic 来传输容器网络，另一个 nic 用于普通主机网络。
-> 
-> 普通Pod的ovs网络是在 pod 和 ovs 端口之间放置了一个 veth 对。 veth 的一端移动到容器网络命名空间。不能用 OVS-DPDK 做到这一点。当我们请求一个新的 DPDK 端口时，我们最终会在 /var/run/openvswitch/ 这样的目录中得到一个类似 vhost-user 套接字文件的东西。它不能在命名空间之间移动，它必须被挂载到 pod 中就像一个普通的文件(由 Userspace-CNI 提供的功能)。所以不能使用 OVS-DPDK 作为默认网络。Pod对K8S API不可达，K8S不能对pod进行健康检查。因此，需要依赖 Multus 来连接多个网络。Kernel-OVS 仍然是默认网络。此外，Multus 允许为Pod提供 OVS-DPDK 网络。这是同一个 OVS 实例，但是 DPDK port位于另一个支持 DPDK 的bridge上。
->
-> ovs-dpdk创建br和port， ovs 集成网桥类型更改为 netdev ，端口类型更改为 dpdkvhostuser 并设置其他 ovs-dpdk 参数。
-
