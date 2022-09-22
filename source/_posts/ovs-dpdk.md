@@ -7,6 +7,8 @@ tags:
 - OVS-DPDK
 ---
 
+`目录：`（可以按`w`快捷键切换大纲视图）
+[TOC]
 
 > 要使用 ovs-dpdk，需要在node上构建 DPDK 并使用相应的 DPDK flag重新构建 ovs。 OVS-DPDK需要从源码编译，因为高度依赖内核等所在机器的环境，并需要配置很多参数以达到高性能。这意味着很难提供一个ovs-dpdk docker镜像来满足所有情况。
 >
@@ -273,7 +275,7 @@ qemu-system-x86_64 -m 1024 -smp 4 -cpu host,pmu=off -hda /root/centos7vm2.qcow2 
 -numa node,memdev=mem -mem-prealloc
 ```
 
-若上面的操作是在vmware上操作，需要加上上面额外的参数pmu=off，为了规避vmware的bug。若不加会报错：
+若上面的操作是在vmware上操作，需要加上上面额外的参数pmu=off，为了规避vmware的bug。若不加会报下面的错误：
 
 ```bash
 [root@backendcloud-fedora27 ~]# qemu-system-x86_64 -m 1024 -smp 4 -cpu host -hda /root/centos7vm1.qcow2 -boot c -enable-kvm -no-reboot -net none -nographic \
