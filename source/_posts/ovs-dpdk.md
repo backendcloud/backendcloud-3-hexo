@@ -289,7 +289,7 @@ qemu-system-x86_64: /builddir/build/BUILD/qemu-2.10.2/target/i386/kvm.c:1806: kv
 Aborted (core dumped)
 ```
 
-# 安装iperf3，并测试DPDK虚拟机：
+# 安装iperf3，并测试OVS-DPDK虚拟机：
 
 ```bash
 [root@localhost ~]# iperf3 -s
