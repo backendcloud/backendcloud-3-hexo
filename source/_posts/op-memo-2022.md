@@ -31,7 +31,7 @@ XXXX-HOST-YYYY34 节点故障，高可用组件应该疏散 XXXX-HOST-YYYY34 节
 
 **分析代码：**
 
-高可用组件，监控到节点故障后，回调用nova api去执行nova的疏散命令。
+高可用组件，监控到节点故障后，会调用nova api去执行nova的疏散命令。
 
 相关代码：
 
@@ -77,7 +77,7 @@ def _hyper_servers(cs, host, strict):
             raise exceptions.NotFound(404, msg)
 ```
 
-> 从上面的代码看出，strict 参数默认是true时候是完全匹配，否者是是否包含的匹配。
+> 从上面的代码看出，strict 参数为true时候是完全匹配，否者是是否包含的匹配。
 
 ```python
     def search(self, hypervisor_match, servers=False, detailed=False):

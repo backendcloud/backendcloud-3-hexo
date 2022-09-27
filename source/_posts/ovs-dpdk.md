@@ -289,7 +289,7 @@ qemu-system-x86_64: /builddir/build/BUILD/qemu-2.10.2/target/i386/kvm.c:1806: kv
 Aborted (core dumped)
 ```
 
-# 安装iperf3，并测试OVS-DPDK虚拟机：
+# 安装iperf3，并测试使用OVS-DPDK虚拟机
 
 ```bash
 [root@localhost ~]# iperf3 -s
@@ -342,7 +342,7 @@ Connecting to host 192.168.0.1, port 5201
 iperf Done.
 ```
 
-# 对比非OVS-DPDK虚拟机
+# 对比未用OVS-DPDK的虚拟机
 
 ```bash
 [root@backendcloud-fedora27 ~]# yum -y install wget openssl-devel gcc make python-devel openssl-devel kernel-devel graphviz kernel-debug-devel autoconf automake rpm-build redhat-rpm-config libtool python-twisted-core python-zope-interface PyQt4 desktop-file-utils libcap-ng-devel groff checkpolicy selinux-policy-devel
@@ -432,3 +432,5 @@ Domain creation completed.
 ```
 
 ![](/images/ovs-dpdk/2022-09-22-17-33-28.png)
+
+> 可以看出使用OVS-DPDK的虚拟机的未使用OVS-DPDK的虚拟机网络性能有明显的差距。以上都是VMWare模拟的DPDK，并非实际环境，性能数据仅供参考，但性能以外的流程逻辑是一样的。
