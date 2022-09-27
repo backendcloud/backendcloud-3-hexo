@@ -478,7 +478,7 @@ ovs-vsctl show
 
 创建虚拟机。虚拟机配置需要注意内存大页、网口配置，虚拟机配置文件可以参考如下：
 
-```xml
+```bash
 <domain type='kvm'> 
    <name>VM1</name> 
  <uuid>fb8eb9ff-21a7-42ad-b233-2a6e0470e0b5</uuid> 
