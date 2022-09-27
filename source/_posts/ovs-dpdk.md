@@ -439,7 +439,7 @@ Domain creation completed.
 
 > 本小节内容源自华为产品用户手册
 
-![](2022-09-27-13-54-20.png)
+![](/images/ovs-dpdk/2022-09-27-13-54-20.png)
 
 ```bash
 ovs-vsctl add-br br-dpdk -- set bridge br-dpdk datapath_type=netdev 
@@ -470,11 +470,11 @@ ovs-vsctl add-port br-int p-tap1 -- set Interface p-tap1 type=patch options:peer
 ovs-vsctl show
 ```
 
-![](2022-09-27-13-58-13.png)
+![](/images/ovs-dpdk/2022-09-27-13-58-13.png)
 
 验证是否和对端的br-dpdk网桥联通 ping 192.168.2.2
 
-![](2022-09-27-13-58-34.png)
+![](/images/ovs-dpdk/2022-09-27-13-58-34.png)
 
 创建虚拟机。虚拟机配置需要注意内存大页、网口配置，虚拟机配置文件可以参考如下：
 
@@ -587,5 +587,4 @@ ovs-vsctl show
 
  跨主机虚拟机连通性验证。Host1主机的虚拟机内验证是否和Host2主机内的虚拟机联通。ping 192.168.1.21
 
- ![](2022-09-27-13-59-25.png)
- 
+ ![](/images/ovs-dpdk/2022-09-27-13-59-25.png)
