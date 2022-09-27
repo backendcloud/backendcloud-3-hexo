@@ -1,5 +1,5 @@
 ---
-title: KubeVirt替换virt-lantch中的libvirt的版本
+title: KubeVirt替换virt-lantch中的libvirt和qemu-kvm的版本
 readmore: true
 date: 2022-08-12 18:49:38
 categories: 云原生
