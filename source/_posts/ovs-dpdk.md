@@ -434,3 +434,158 @@ Domain creation completed.
 ![](/images/ovs-dpdk/2022-09-22-17-33-28.png)
 
 > 可以看出使用OVS-DPDK的虚拟机的未使用OVS-DPDK的虚拟机网络性能有明显的差距。以上都是VMWare模拟的DPDK，并非实际环境，性能数据仅供参考，但性能以外的流程逻辑是一样的。
+
+# 参考：OVS-DPDK bond组网
+
+> 本小节内容源自华为产品用户手册
+
+![](2022-09-27-13-54-20.png)
+
+```bash
+ovs-vsctl add-br br-dpdk -- set bridge br-dpdk datapath_type=netdev 
+ovs-vsctl add-bond br-dpdk dpdk-bond p0 p1 -- set Interface p0 type=dpdk options:dpdk-devargs=0000:05:00.0 -- set Interface p1 type=dpdk options:dpdk-devargs=0000:06:00.0 
+ovs-vsctl set port dpdk-bond bond_mode=balance-tcp 
+ovs-vsctl set port dpdk-bond lacp=active ifconfig br-dpdk 192.168.2.1/24 up
+```
+
+ifconfig br-dpdk 192.168.2.1/24 up这个是配置br-dpdk网桥的IP地址，用来配置VXLAN隧道。Host2上执行ifconfig br-dpdk 192.168.2.2/24 up来配对，隧道的网段和虚拟机的网段区别开来。
+
+```bash
+ovs-vsctl add-br br-int -- set bridge br-int datapath_type=netdev
+ovs-vsctl add-port br-int vxlan0 -- set Interface vxlan0 type=vxlan options:local_ip=192.168.2.1 options:remote_ip=192.168.2.2
+```
+
+> 该组网下br-int上有一个VXLAN端口，出主机的流量都会加上VXLAN头。而VXLAN口的local_ip填的是本主机br-dpdk的IP地址，remote_ip是对端br-dpdk的IP地址。
+
+```bash
+ovs-vsctl add-br br-ply1 -- set bridge br-ply1 datapath_type=netdev
+ovs-vsctl add-port br-ply1 tap1 -- set Interface tap1 type=dpdkvhostuserclient options:vhost-server-path=/var/run/openvswitch/tap1
+ovs-vsctl add-port br-ply1 p-tap1-int -- set Interface p-tap1-int type=patch options:peer=p-tap1
+ovs-vsctl add-port br-int p-tap1 -- set Interface p-tap1 type=patch options:peer=p-tap1-int
+```
+
+> 该组网每增加一个虚拟机，就增加一个br-ply网桥，该网桥上有一个dpdkvhostuser给虚拟机，patch口连到br-int网桥上。
+
+```bash
+ovs-vsctl show
+```
+
+![](2022-09-27-13-58-13.png)
+
+验证是否和对端的br-dpdk网桥联通 ping 192.168.2.2
+
+![](2022-09-27-13-58-34.png)
+
+创建虚拟机。虚拟机配置需要注意内存大页、网口配置，虚拟机配置文件可以参考如下：
+
+```xml
+<domain type='kvm'> 
+   <name>VM1</name> 
+ <uuid>fb8eb9ff-21a7-42ad-b233-2a6e0470e0b5</uuid> 
+   <memory unit='KiB'>2097152</memory> 
+   <currentMemory unit='KiB'>2097152</currentMemory> 
+   <memoryBacking> 
+     <hugepages> 
+       <page size='524288' unit='KiB' nodeset='0'/> 
+     </hugepages> 
+     <locked/> 
+   </memoryBacking> 
+   <vcpu placement='static'>4</vcpu> 
+   <cputune> 
+     <vcpupin vcpu='0' cpuset='6'/> 
+     <vcpupin vcpu='1' cpuset='7'/> 
+     <vcpupin vcpu='2' cpuset='8'/> 
+     <vcpupin vcpu='3' cpuset='9'/> 
+     <emulatorpin cpuset='0-3'/> 
+   </cputune> 
+   <numatune> 
+     <memory mode='strict' nodeset='0'/> 
+   </numatune> 
+   <os> 
+     <type arch='aarch64' machine='virt-rhel7.6.0'>hvm</type> 
+     <loader readonly='yes' type='pflash'>/usr/share/AAVMF/AAVMF_CODE.fd</loader> 
+     <nvram>/var/lib/libvirt/qemu/nvram/VM1_VARS.fd</nvram> 
+     <boot dev='hd'/> 
+   </os> 
+   <features> 
+     <acpi/> 
+     <gic version='3'/> 
+   </features> 
+   <cpu mode='host-passthrough' check='none'> 
+     <topology sockets='1' cores='4' threads='1'/> 
+     <numa> 
+       <cell id='0' cpus='0-3' memory='2097152' unit='KiB' memAccess='shared'/> 
+     </numa> 
+   </cpu> 
+   <clock offset='utc'/> 
+ <on_poweroff>destroy</on_poweroff> 
+ <on_reboot>restart</on_reboot> 
+   <on_crash>destroy</on_crash> 
+   <devices> 
+     <emulator>/usr/libexec/qemu-kvm</emulator> 
+     <disk type='file' device='disk'> 
+       <driver name='qemu' type='qcow2'/> 
+       <source file='/home/kvm/images/1.img'/> 
+       <target dev='vda' bus='virtio'/> 
+       <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/> 
+     </disk> 
+     <disk type='file' device='cdrom'> 
+      <driver name='qemu' type='raw'/> 
+       <target dev='sda' bus='scsi'/> 
+       <readonly/> 
+       <address type='drive' controller='0' bus='0' target='0' unit='0'/> 
+     </disk> 
+     <controller type='usb' index='0' model='qemu-xhci' ports='8'> 
+       <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/> 
+     </controller> 
+     <controller type='scsi' index='0' model='virtio-scsi'> 
+       <address type='pci' domain='0x0000' bus='0x03' slot='0x00' function='0x0'/> 
+     </controller> 
+     <controller type='pci' index='0' model='pcie-root'/> 
+     <controller type='pci' index='1' model='pcie-root-port'> 
+       <model name='pcie-root-port'/> 
+       <target chassis='1' port='0x8'/> 
+       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x0' multifunction='on'/> 
+     </controller> 
+     <controller type='pci' index='2' model='pcie-root-port'> 
+       <model name='pcie-root-port'/> 
+       <target chassis='2' port='0x9'/> 
+       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/> 
+     </controller> 
+     <controller type='pci' index='3' model='pcie-root-port'> 
+       <model name='pcie-root-port'/> 
+       <target chassis='3' port='0xa'/> 
+       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/> 
+     </controller> 
+     <controller type='pci' index='4' model='pcie-root-port'> 
+       <model name='pcie-root-port'/> 
+       <target chassis='4' port='0xb'/> 
+       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x3'/> 
+     </controller> 
+     <controller type='pci' index='5' model='pcie-root-port'> 
+       <model name='pcie-root-port'/> 
+       <target chassis='5' port='0xc'/> 
+       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x4'/> 
+     </controller> 
+     <interface type='vhostuser'> 
+       <source type='unix' path='/var/run/openvswitch/tap1' mode='server'/> 
+       <target dev='tap1'/> 
+       <model type='virtio'/> 
+       <driver name='vhost' queues='4' rx_queue_size='1024' tx_queue_size='1024'/> 
+     </interface> 
+     <serial type='pty'> 
+       <target type='system-serial' port='0'> 
+         <model name='pl011'/> 
+       </target> 
+     </serial> 
+     <console type='pty'> 
+       <target type='serial' port='0'/> 
+     </console> 
+   </devices> 
+ </domain> 
+ ```
+
+ 跨主机虚拟机连通性验证。Host1主机的虚拟机内验证是否和Host2主机内的虚拟机联通。ping 192.168.1.21
+
+ ![](2022-09-27-13-59-25.png)
+ 
