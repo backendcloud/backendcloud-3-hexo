@@ -186,7 +186,7 @@ func (c *cache) delete(k string) (interface{}, bool) {
 
 ## Set()
 
-Set()比较简单，就是配置key/value对，并附上过期时间。由两个类似的方法Add()和replace()。
+Set()比较简单，就是配置key/value对，并附上过期时间。有两个类似的方法Add()和replace()。
 
 区别是，Set()不管key是否存在，都配置。Add()只能用于key不存在的情况，否则报错，replace是反的，只能用于key存在的情况，否则报错。
 
@@ -246,7 +246,7 @@ func (c *cache) Replace(k string, x interface{}, d time.Duration) error {
 
 ## Get()
 
-Get()方法比较简单，获取key/value对，并返回是key是否存在且未过期。GetWithExpiration()相较Get()方法多返回一个过期时间。
+Get()方法比较简单，获取key/value对，并返回是key是否存在且未过期。GetWithExpiration()相较Get()方法多了个返回过期时间的参数。
 
 ```go
 // Get an item from the cache. Returns the item or nil, and a bool indicating
@@ -304,7 +304,7 @@ func (c *cache) GetWithExpiration(k string) (interface{}, time.Time, bool) {
 
 ## 其他
 
-Flush()清空所有的items，ItemCount()获取item数量。还有将所有items保存到文件，从文件中恢复items的方法，逻辑比较简单，这里就不详细分析了。
+Flush()清空所有的items。ItemCount()获取item数量。还有将所有items保存到文件，从文件中恢复items的方法，逻辑比较简单，这里就不详细分析了。
 
 ```go
 // Delete all items from the cache.
