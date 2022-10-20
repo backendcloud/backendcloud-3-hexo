@@ -119,7 +119,7 @@ func (n *node) insert(pattern string, parts []string, height int) {
 	}
 	child.insert(pattern, parts, height+1)
 }
-// 根节点node结构体的成员part是空的，子节点是URL片段
+// 根节点node结构体的成员part是空的，子节点的part变量是URL片段。或者理解成当前node结构体的处理函数的入参parts []string和height int组合获取的part是提供给子节点的。或者理解成第一个URL的片段是第二层（height=1），并非第一层（height=0）的node的part。参考上图的黄色方块的白色内容。
 
 // 第一个匹配成功的子节点
 func (n *node) matchChild(part string) *node {
