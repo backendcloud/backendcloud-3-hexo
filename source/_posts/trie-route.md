@@ -1,6 +1,6 @@
 ---
-title: http前缀树路由的算法和golang源码分析
-readmore: true
+title: http前缀树路由算法和Go源码分析
+readmore: false
 date: 2022-10-20 11:36:54
 categories: 云原生
 tags:
@@ -30,7 +30,7 @@ tags:
 
 Trie树的结构非常适用于路由匹配。不同的web框架中的快速路由用到了不同的路由算法。Trie 树是其中简单的一种。
 
-因为现在web框架中的路由往往加入了动态路由功能，即加入了参数提取，通配符，这些功能简化了路由注册，但是增加了Trie树的复杂度。
+因为现在web框架中的路由往往加入了动态路由功能，即加入了参数提取，通配符，这些功能简化了用户的路由注册，但是增加了Trie树实现路由的复杂度。
 
 比如定义了如下路由规则：
 * /:lang/doc
@@ -41,7 +41,7 @@ Trie树的结构非常适用于路由匹配。不同的web框架中的快速路�
 * /p/related
 
 用前缀树来表示，是这样的：
-![](/images/trie-route/trie-router.jpg)
+![](/images/trie-route/2022-10-20-09-04-41.jpg)
 
 动态路由具备以下两个功能。
 * 参数匹配:。例如 /p/:lang/doc，可以匹配 /p/c/doc 和 /p/go/doc。
