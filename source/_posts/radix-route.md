@@ -93,3 +93,64 @@ type Router struct {
 路由注册的过程包括两部分：
 1. 一层层查找到最底层匹配的节点
 2. 获取动态路由（冒号，星号）匹配的参数
+
+## 基础被调用的函数
+
+* min 返回较小的值
+* longestCommonPrefix 返回两个字符串最长相同字符的下标的下一个下标
+* findWildcard 返回是否匹配到的通配符，返回的内容通配符例如：“:land”，“*land/”，起始下标，是否合法
+* countParams 返回通配符个数
+
+```go
+func min(a, b int) int {
+	if a <= b {
+		return a
+	}
+	return b
+}
+
+func longestCommonPrefix(a, b string) int {
+	i := 0
+	max := min(len(a), len(b))
+	for i < max && a[i] == b[i] {
+		i++
+	}
+	return i
+}
+
+// Search for a wildcard segment and check the name for invalid characters.
+// Returns -1 as index, if no wildcard was found.
+func findWildcard(path string) (wilcard string, i int, valid bool) {
+	// Find start
+	for start, c := range []byte(path) {
+		// A wildcard starts with ':' (param) or '*' (catch-all)
+		if c != ':' && c != '*' {
+			continue
+		}
+
+		// Find end and check for invalid characters
+		valid = true
+		for end, c := range []byte(path[start+1:]) {
+			switch c {
+			case '/':
+				return path[start : start+1+end], start, valid
+			case ':', '*':
+				valid = false
+			}
+		}
+		return path[start:], start, valid
+	}
+	return "", -1, false
+}
+
+func countParams(path string) uint16 {
+	var n uint
+	for i := range []byte(path) {
+		switch path[i] {
+		case ':', '*':
+			n++
+		}
+	}
+	return uint16(n)
+}
+```
