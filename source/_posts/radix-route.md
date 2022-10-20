@@ -87,6 +87,41 @@ type Router struct {
 1. 检查路由根节点（以request method GET/POST/DELETE/PUT 区分几个路由根结点）是否存在，不存在则新建。并注册根节点信息。
 2. 递归注册根节点的所有子节点信息。
 
+基数树算法相较于前缀树算法之所以快，主要在于：
+* 进一步压缩前缀树，即：同前缀的节点拥有相同的父节点
+* 对子节点建立了索引并按优先级从左到右排列，并将该信息保存在node结构体的indices字符数组里
+
+下面的incrementChildPrio方法做了下面几件事：
+1. 根据入参的下标，修改对应下标的子节点的优先级
+2. 调整子节点数组的顺序，具体将+1优先级的子节点的优先级依次和前一个子节点的优先级做比较，若高，则互换位置
+3. 重新索引。若重新排列过子节点，即 newPos != pos，即按调整后的子节点顺序重新建立索引。索引就是个字符数组，各取子节点的首字符
+
+通过建立按优先级排序的索引，可以极大缩短路由查找时间，实现快速路由。
+
+```go
+// Increments priority of the given child and reorders if necessary
+func (n *node) incrementChildPrio(pos int) int {
+	cs := n.children
+	cs[pos].priority++
+	prio := cs[pos].priority
+
+	// Adjust position (move to front)
+	newPos := pos
+	for ; newPos > 0 && cs[newPos-1].priority < prio; newPos-- {
+		// Swap node positions
+		cs[newPos-1], cs[newPos] = cs[newPos], cs[newPos-1]
+	}
+
+	// Build new index char string
+	if newPos != pos {
+		n.indices = n.indices[:newPos] + // Unchanged prefix, might be empty
+			n.indices[pos:pos+1] + // The index char we move
+			n.indices[newPos:pos] + n.indices[pos+1:] // Rest without char at 'pos'
+	}
+
+	return newPos
+}
+```
 
 ## 路由发现
 
