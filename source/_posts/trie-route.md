@@ -1,10 +1,10 @@
 ---
 title: http前缀树路由的算法和golang源码分析
 readmore: true
-date: 2022-10-20 08:56:54
+date: 2022-10-20 11:36:54
 categories: 云原生
 tags:
-- trie
+- Trie树
 ---
 
 
@@ -151,7 +151,7 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 		return nil, nil
 	}
 
-    // 找到以方法名区分的根节点，调用递归函数search(), 具体的步骤可以参考路由注册，这里不详细说了
+    // 找到以方法名区分的根节点，调用递归函数search(), 具体的步骤可以参考路由注册，这里不详细说了。区别主要是注册只要找到一个匹配的子节点，因为注册只会注册一条线，而路由发现和走迷宫一样，需要并行多条线查找合适的路径
 	n := root.search(searchParts, 0)
 
     // 如找到最底层的节点，即路由发现，则提取动态路由的参数和值
@@ -173,6 +173,7 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 	return nil, nil
 }
 
+// 递归查找
 func (n *node) search(parts []string, height int) *node {
 	if len(parts) == height || strings.HasPrefix(n.part, "*") {
 		if n.pattern == "" {
