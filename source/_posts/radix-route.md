@@ -358,7 +358,7 @@ func (n *node) insertChild(path, fullPath string, handle Handle) {
 
 ## 路由发现
 
-路由发现和路由注册的过程是反的，搞懂了路由注册自然就搞懂了路由发现，这里略过。
+路由发现和路由注册的过程是类似的并且相对简单，搞懂了路由注册自然就搞懂了路由发现，这里略过。
 
 ```go
 // Returns the handle registered with the given path (key). The values of
