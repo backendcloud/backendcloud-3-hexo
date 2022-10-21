@@ -345,15 +345,81 @@ func main() {
 
 没有中间件的框架设计是这样的，当接收到请求后，匹配路由，该请求的所有信息都保存在Context中。中间件也不例外，接收到请求后，应查找所有应作用于该路由的中间件，保存在Context中，依次进行调用。为什么依次调用后，还需要在Context中保存呢？因为在设计中，中间件不仅作用在处理流程前，也可以作用在处理流程后，即在用户业务的 Handler 处理完毕后，还可以执行剩下的操作。
 
+具体的中间件框架的代码设计如下：
+
+一部分是对Context的设计，增加中间件相关代码：
+
+```go
+type Context struct {
+    ...
+	// 新增middleware相关的两个参数
+	handlers []HandlerFunc
+	index    int
+}
+
+func newContext(w http.ResponseWriter, req *http.Request) *Context {
+	return &Context{
+        ...
+        // index是含有所有中间件和用户handler的数组下标，初始值为-1，因为首次调用Next()会第一句代码会+1
+		index:  -1,
+	}
+}
+
+func (c *Context) Next() {
+	c.index++
+	s := len(c.handlers)
+	for ; c.index < s; c.index++ {
+		c.handlers[c.index](c)
+	}
+}
+```
+
+一部分是对handle以及调用handle的ServeHTTP（实现net/http标准库接口方法），增加中间件相关代码：
+
+```go
+func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	var middlewares []HandlerFunc
+	for _, group := range engine.groups {
+		if strings.HasPrefix(req.URL.Path, group.prefix) {
+			middlewares = append(middlewares, group.middlewares...)
+		}
+	}
+	c := newContext(w, req)
+	c.handlers = middlewares
+	engine.router.handle(c)
+}
+
+func (r *router) handle(c *Context) {
+	n, params := r.getRoute(c.Method, c.Path)
+
+	if n != nil {
+		key := c.Method + "-" + n.pattern
+		c.Params = params
+		c.handlers = append(c.handlers, r.handlers[key])
+	} else {
+		c.handlers = append(c.handlers, func(c *Context) {
+			c.String(http.StatusNotFound, "404 NOT FOUND: %s\n", c.Path)
+		})
+	}
+	c.Next()
+}
+```
+
+这两部分要结合起来看，Context结构体新增middleware相关的两个参数，handler数组和handler数组下标index，index初始值为-1，因为首次调用Next()会第一句代码会+1。
+
+首次Next()调用是由ServeHTTP方法调用，下次调用Next()，是由框架的使用者在编写业务所需的中间件的代码中调用。
+
+用户路由对应的handler不需要写Next()，因为是该handler是handler数组最后一个。
+
 比如：
 ```go
-//中间件A
+//用户编写的中间件A
 func A(c *Context) {
     part1
     c.Next()
     part2
 }
-//中间件B
+//用户编写的中间件B
 func B(c *Context) {
     part3
     c.Next()
@@ -362,5 +428,3 @@ func B(c *Context) {
 ```
 
 执行的顺序是：part1 -> part3 -> Handler -> part 4 -> part2
-
-具体的中间件框架的代码设计如下：
