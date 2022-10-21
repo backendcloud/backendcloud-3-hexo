@@ -1,5 +1,5 @@
 ---
-title: workinprocess-http基数树路由算法和Go源码分析
+title: http基数树路由算法和Go源码分析
 readmore: false
 date: 2022-10-20 18:36:54
 categories: 云原生
@@ -128,11 +128,12 @@ addRoute方法处理下面几种情况：
 3. 若入参的path和该节点有开头有重复的字段，并重复字段包括当前整个节点，则对重复字段之后的字段进行处理（这部分内容分为下面2种情况）。
 
 情况1. 若首字母可以在索引列表中找到，则增加该索引对应的子节点的优先级，并重新回到for循环开头对该子节点进行递归处理（该子节点变为当前节点），直至整个完整URL都被解析完成，并完成所有节点的更新。
+> 这个标识符名字起的好，walk，walk整个URL，walk整个tree。
 情况2. 若首字母可以在索引列表中未找到，则新建子节点，加入新索引，新索引优先级+1，对新的子节点调用insertChild方法。
 
 insertChild方法就干了一件事：入参的path和handler函数赋值给node结构体。
 
-> 由于基数树的特点，上面addRoute方法的整个过程有两处会调用insertChild方法，该方法会将未解析的整段的URL作为子节点插入当前树上。一处是空树的情况，一处是索引列表找不到的情况。换个说法就是，当前树没有任何节点时，第一个注册路由不管多长，都只增加一个节点，这和前缀树算法有明显区别，当索引找不到时，不管未解析的路由有多长，也只插入一个节点。从这里可以看出之所以较快速路由的原因。
+> 由于基数树的特点，上面addRoute方法的整个过程有两处会调用insertChild方法，该方法会将未解析的整段的URL作为子节点插入当前树上。一处是空树的情况，一处是索引列表找不到的情况。换个说法就是，当前树没有任何节点时，第一个注册路由不管多长，都只增加一个节点，这和前缀树算法有明显区别，当索引找不到时，不管未解析的路由有多长，也只插入一个子节点。从这里可以看出之所以称为快速路由的原因。
 
 ```go
 // addRoute adds a node with the given handle to the path.
@@ -354,11 +355,155 @@ func (n *node) insertChild(path, fullPath string, handle Handle) {
 
 ## 路由发现
 
-路由注册的过程包括两部分：
-1. 一层层查找到最底层匹配的节点
-2. 获取动态路由（冒号，星号）匹配的参数
+路由发现和路由注册的过程是反的，搞懂了路由注册自然就搞懂了路由发现，这里略过。
 
-## 基础被调用的函数
+```go
+// Returns the handle registered with the given path (key). The values of
+// wildcards are saved to a map.
+// If no handle can be found, a TSR (trailing slash redirect) recommendation is
+// made if a handle exists with an extra (without the) trailing slash for the
+// given path.
+func (n *node) getValue(path string, params func() *Params) (handle Handle, ps *Params, tsr bool) {
+walk: // Outer loop for walking the tree
+	for {
+		prefix := n.path
+		if len(path) > len(prefix) {
+			if path[:len(prefix)] == prefix {
+				path = path[len(prefix):]
+
+				// If this node does not have a wildcard (param or catchAll)
+				// child, we can just look up the next child node and continue
+				// to walk down the tree
+				if !n.wildChild {
+					idxc := path[0]
+					for i, c := range []byte(n.indices) {
+						if c == idxc {
+							n = n.children[i]
+							continue walk
+						}
+					}
+
+					// Nothing found.
+					// We can recommend to redirect to the same URL without a
+					// trailing slash if a leaf exists for that path.
+					tsr = (path == "/" && n.handle != nil)
+					return
+				}
+
+				// Handle wildcard child
+				n = n.children[0]
+				switch n.nType {
+				case param:
+					// Find param end (either '/' or path end)
+					end := 0
+					for end < len(path) && path[end] != '/' {
+						end++
+					}
+
+					// Save param value
+					if params != nil {
+						if ps == nil {
+							ps = params()
+						}
+						// Expand slice within preallocated capacity
+						i := len(*ps)
+						*ps = (*ps)[:i+1]
+						(*ps)[i] = Param{
+							Key:   n.path[1:],
+							Value: path[:end],
+						}
+					}
+
+					// We need to go deeper!
+					if end < len(path) {
+						if len(n.children) > 0 {
+							path = path[end:]
+							n = n.children[0]
+							continue walk
+						}
+
+						// ... but we can't
+						tsr = (len(path) == end+1)
+						return
+					}
+
+					if handle = n.handle; handle != nil {
+						return
+					} else if len(n.children) == 1 {
+						// No handle found. Check if a handle for this path + a
+						// trailing slash exists for TSR recommendation
+						n = n.children[0]
+						tsr = (n.path == "/" && n.handle != nil) || (n.path == "" && n.indices == "/")
+					}
+
+					return
+
+				case catchAll:
+					// Save param value
+					if params != nil {
+						if ps == nil {
+							ps = params()
+						}
+						// Expand slice within preallocated capacity
+						i := len(*ps)
+						*ps = (*ps)[:i+1]
+						(*ps)[i] = Param{
+							Key:   n.path[2:],
+							Value: path,
+						}
+					}
+
+					handle = n.handle
+					return
+
+				default:
+					panic("invalid node type")
+				}
+			}
+		} else if path == prefix {
+			// We should have reached the node containing the handle.
+			// Check if this node has a handle registered.
+			if handle = n.handle; handle != nil {
+				return
+			}
+
+			// If there is no handle for this route, but this route has a
+			// wildcard child, there must be a handle for this path with an
+			// additional trailing slash
+			if path == "/" && n.wildChild && n.nType != root {
+				tsr = true
+				return
+			}
+
+			if path == "/" && n.nType == static {
+				tsr = true
+				return
+			}
+
+			// No handle found. Check if a handle for this path + a
+			// trailing slash exists for trailing slash recommendation
+			for i, c := range []byte(n.indices) {
+				if c == '/' {
+					n = n.children[i]
+					tsr = (len(n.path) == 1 && n.handle != nil) ||
+						(n.nType == catchAll && n.children[0].handle != nil)
+					return
+				}
+			}
+			return
+		}
+
+		// Nothing found. We can recommend to redirect to the same URL with an
+		// extra trailing slash if a leaf exists for that path
+		tsr = (path == "/") ||
+			(len(prefix) == len(path)+1 && prefix[len(path)] == '/' &&
+				path == prefix[:len(prefix)-1] && n.handle != nil)
+		return
+	}
+}
+```
+
+## 基础方法
 
 * min 返回较小的值
 * longestCommonPrefix 返回两个字符串最长相同字符的下标的下一个下标
