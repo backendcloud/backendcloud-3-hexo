@@ -111,7 +111,7 @@ func main() {
 }
 ```
 
-进一步代码结构拆分，并在Engine结构体中创建一个map用于保存路由和Handler的映射。之后的调用就出现了我们用主流web框架的雏形调用样式。
+只要对上面的代码做一些代码结构拆分，并在Engine结构体中创建一个map用于保存路由和Handler的映射。之后的调用就出现了我们用主流web框架的雏形调用样式。
 
 ```go
 func main() {
@@ -181,3 +181,8 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 ```
 
+# 上下文Context
+
+为何要有上下文：
+1. 对Web服务来说，无非是根据请求*http.Request，构造响应http.ResponseWriter。要构造一个完整的响应，需要考虑消息头(Header)和消息体(Body)，而 Header 包含了状态码(StatusCode)，消息类型(ContentType)等几乎每次请求都需要设置的信息。因此，如果不进行有效的封装，那么框架的用户将需要写大量重复，繁杂的代码，而且容易出错。针对常用场景，能够高效地构造出 HTTP 响应是一个好的框架必须考虑的点。现在前后端分离的web开发，返回的结构体往往是json数据类型，所以要对返回体作json数据格式的封装。
+2. 提供和当前请求强相关的信息的存放位置。比如：解析动态路由/hello/:name，参数:name的值。中间件。Context 就像一次会话的百宝箱，可以找到任何东西。
