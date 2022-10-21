@@ -83,10 +83,6 @@ type Router struct {
 
 ## 路由注册
 
-路由注册的过程包括两部分：
-1. 检查路由根节点（以request method GET/POST/DELETE/PUT 区分几个路由根结点）是否存在，不存在则新建。并注册根节点信息。
-2. 递归注册根节点的所有子节点信息。
-
 基数树算法相较于前缀树算法之所以快，主要在于：
 * 进一步压缩前缀树，即：同前缀的节点拥有相同的父节点
 * 对子节点建立了索引并按优先级从左到右排列，并将该信息保存在node结构体的indices字符数组里
@@ -95,8 +91,9 @@ type Router struct {
 1. 根据入参的下标，修改对应下标的子节点的优先级
 2. 调整子节点数组的顺序，具体将+1优先级的子节点的优先级依次和前一个子节点的优先级做比较，若高，则互换位置
 3. 重新索引。若重新排列过子节点，即 newPos != pos，即按调整后的子节点顺序重新建立索引。索引就是个字符数组，各取子节点的首字符
+4. 返回最新索引的调整后的位置
 
-通过建立按优先级排序的索引，可以极大缩短路由查找时间，实现快速路由。
+> 通过建立按优先级排序的索引，可以极大缩短路由查找时间，实现快速路由。该索引不仅用在路由发现，路由注册也用到了，大大加快速度。
 
 ```go
 // Increments priority of the given child and reorders if necessary
@@ -120,6 +117,238 @@ func (n *node) incrementChildPrio(pos int) int {
 	}
 
 	return newPos
+}
+```
+
+整个addRoute和insertChild方法的代码是相当绕的，但好在大多数代码在处理通配符冒号和星号，以及检测通配符冲突和不合法上面，跳过这些代码，就简单很多。（下面分析的就跳过这些内容）
+
+addRoute方法处理下面几种情况：
+1. 若是该节点是下面是空的，就是空树的情况，即当前的path和索引都为空，insertChild，并设置为root类型的节点。
+2. 若入参的path和该节点有开头有重复的字段，并重复字段没有包括当前整个节点，则对该节点进行裂变，裂变成两节点。共通的节点和原节点剩下的部分作为子节点。
+3. 若入参的path和该节点有开头有重复的字段，并重复字段包括当前整个节点，则对重复字段之后的字段进行处理（这部分内容分为下面2种情况）。
+
+情况1. 若首字母可以在索引列表中找到，则增加该索引对应的子节点的优先级，并重新回到for循环开头对该子节点进行递归处理（该子节点变为当前节点），直至整个完整URL都被解析完成，并完成所有节点的更新。
+情况2. 若首字母可以在索引列表中未找到，则新建子节点，加入新索引，新索引优先级+1，对新的子节点调用insertChild方法。
+
+insertChild方法就干了一件事：入参的path和handler函数赋值给node结构体。
+
+> 由于基数树的特点，上面addRoute方法的整个过程有两处会调用insertChild方法，该方法会将未解析的整段的URL作为子节点插入当前树上。一处是空树的情况，一处是索引列表找不到的情况。换个说法就是，当前树没有任何节点时，第一个注册路由不管多长，都只增加一个节点，这和前缀树算法有明显区别，当索引找不到时，不管未解析的路由有多长，也只插入一个节点。从这里可以看出之所以较快速路由的原因。
+
+```go
+// addRoute adds a node with the given handle to the path.
+// Not concurrency-safe!
+func (n *node) addRoute(path string, handle Handle) {
+	fullPath := path
+	n.priority++
+
+	// Empty tree
+	if n.path == "" && n.indices == "" {
+		n.insertChild(path, fullPath, handle)
+		n.nType = root
+		return
+	}
+
+walk:
+	for {
+		// Find the longest common prefix.
+		// This also implies that the common prefix contains no ':' or '*'
+		// since the existing key can't contain those chars.
+		i := longestCommonPrefix(path, n.path)
+
+		// Split edge
+		if i < len(n.path) {
+			child := node{
+				path:      n.path[i:],
+				wildChild: n.wildChild,
+				nType:     static,
+				indices:   n.indices,
+				children:  n.children,
+				handle:    n.handle,
+				priority:  n.priority - 1,
+			}
+
+			n.children = []*node{&child}
+			// []byte for proper unicode char conversion, see #65
+			n.indices = string([]byte{n.path[i]})
+			n.path = path[:i]
+			n.handle = nil
+			n.wildChild = false
+		}
+
+		// Make new node a child of this node
+		if i < len(path) {
+			path = path[i:]
+
+			if n.wildChild {
+				n = n.children[0]
+				n.priority++
+
+				// Check if the wildcard matches
+				if len(path) >= len(n.path) && n.path == path[:len(n.path)] &&
+					// Adding a child to a catchAll is not possible
+					n.nType != catchAll &&
+					// Check for longer wildcard, e.g. :name and :names
+					(len(n.path) >= len(path) || path[len(n.path)] == '/') {
+					continue walk
+				} else {
+					// Wildcard conflict
+					pathSeg := path
+					if n.nType != catchAll {
+						pathSeg = strings.SplitN(pathSeg, "/", 2)[0]
+					}
+					prefix := fullPath[:strings.Index(fullPath, pathSeg)] + n.path
+					panic("'" + pathSeg +
+						"' in new path '" + fullPath +
+						"' conflicts with existing wildcard '" + n.path +
+						"' in existing prefix '" + prefix +
+						"'")
+				}
+			}
+
+			idxc := path[0]
+
+			// '/' after param
+			if n.nType == param && idxc == '/' && len(n.children) == 1 {
+				n = n.children[0]
+				n.priority++
+				continue walk
+			}
+
+			// Check if a child with the next path byte exists
+			for i, c := range []byte(n.indices) {
+				if c == idxc {
+					i = n.incrementChildPrio(i)
+					n = n.children[i]
+					continue walk
+				}
+			}
+
+			// Otherwise insert it
+			if idxc != ':' && idxc != '*' {
+				// []byte for proper unicode char conversion, see #65
+				n.indices += string([]byte{idxc})
+				child := &node{}
+				n.children = append(n.children, child)
+				n.incrementChildPrio(len(n.indices) - 1)
+				n = child
+			}
+			n.insertChild(path, fullPath, handle)
+			return
+		}
+
+		// Otherwise add handle to current node
+		if n.handle != nil {
+			panic("a handle is already registered for path '" + fullPath + "'")
+		}
+		n.handle = handle
+		return
+	}
+}
+```
+
+```go
+func (n *node) insertChild(path, fullPath string, handle Handle) {
+	for {
+		// Find prefix until first wildcard
+		wildcard, i, valid := findWildcard(path)
+		if i < 0 { // No wilcard found
+			break
+		}
+
+		// The wildcard name must not contain ':' and '*'
+		if !valid {
+			panic("only one wildcard per path segment is allowed, has: '" +
+				wildcard + "' in path '" + fullPath + "'")
+		}
+
+		// Check if the wildcard has a name
+		if len(wildcard) < 2 {
+			panic("wildcards must be named with a non-empty name in path '" + fullPath + "'")
+		}
+
+		// Check if this node has existing children which would be
+		// unreachable if we insert the wildcard here
+		if len(n.children) > 0 {
+			panic("wildcard segment '" + wildcard +
+				"' conflicts with existing children in path '" + fullPath + "'")
+		}
+
+		// param
+		if wildcard[0] == ':' {
+			if i > 0 {
+				// Insert prefix before the current wildcard
+				n.path = path[:i]
+				path = path[i:]
+			}
+
+			n.wildChild = true
+			child := &node{
+				nType: param,
+				path:  wildcard,
+			}
+			n.children = []*node{child}
+			n = child
+			n.priority++
+
+			// If the path doesn't end with the wildcard, then there
+			// will be another non-wildcard subpath starting with '/'
+			if len(wildcard) < len(path) {
+				path = path[len(wildcard):]
+				child := &node{
+					priority: 1,
+				}
+				n.children = []*node{child}
+				n = child
+				continue
+			}
+
+			// Otherwise we're done. Insert the handle in the new leaf
+			n.handle = handle
+			return
+		}
+
+		// catchAll
+		if i+len(wildcard) != len(path) {
+			panic("catch-all routes are only allowed at the end of the path in path '" + fullPath + "'")
+		}
+
+		if len(n.path) > 0 && n.path[len(n.path)-1] == '/' {
+			panic("catch-all conflicts with existing handle for the path segment root in path '" + fullPath + "'")
+		}
+
+		// Currently fixed width 1 for '/'
+		i--
+		if path[i] != '/' {
+			panic("no / before catch-all in path '" + fullPath + "'")
+		}
+
+		n.path = path[:i]
+
+		// First node: catchAll node with empty path
+		child := &node{
+			wildChild: true,
+			nType:     catchAll,
+		}
+		n.children = []*node{child}
+		n.indices = string('/')
+		n = child
+		n.priority++
+
+		// Second node: node holding the variable
+		child = &node{
+			path:     path[i:],
+			nType:    catchAll,
+			handle:   handle,
+			priority: 1,
+		}
+		n.children = []*node{child}
+
+		return
+	}
+
+	// If no wildcard was found, simply insert the path and handle
+	n.path = path
+	n.handle = handle
 }
 ```
 
