@@ -1,6 +1,6 @@
 ---
-title: workinprocess-Web框架的设计方案和Go源码实现
-readmore: true
+title: Web框架的设计方案和Go源码实现
+readmore: false
 date: 2022-10-21 19:28:18
 categories: 云原生
 tags:
@@ -405,7 +405,7 @@ func (r *router) handle(c *Context) {
 }
 ```
 
-这两部分要结合起来看，Context结构体新增middleware相关的两个参数，handler数组和handler数组下标index，index初始值为-1，因为首次调用Next()会第一句代码会+1。
+这两部分要结合起来看，Context结构体新增middleware相关的两个参数，handler数组和handler数组下标index，index初始值为-1，因为首次调用Next()会第一句代码会+1，即首次会执行注册的第一个中间件。
 
 首次Next()调用是由ServeHTTP方法调用，下次调用Next()，是由框架的使用者在编写业务所需的中间件的代码中调用。
 
@@ -428,3 +428,63 @@ func B(c *Context) {
 ```
 
 执行的顺序是：part1 -> part3 -> Handler -> part 4 -> part2
+
+# 错误恢复
+
+对一个 Web 框架而言，错误处理机制是非常必要的。可能是框架本身没有完备的测试，导致在某些情况下出现空指针异常等情况。也有可能用户不正确的参数，触发了某些异常，例如数组越界，空指针等。如果因为这些原因导致系统宕机，必然是不可接受的。
+
+代码实现：
+
+是通过编写错误恢复中间件，并将该中间件注册到Engine上实现的。
+
+错误恢复中间件：
+
+```go
+// print stack trace for debug
+func trace(message string) string {
+	var pcs [32]uintptr
+	n := runtime.Callers(3, pcs[:]) // skip first 3 caller
+
+	var str strings.Builder
+	str.WriteString(message + "\nTraceback:")
+	for _, pc := range pcs[:n] {
+		fn := runtime.FuncForPC(pc)
+		file, line := fn.FileLine(pc)
+		str.WriteString(fmt.Sprintf("\n\t%s:%d", file, line))
+	}
+	return str.String()
+}
+
+func Recovery() HandlerFunc {
+	return func(c *Context) {
+		defer func() {
+			if err := recover(); err != nil {
+				message := fmt.Sprintf("%s", err)
+				log.Printf("%s\n\n", trace(message))
+				c.Fail(http.StatusInternalServerError, "Internal Server Error")
+			}
+		}()
+
+		c.Next()
+	}
+}
+```
+
+```go
+// New is the constructor of gee.Engine
+func New() *Engine {
+	engine := &Engine{router: newRouter()}
+	engine.RouterGroup = &RouterGroup{engine: engine}
+	engine.groups = []*RouterGroup{engine.RouterGroup}
+	return engine
+}
+
+// Default use Logger() & Recovery middlewares
+func Default() *Engine {
+	engine := New()
+	engine.Use(Logger(), Recovery())
+	return engine
+}
+```
+
+调用New()是没有日志中间件和错误恢复中间件的，只有调用Default()才有这两个中间件，且加在了Engine，即加在全局上。
