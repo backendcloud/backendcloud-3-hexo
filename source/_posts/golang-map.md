@@ -560,7 +560,11 @@ done:
                                                   │                                                                                       │
 ```
 
+sameSizeGrow需要了解标准桶和溢出桶的概念。当 bucket 总数 < 2 ^ 15 时，如果 overflow 的 bucket 总数 >= bucket 的总数，那么我们认为 overflow 的桶太多了。当 bucket 总数 >= 2 ^ 15 时，那我们直接和 2 ^ 15 比较，overflow 的 bucket >= 2 ^ 15 时，即认为溢出桶太多了。为啥会导致这种情况呢？是因为我们对 map 一边插入，一边删除，会导致其中很多桶出现空洞，这样使得 bucket 使用率不高，值存储得比较稀疏。在查找时效率会下降。
 
+解决方法是通过移动 bucket 内容，使其倾向于紧密排列从而提高 bucket 利用率。
+
+![](/images/golang-map/image-20221102143237849.png)
 
 ### biggerSizeGrow是桶数组不够用了而进行的扩容，桶数组的length是原来的2倍
 
@@ -600,8 +604,8 @@ done:
                                                           └──────────┴───────────  
 ```
 
+是不是已经到了 load factor 的临界点，即元素个数 >= 桶个数 * 6.5，这时候说明大部分的桶可能都快满了，如果插入新元素，有大概率需要挂在 overflow 的桶上。
 
-
-![](/images/golang-map/image-20221102143237849.png)
+解决方法是将 B + 1，进而 hmap 的 bucket 数组扩容一倍。
 
 ![](/images/golang-map/image-20221102143607066.png)
