@@ -163,7 +163,7 @@ golang的map之所以效率高，得益于下面的几处巧妙设计：
 	minTopHash     = 5 // minimum tophash for a normal filled cell.
 ```
 
-底层对map的读运用了上面的（1）（2）（3），写运用了（1）和（2）。
+底层对map的读写删除都运用了上面的（1）（2）（3），根据key是否存在写包括了更新和新增。
 
 ```go
 func mapaccess2(t *maptype, h *hmap, key unsafe.Pointer) (unsafe.Pointer, bool) {
@@ -228,6 +228,115 @@ bucketloop:
 		}
 	}
 	return unsafe.Pointer(&zeroVal[0]), false
+}
+```
+
+map的key的删除，类似上面的读，不详细分析了。下面的代码主要做了2件事：寻址到key并删除key对应的地址空间和value对应的地址空间；遍历删除key后面的桶元素和桶链表，对其中的tophash保存的标志位更新，是空emptyOne还是之后的所有的都是空emptyRest。可以加快map的读写操作。
+
+```go
+func mapdelete(t *maptype, h *hmap, key unsafe.Pointer) {
+	...
+	if h == nil || h.count == 0 {
+		if t.hashMightPanic() {
+			t.hasher(key, 0) // see issue 23734
+		}
+		return
+	}
+	if h.flags&hashWriting != 0 {
+		fatal("concurrent map writes")
+	}
+
+	hash := t.hasher(key, uintptr(h.hash0))
+
+	// Set hashWriting after calling t.hasher, since t.hasher may panic,
+	// in which case we have not actually done a write (delete).
+	h.flags ^= hashWriting
+
+	bucket := hash & bucketMask(h.B)
+	if h.growing() {
+		growWork(t, h, bucket)
+	}
+	b := (*bmap)(add(h.buckets, bucket*uintptr(t.bucketsize)))
+	bOrig := b
+	top := tophash(hash)
+search:
+	for ; b != nil; b = b.overflow(t) {
+		for i := uintptr(0); i < bucketCnt; i++ {
+			if b.tophash[i] != top {
+				if b.tophash[i] == emptyRest {
+					break search
+				}
+				continue
+			}
+			k := add(unsafe.Pointer(b), dataOffset+i*uintptr(t.keysize))
+			k2 := k
+			if t.indirectkey() {
+				k2 = *((*unsafe.Pointer)(k2))
+			}
+			if !t.key.equal(key, k2) {
+				continue
+			}
+			// Only clear key if there are pointers in it.
+			if t.indirectkey() {
+				*(*unsafe.Pointer)(k) = nil
+			} else if t.key.ptrdata != 0 {
+				memclrHasPointers(k, t.key.size)
+			}
+			e := add(unsafe.Pointer(b), dataOffset+bucketCnt*uintptr(t.keysize)+i*uintptr(t.elemsize))
+			if t.indirectelem() {
+				*(*unsafe.Pointer)(e) = nil
+			} else if t.elem.ptrdata != 0 {
+				memclrHasPointers(e, t.elem.size)
+			} else {
+				memclrNoHeapPointers(e, t.elem.size)
+			}
+			b.tophash[i] = emptyOne
+			// If the bucket now ends in a bunch of emptyOne states,
+			// change those to emptyRest states.
+			// It would be nice to make this a separate function, but
+			// for loops are not currently inlineable.
+			if i == bucketCnt-1 {
+				if b.overflow(t) != nil && b.overflow(t).tophash[0] != emptyRest {
+					goto notLast
+				}
+			} else {
+				if b.tophash[i+1] != emptyRest {
+					goto notLast
+				}
+			}
+			for {
+				b.tophash[i] = emptyRest
+				if i == 0 {
+					if b == bOrig {
+						break // beginning of initial bucket, we're done.
+					}
+					// Find previous bucket, continue at its last entry.
+					c := b
+					for b = bOrig; b.overflow(t) != c; b = b.overflow(t) {
+					}
+					i = bucketCnt - 1
+				} else {
+					i--
+				}
+				if b.tophash[i] != emptyOne {
+					break
+				}
+			}
+		notLast:
+			h.count--
+			// Reset the hash seed to make it more difficult for attackers to
+			// repeatedly trigger hash collisions. See issue 25237.
+			if h.count == 0 {
+				h.hash0 = fastrand()
+			}
+			break search
+		}
+	}
+
+	if h.flags&hashWriting == 0 {
+		fatal("concurrent map writes")
+	}
+	h.flags &^= hashWriting
 }
 ```
 
