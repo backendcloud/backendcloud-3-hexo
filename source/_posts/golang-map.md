@@ -13,11 +13,21 @@ tags:
 
 # map的底层数据结构
 
-golang map底层有两个核心的结构体实现，hmap和bmap，bmap本篇用桶代替。
+golang map底层由两个核心的结构体实现：hmap和bmap，bmap本篇用桶代替。
 
-![image-20221102141650817](/images/golang-map/image-20221102141650817.png)
+![](/images/golang-map/image-20221102141650817.png)
 
+golang的代码中一旦初始化一个map，比如：make(map[k]v, hint)，底层就会创建一个hmap的结构体实例。该结构体实例包含了该map的所有信息。上图列了几个主要的成员。
 
+count：golang中的length(map[k]v)就返回的是该结构体的count
+
+B：桶的数量的log2，如果B为1就创建两个桶，若B为3就创建8个桶，一个桶可以最多存放8个key/value对，golang代码中若写了make(map[k]v, 10)，创建的hmap对应的B就等于2
+
+buckets：当前map的桶数组
+
+hash0：哈希因子，有点类似加密算法的盐
+
+下面的makemap函数就是初始化了一个map的golang语句make(map[k]v, hint)，底层的map初始化。下面代码干的事情主要是：初始化一个hmap结构体，计算B值，创建桶数组。
 
 ```go
 func makemap(t *maptype, hint int, h *hmap) *hmap {
@@ -148,6 +158,6 @@ golang的map之所以效率高，得益于下面的三个巧妙设计：
 
 ### biggerSizeGrow是桶数组不够用了而进行的扩容
 
-![image-20221102143237849](/images/golang-map/image-20221102143237849.png)
+![](/images/golang-map/image-20221102143237849.png)
 
-![image-20221102143607066](/images/golang-map/image-20221102143607066.png)
+![](/images/golang-map/image-20221102143607066.png)
