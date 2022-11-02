@@ -19,13 +19,13 @@ golang map底层由两个核心的结构体实现：hmap和bmap，bmap本篇用�
 
 golang的代码中一旦初始化一个map，比如：make(map[k]v, hint)，底层就会创建一个hmap的结构体实例。该结构体实例包含了该map的所有信息。上图列了几个主要的成员。
 
-count：golang中的length(map[k]v)就返回的是该结构体的count
+* count：golang中的length(map[k]v)就返回的是该结构体的count
 
-B：桶的数量的log2，如果B为1就创建两个桶，若B为3就创建8个桶，一个桶可以最多存放8个key/value对，golang代码中若写了make(map[k]v, 10)，创建的hmap对应的B就等于2
+* B：桶的数量的log2，如果B为1就创建两个桶，若B为3就创建8个桶，一个桶可以最多存放8个key/value对，golang代码中若写了make(map[k]v, 10)，创建的hmap对应的B就等于2
 
-buckets：当前map的桶数组
+* buckets：当前map的桶数组
 
-hash0：哈希因子，有点类似加密算法的盐
+* hash0：哈希因子，有点类似加密算法的盐
 
 下面的makemap函数就是初始化了一个map的golang语句make(map[k]v, hint)，底层的map初始化。下面代码干的事情主要是：初始化一个hmap结构体，计算B值，创建桶数组。
 
@@ -68,13 +68,11 @@ func makemap(t *maptype, hint int, h *hmap) *hmap {
 
 
 
-# # 设计
+# 设计
 
-golang的map之所以效率高，得益于下面的三个巧妙设计：
+golang的map之所以效率高，得益于下面的几处巧妙设计：
 
 ## （1）key hash值的后B位作为桶index查找桶
-
-## （2）key hash值的前8位作为桶内结构体的三个数组（tophash，key，value）的index
 
 ```bash
    ┌─────────────┬─────────────────────────────────────────────────────┬─────────────┐                          
@@ -146,9 +144,91 @@ golang的map之所以效率高，得益于下面的三个巧妙设计：
    └──────────────────────────────────────────────────────────────────┘                                         
 ```
 
+若上面的makemap函数算出的B值=5，则bucketMask = 11111，key的hash值和bucketMask相与。就是取key的hash值的低B位，作为buckets数组的index查找桶。
 
+## （2）key hash值的前8位作为桶内结构体的三个数组（tophash，key，value）的index
+
+通过上一步找到了桶，因为一个桶最多由8个key/value对，所以还要进一步查找，这时候用到了tophash。参考上一步的图，tophash是取key的hash值的高8位。之所以要多出tophash存储空间，是为了空间换时间，加速寻址速度。
 
 ## （3）桶结构体的tophash复用，既作为tophash使用，也作为标志位使用
+
+从上面的图看出，tophash数组不仅保存了tophash，还在当桶里8个key/value对某一对为空时保存了标志位。
+
+```go
+	emptyRest      = 0 // this cell is empty, and there are no more non-empty cells at higher indexes or overflows.
+	emptyOne       = 1 // this cell is empty
+	evacuatedX     = 2 // key/elem is valid.  Entry has been evacuated to first half of larger table.
+	evacuatedY     = 3 // same as above, but evacuated to second half of larger table.
+	evacuatedEmpty = 4 // cell is empty, bucket is evacuated.
+	minTopHash     = 5 // minimum tophash for a normal filled cell.
+```
+
+底层对map的读运用了上面的（1）（2）（3），写运用了（1）和（2）。
+
+```go
+func mapaccess2(t *maptype, h *hmap, key unsafe.Pointer) (unsafe.Pointer, bool) {
+	if raceenabled && h != nil {
+		callerpc := getcallerpc()
+		pc := abi.FuncPCABIInternal(mapaccess2)
+		racereadpc(unsafe.Pointer(h), callerpc, pc)
+		raceReadObjectPC(t.key, key, callerpc, pc)
+	}
+	if msanenabled && h != nil {
+		msanread(key, t.key.size)
+	}
+	if asanenabled && h != nil {
+		asanread(key, t.key.size)
+	}
+	if h == nil || h.count == 0 {
+		if t.hashMightPanic() {
+			t.hasher(key, 0) // see issue 23734
+		}
+		return unsafe.Pointer(&zeroVal[0]), false
+	}
+	if h.flags&hashWriting != 0 {
+		fatal("concurrent map read and map write")
+	}
+	hash := t.hasher(key, uintptr(h.hash0))
+	m := bucketMask(h.B)
+	b := (*bmap)(add(h.buckets, (hash&m)*uintptr(t.bucketsize)))
+	if c := h.oldbuckets; c != nil {
+		if !h.sameSizeGrow() {
+			// There used to be half as many buckets; mask down one more power of two.
+			m >>= 1
+		}
+		oldb := (*bmap)(add(c, (hash&m)*uintptr(t.bucketsize)))
+		if !evacuated(oldb) {
+			b = oldb
+		}
+	}
+	top := tophash(hash)
+bucketloop:
+	for ; b != nil; b = b.overflow(t) {
+		for i := uintptr(0); i < bucketCnt; i++ {
+			if b.tophash[i] != top {
+				if b.tophash[i] == emptyRest {
+					break bucketloop
+				}
+				continue
+			}
+			k := add(unsafe.Pointer(b), dataOffset+i*uintptr(t.keysize))
+			if t.indirectkey() {
+				k = *((*unsafe.Pointer)(k))
+			}
+			if t.key.equal(key, k) {
+				e := add(unsafe.Pointer(b), dataOffset+bucketCnt*uintptr(t.keysize)+i*uintptr(t.elemsize))
+				if t.indirectelem() {
+					e = *((*unsafe.Pointer)(e))
+				}
+				return e, true
+			}
+		}
+	}
+	return unsafe.Pointer(&zeroVal[0]), false
+}
+```
+
+
 
 ## （4）扩容和迁移
 
