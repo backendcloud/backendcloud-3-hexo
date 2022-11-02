@@ -167,30 +167,25 @@ golang的map之所以效率高，得益于下面的几处巧妙设计：
 
 ```go
 func mapaccess2(t *maptype, h *hmap, key unsafe.Pointer) (unsafe.Pointer, bool) {
-	if raceenabled && h != nil {
-		callerpc := getcallerpc()
-		pc := abi.FuncPCABIInternal(mapaccess2)
-		racereadpc(unsafe.Pointer(h), callerpc, pc)
-		raceReadObjectPC(t.key, key, callerpc, pc)
-	}
-	if msanenabled && h != nil {
-		msanread(key, t.key.size)
-	}
-	if asanenabled && h != nil {
-		asanread(key, t.key.size)
-	}
+	...
+    // hmap为nil或map的length为0，返回未找到key
 	if h == nil || h.count == 0 {
 		if t.hashMightPanic() {
 			t.hasher(key, 0) // see issue 23734
 		}
 		return unsafe.Pointer(&zeroVal[0]), false
 	}
+    // 读写冲突
 	if h.flags&hashWriting != 0 {
 		fatal("concurrent map read and map write")
 	}
+    // 不同的key类型运用不同的hash算法，并加入hash因子，算出key对应的hash值
 	hash := t.hasher(key, uintptr(h.hash0))
+    // 根据B值算出mask，就是B等于几就是几个1
 	m := bucketMask(h.B)
+    // 根据key的hash的后B位作为buckets数组的index，寻址到桶b
 	b := (*bmap)(add(h.buckets, (hash&m)*uintptr(t.bucketsize)))
+    // 若存在biggerSizeGrow扩容的旧桶数组，则将m去掉一个1，并在旧桶中寻址
 	if c := h.oldbuckets; c != nil {
 		if !h.sameSizeGrow() {
 			// There used to be half as many buckets; mask down one more power of two.
@@ -203,14 +198,19 @@ func mapaccess2(t *maptype, h *hmap, key unsafe.Pointer) (unsafe.Pointer, bool) 
 	}
 	top := tophash(hash)
 bucketloop:
+    // for ; b != nil; b = b.overflow(t) 是链式查找（为了解决hash碰撞，桶结构体加入了链表）
 	for ; b != nil; b = b.overflow(t) {
 		for i := uintptr(0); i < bucketCnt; i++ {
+            // b.tophash[i] != top 对比key的tophash是否存在
 			if b.tophash[i] != top {
+                // 优化寻址，tophash数组复用了标志位，一旦检测到emptyRest则跳出外层大循环，返回key在map中未找到
 				if b.tophash[i] == emptyRest {
 					break bucketloop
 				}
+                // key的tophash和tophash数组中的某个元素不相等，则进入小循环的下一个index的对比，或者进入大循环的下一个桶链表的查找
 				continue
 			}
+            // 走到这一步，就是tophash已匹配，取出桶结构体的key数组对应的index对应的值，并对比两个key是否相等，若相等则返回桶结构体的value数组对应的index对应的值
 			k := add(unsafe.Pointer(b), dataOffset+i*uintptr(t.keysize))
 			if t.indirectkey() {
 				k = *((*unsafe.Pointer)(k))
@@ -234,9 +234,9 @@ bucketloop:
 
 扩容分为sameSizeGrow和biggerSizeGrow：
 
-### sameSizeGrow本质不是扩容，而是重新整理，减少链表，提高寻址效率
+### sameSizeGrow本质不是扩容，桶数组的length不变，而是重新整理，减少链表，提高寻址效率
 
-### biggerSizeGrow是桶数组不够用了而进行的扩容
+### biggerSizeGrow是桶数组不够用了而进行的扩容，桶数组的length是原来的2倍
 
 ![](/images/golang-map/image-20221102143237849.png)
 
