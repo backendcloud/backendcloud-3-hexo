@@ -189,3 +189,36 @@ func SetName2(s *MyStruct,name string){
 虽然看到不少人不少地方这么用，但还是不推荐。一方面this，self是面向对象的典型标识符，golang准确是面向对象风格的，不用这些，可以做很好的区分。另一方面，上面提到过，在golang中方法接收器其实是方法的第一个参数。若不是一般写法，就是方法接收器不是结构体指针，而是结构体的情形，那么不会对类中成员变量做任何修改，和this，self的意义完全不符，这时候用this，self会带到沟里去。
 
 推荐做法就是用小写的单个缩写字母。
+
+# 结构体的声明和初始化时候的内存分配问题
+
+前面提到，在Go语言中，除了map、slice和chan，所有类型（包括struct）都是值传递的。map在文章{% post_link golang-map %}提到：
+
+```go
+	// var countryCapitalMap map[string]string
+	// //countryCapitalMap = make(map[string]string)
+	// countryCapitalMap [ "France" ] = "巴黎"
+	// 若不加中间这句make，会报错
+```
+
+因为map是指针传递，不是值传递，var countryCapitalMap map[string]string，后直接新增key是会panic的，是因为还没有为这个map分配内存空间，加入key/value会panic。
+
+同理，结构体是值传递，但值传递的类型的指针是指针传递的，所以结构体指针是指针传递的。所以：
+
+```go
+var m1 Member
+m1.name = "小明" //正确用法，结构体字段初始化对应类型的零值
+
+var m1 *Member
+m1.name = "小明"//错误用法，未初始化,m1为nil
+
+m1 = &Member{}
+m1.name = "小明"//初始化后，结构体指针指向某个结构体地址，才能访问字段，为字段赋值。 
+```
+
+另外，使用Go内置new()函数，可以分配内存来初始化结构休，并返回分配的内存指针，因为已经初始化了，所以可以直接访问字段。
+
+```go
+var m2 = new(Member)
+m2.name = "小红"
+```
