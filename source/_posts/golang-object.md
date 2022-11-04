@@ -201,7 +201,7 @@ func SetName2(s *MyStruct,name string){
 	// 若不加中间这句make，会报错
 ```
 
-因为map是指针传递，不是值传递，var countryCapitalMap map[string]string，后直接新增key是会panic的，是因为还没有为这个map分配内存空间，加入key/value会panic。
+因为map是指针传递，不是值传递，var countryCapitalMap map[string]string，后直接新增key是会panic的，是因为还没有为这个map分配内存空间，加入key/value会panic。因为map是指针传递的，这种写法仅仅是声明不会完成初始化，会有panic的问题；若是值传递，这样的写法，是声明的同时完成对应数据类型的零值的初始化，就不会有此类panic的问题。
 
 同理，结构体是值传递，但值传递的类型的指针是指针传递的，所以结构体指针是指针传递的。所以：
 
