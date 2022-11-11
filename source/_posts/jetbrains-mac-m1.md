@@ -39,6 +39,8 @@ Jetbrains 家的产品有一个很良心的地方，他会允许你试用 30 天
 
 
 
-> [于 2022.04.20 更新 Jetbrains 2022.1 正式版 破解方法 适用于全系列系统 mac m1/x86；windows；linux（centos/ubuntu）等](https://puffy-secure-2a8.notion.site/jetbrains-2022-1-windows-64-mac-m1-6dda5f1f079d41609eac7a467d7c19d4)
+> [于 2022.04.20 更新 Jetbrains 2022.1 正式版 破解方法 适用于全系列系统 mac m1/x86；windows；linux（centos/ubuntu）等](https://backendcloud.notion.site/jetbrains-2022-1-windows-64-mac-m1-mac-x86-linux-6682daee7d3a4659a4ba79561f7a508b)
 
-> [于 2022.08.09 更新 Jetbrains 2022.2 正式版 破解方法 适用于Jetbrains全家桶，适用于全平台 mac m1/x86；windows；linux（centos/ubuntu）等](https://puffy-secure-2a8.notion.site/jetbrains-2022-2-windows-64-mac-m1-mac-x86-linux-4320ae14f4474cf48ca291d5aa03a1be)
+> [于 2022.08.09 更新 Jetbrains 2022.2 正式版 破解方法 适用于Jetbrains全家桶，适用于全平台 mac m1/x86；windows；linux（centos/ubuntu）等](https://backendcloud.notion.site/jetbrains-2022-2-windows-64-mac-m1-mac-x86-linux-1091781f62f542b7af52dc80416a09d3)
+
+> 2022.3 已出，上面的2022.2的破解方式同样适用
