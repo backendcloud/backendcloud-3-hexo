@@ -37,6 +37,10 @@ runc 是一个有名的 low-level OCI rumtime, 他们就开发了一个 crun . p
 
 众所周知, golang 是容器生态的主要语言, podman 也是 go 写的,但是在 podman 4 的版本中, podman 增加了非 CNI 的网络栈支持, 这几个工具是 netavark 和 aardvark-dns, 这两个工具是 rust 写的, 而且还有 youki 这个 rust 写的 low-level OCI runtime, 不知道将来某一天 podman 会不会默认使用 youki , 还有好几个 rust 写的容器技术相关的应用和库, 这是要与 golang 分天下的节奏。
 
+Rust 将在云原生领域大放异彩了。目前来看，很有可能和Golang相互配合，Rust负责底层部分，Go负责中间部分，共同服务上层各种语言的应用。
+
+比如要轻量场景可替换kvm，qemu的轻量vmm中，rust也有很多新兴开源项目：比如google的crosvm和基于crosvm的亚马逊的Firecracker，Rust-vmm项目以及基于Rust-vmm的Intel的cloud-hypervisor。
+
 ## 区块链
 Rust已完全取代Golang在区块链的地位，成为首选语言。
 
