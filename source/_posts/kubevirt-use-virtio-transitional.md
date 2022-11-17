@@ -122,7 +122,7 @@ spec:
     spec:
       domain:
         devices:
-		  useVirtioTransitional: true
+          useVirtioTransitional: true
           disks:
             - name: containerdisk
               disk:

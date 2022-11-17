@@ -72,7 +72,7 @@ google的下一代全平台操作系统fuschia的前端是google自己的一套 
 
 前端原来是js和ts的天下，js是号称网页版的汇编，ts是完全兼容js的更高级的语言，js工具链都是js编写的。如今javascript的所有工具链快要完全被rust取代了。Rust 开始替换 Javascript 的 Web 生态系统的重要组成部分包括压缩（Terser）、编译（Babel）、格式化（Prettier）、打包（webpack）、代码检查（ESLint）、以及更多其他的库。Rust Is The Future of JavaScript Infrastructure. Node.js 的创始人推出了Rust语言的Deno项目（js/ts的运行时），想要替换node.js。前端两大发展方向：wasm和js/ts  的基础架构都被rust拿下。
 
-前端和桌面（windows/mac/linux）应用，rust的代表项目tuari现在也大有和flutter平分天下的趋势。
+前端和桌面应用（windows/mac/linux）的融合框架领域，rust的代表项目Tuari现在也大有和Flutter平分天下的趋势。
 
 ![](/images/rust-ecology/js.png)
 

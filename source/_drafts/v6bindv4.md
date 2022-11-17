@@ -18,3 +18,8 @@ Socket applications written with AF_INET6 address family allow Internet Protocol
 ::FFFF:192.1.1.1
 
 These addresses can be generated automatically by the getaddrinfo() API, when the specified host has only IPv4 addresses.
+
+这些地址包含一个嵌入式全局 IPv4地址。它们用于将 IPv4节点的地址表示为 IPv6地址，用于支持 IPv6并使用 AF _ INET6套接字的应用程序。这允许支持 IPv6的应用程序始终以 IPv6格式处理 IP 地址，而不管 TCP/IP 通信是通过 IPv4还是 IPv6网络进行的。双模式 TCP/IP 栈执行 IPv4映射的地址与本机 IPv4格式之间的转换。IPv4映射的地址具有以下格式:
+
+前80位全0，中间16位全1，后面32位是ipv4地址，例如 `::FFFF:129.144.52.38`
+
