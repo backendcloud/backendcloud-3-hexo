@@ -19,11 +19,11 @@ Kubernetes的资源配额（Resource Quotas）是通过namespace实现的，可�
 
 GKE早已实现上述需求。以下内容出自GKE的帮助文档。
 
+```bash
 使用分层资源配额，设置配额。设置 HRQ (Hierarchical Resource Quotas 层级资源配额) 与设置常规 ResourceQuota 相同，但具有不同的 apiVersion 和 kind；因此，您可以像在 ResourceQuota 中一样在 spec.hard 字段中设置资源限制。
 
 假设有一个名为 team-a 的团队拥有一个名为 service-a 的服务，并且有一个名为 team-b 的子团队，三者均由分层命名空间表示，如下所示：
 
-```bash
 kubectl hns tree team-a
 输出：
 
@@ -82,7 +82,7 @@ kubectl create configmap config-2 --from-literal key=value -n team-a
 Error from server (Forbidden): admission webhook "resourcesquotasstatus.hierarchycontroller.configmanagement.gke.io" denied the request: exceeded hierarchical quota in namespace "team-a": "team-a-hrq", requested: configmaps=1, used: configmaps=1, limited: configmaps=1
 ```
 
-# HRQ 开源社区的实现
+# HRQ 的开源实现
 
 Kubernetes SIG（特别兴趣小组）下的子项目：多租户项目 下孵化毕业的的 HNC（Hierarchical Namespace Controller） 项目 最近正在把 GKE 的 HRQ 功能 引入HNC项目，目前还在进行中。
 

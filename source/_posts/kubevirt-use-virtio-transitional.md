@@ -28,17 +28,20 @@ Authorization not available. Check if polkit service is running or see debug mes
 
 看来下libvirt官网 https://libvirt.org/ 对virtio几种模式的说明：
 
-```bash
-Virtio transitional devices
+**Virtio transitional devices**
+
 Since 5.2.0 , some of QEMU's virtio devices, when used with PCI/PCIe machine types, accept the following model values:
 
-virtio-transitional
+**virtio-transitional**
+
 This device can work both with virtio 0.9 and virtio 1.0 guest drivers, so it's the best choice when compatibility with older guest operating systems is desired. libvirt will plug the device into a conventional PCI slot.
 
-virtio-non-transitional
+**virtio-non-transitional**
+
 This device can only work with virtio 1.0 guest drivers, and it's the recommended option unless compatibility with older guest operating systems is necessary. libvirt will plug the device into either a PCI Express slot or a conventional PCI slot based on the machine type, resulting in a more optimized PCI topology.
 
-virtio
+**virtio**
+
 This device will work like a virtio-non-transitional device when plugged into a PCI Express slot, and like a virtio-transitional device otherwise; libvirt will pick one or the other based on the machine type. This is the best choice when compatibility with libvirt versions older than 5.2.0 is necessary, but it's otherwise not recommended to use it.
 
 While the information outlined above applies to most virtio devices, there are a few exceptions:
@@ -48,7 +51,6 @@ for SCSI controllers, there is no virtio model available due to historical reaso
 some devices, such as GPUs and input devices (keyboard, tablet and mouse), are only defined in the virtio 1.0 spec and as such don't have a transitional variant: the only accepted model is virtio, which will result in a non-transitional device.
 
 For more details see the qemu patch posting and the virtio-1.0 spec.
-```
 
 查看了kubevirt的源码，从 kubevirt\staging\src\kubevirt.io\api\core\v1\schema.go Devices结构体 得知：
 
