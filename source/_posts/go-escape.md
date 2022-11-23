@@ -1,5 +1,5 @@
 ---
-title: WIProcess - Golang的逃逸分析和C以及Rust的此类问题的处理对比
+title: Golang的逃逸分析和C以及Rust的此类问题的处理对比
 readmore: false
 date: 2022-11-23 12:43:35
 categories: 云原生
@@ -9,7 +9,7 @@ tags:
 # Golang的逃逸分析
 
 首先抛出几个常见的问题：
-1. golang中选用传指针还是传值？既然传指针效率高，那是不是只要不涉及复制需求的情况下每次都采用指针传递？
+1. 用golang编程时是选用传指针还是传值？既然传指针效率高，那是不是只要不涉及复制需求的情况下每次都采用指针传递？
 2. Go 语言的局部变量分配在栈上还是堆上？
 
 首先回答第2个问题，分配在栈上还是堆上是由编译器决定的，编译器会做逃逸分析(escape analysis)，当发现变量的作用域没有超出函数范围，就可以在栈上，反之则必须分配在堆上。
@@ -107,7 +107,7 @@ Increase() 返回值是一个闭包函数，该闭包函数访问了外部变量
 
 # c和Rust以及golang 对 dangling reference 处理的对比
 
-篇外话：c/rust/go/java这四门语言是云原生绕不开的四门语言。大量的业务层的应用，监控，中间件，后台管理后端是java开发的。云原生基础架构的中间层是golang开发的，云原生基础架构的底层，如运行时，等等是rust开发，且越来越多的底层的golang开发的组件和c开发的组件正在被rust重写和代替。
+篇外话：c/rust/go/java这四门语言是云原生绕不开的四门语言。大量的业务层的应用，监控，中间件，后台管理后端是java开发的。云原生基础架构的中间层是golang开发的，云原生基础架构的底层，如运行时，等等是rust开发，且越来越多的偏向底层组件，原来golang或c开发的正在被rust重写和代替。
 
 总结下，云原生领域中，c和Rust负责底层部分，Go负责中间部分，共同服务上层各种语言的应用（java/go/ts/js）。且目前的趋势是对性能要求高的底层和中间部分，比如操作系统，运行时，vmm等等原来c/go开发的正在被rust重写。rust是具备接近c的性能开销，但远高于c的开发效率，且天生适合review的现代语言。
 
@@ -127,6 +127,10 @@ int *func(void)
     return &num;
 }
 ```
+
+Go就不会Dangling pointer，因为专门设计了内存逃逸（本篇上半部分讲到）。
+
+C语言的手动管理内存方式，除了Dangling pointer问题，还有头疼的内存泄露问题。
 
 Rust 如何处理dangling reference。一句话简单说，在 Rust 中，编译器保证引用永远不会是dangling reference。
 
@@ -177,3 +181,91 @@ fn create_dangling_reference() -> String {
 在这种情况下，所有权被正确转移，没有任何东西被解除分配。
 
 总结：作为开发人员，我们不需要担心 Rust 中的dangling reference。编译器负责避免dangling reference。
+
+Rust除了通过严格的语法和编译器的方式实现了golang中gc逃逸分析机制才能避免的dangling reference问题。实现了golang中gc对内存的管理，又没有c语言的内存问题；即通过对内存的控制实现了c语言的高性能，又没有golang中gc的性能消耗问题。再举个例子：
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+    let s2 = s1;
+    println!("{}", s1)
+}
+```
+
+上面这段rust程序会报错：
+
+```bash
+error[E0382]: borrow of moved value: `s1`
+ --> src\main.rs:4:20
+  |
+2 |     let s1 = String::from("hello");
+  |         -- move occurs because `s1` has type `String`, which does not implement the `Copy` trait
+3 |     let s2 = s1;
+  |              -- value moved here
+4 |     println!("{}", s1)
+  |                    ^^ value borrowed here after move
+  |
+  = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+```
+
+String和大多数语言一样是存在堆上的，String的底层相当于一个结构体（存放在栈上，存放在栈上的该结构体只有指针，长度，容量这几个属性），ptr是指向堆内存的首地址，内存结构如下图：
+
+```rust
+    let s2 = s1;
+```
+
+一旦执行了上面这一句，因为一块内存只能有一个所属者，所以这行代码就把上图右边内存所属从s1移动到了s2身上（MOVE），之后s1就相当于C语言中的dangling reference了，在编译的时候就会报错。
+
+> 若将上面程序的String::from换成int，就不会报错。是因为所有固定size（编译时能确定多少字节）的变量（可能除数组）都分配在栈上，不会如String::from一样分配在堆上。要想上面的程序不报错，可以将String::from复制一份（COPY）。如下：
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+    let s2 = s1.clone();
+    println!("{}， {}", s1, s2)
+}
+```
+
+举一反三，下面的程序是不会报错的：
+
+```rust
+fn main() {
+    let s1: String = String::from("hello");
+    let s2: &String = &s1;
+    println!("{}， {}", s1, s2)
+}
+```
+
+不会报错的原因是 不涉及一块内存只能有一个所属者，并没有发生内存所属从s1移动到了s2身上（MOVE）。s2只是在内存的栈空间另开一各空间用于存放指向s1变量地址的指针。这样s1和s2都能读这块内存了，Rust是允许这种情况的，这种情况叫Borrowing。因为是只读，Rust才允许，不仅两个变量允许，两个以上的只读变量也是允许的。若可写，比如s1和s2都能写，Rust就不允许了。如下：
+
+```rust
+fn main() {
+    let s1= String::from("hello");
+    let s2 = &s1;
+    let s3 = &s1;
+    println!("{}， {}, {}", s1, s2, s3)
+}
+```
+
+上面的一段代码是三个只读变量，不会报错。下面的有读有写的就会报错了：
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+    let r1 = &s;
+    let r3 = &mut s; // 挂掉
+    println!("{} and {}", r1, r3);
+}
+```
+
+```bash
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+ --> src\main.rs:4:14
+  |
+3 |     let r1 = &s;
+  |              -- immutable borrow occurs here
+4 |     let r3 = &mut s; // 挂掉
+  |              ^^^^^^ mutable borrow occurs here
+5 |     println!("{} and {}", r1, r3);
+  |                           -- immutable borrow later used here
+```
