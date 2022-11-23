@@ -84,7 +84,7 @@ Error from server (Forbidden): admission webhook "resourcesquotasstatus.hierarch
 
 # HRQ 的开源实现
 
-Kubernetes SIG（特别兴趣小组）下的子项目：多租户项目 下孵化毕业的的 HNC（Hierarchical Namespace Controller） 项目 最近正在把 GKE 的 HRQ 功能 引入HNC项目，目前还在进行中。
+Kubernetes SIG（特别兴趣小组）下的子项目：多租户项目 下孵化毕业的子项目： HNC（Hierarchical Namespace Controller）项目 最近正在把 GKE 的 HRQ 功能 引入HNC项目，目前还在进行中。
 
 > 这是个相对简单却很有需求的功能，且复杂度和难度对于新手特别友好，适合拿来作为K8S功能开发的学习入门。
 
