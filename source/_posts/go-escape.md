@@ -182,7 +182,7 @@ fn create_dangling_reference() -> String {
 
 总结：作为开发人员，我们不需要担心 Rust 中的dangling reference。编译器负责避免dangling reference。
 
-Rust除了通过严格的语法和编译器的方式实现了golang中gc逃逸分析机制才能避免的dangling reference问题。实现了golang中gc对内存的管理，又没有c语言的内存问题；即通过对内存的控制实现了c语言的高性能，又没有golang中gc的性能消耗问题。再举个例子：
+Rust除了通过严格的语法和编译器的方式实现了golang中gc逃逸分析机制才能避免的dangling reference问题。实现了golang中gc对内存的管理，又没有c语言的内存问题；通过对内存的控制实现了c语言的高性能，又没有golang中gc的性能消耗问题。再举个例子：
 
 ```rust
 fn main() {
