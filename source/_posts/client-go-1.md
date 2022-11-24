@@ -1,5 +1,5 @@
 ---
-title: client-go 源码分析（1） - discover：discoverclient获取所有的gv和gvr
+title: client-go 源码分析（1） - discovery模块：discoveryclient获取所有的gv和gvr
 readmore: true
 date: 2022-11-24 12:21:32
 categories: 云原生
@@ -7,10 +7,10 @@ tags:
 - client-go
 ---
 
-本篇是client-go源码分析的第一篇，client-go是从事Kubernetes开发必研究的项目，client-go之所以总要，主要在以下几个方面：
-* 调用Kubernetes API的唯一的golang库
-* 在Kubernetes源码中，如果Kubernetes的某个组件，需要List/Get Kubernetes中的Object，在绝大多 数情况下，会直接使用Informer实例中的Lister()方法（该方法包含 了 Get 和 List 方法），而很少直接请求Kubernetes API。
-* 用operator sdk开发自己的crd和custom controller开发，必须要用到的golang库，因为kubernetes的友好的架构设计，只要是基本kubernetes二次开发的项目，基本都要开发特有的crd和controller。
+本篇是client-go源码分析的第一篇，client-go是从事Kubernetes开发必研究的项目，client-go之所以重要，主要在以下几个方面：
+* 是调用Kubernetes API的唯一的golang官方库。
+* 在Kubernetes源码中，如果Kubernetes的某个组件，需要List/Get Kubernetes中的Object，在绝大多 数情况下，会直接使用client-go中的Informer实例中的Lister()方法（该方法包含 了 Get 和 List 方法），而很少直接请求Kubernetes API。
+* 用operator sdk开发自己的crd和custom controller开发，必须要用到的golang库，因为kubernetes易扩展的架构设计，只要是基于kubernetes二次开发的项目，基本都要开发自己定制的crd和controller。
 
 
 本篇从相对简单的discovery包开始：
@@ -20,15 +20,11 @@ tags:
 
 discovery包的主要作用就是提供当前k8s集群支持哪些资源以及版本信息。
 
-Kubernetes API Server暴露出/api和/apis接口。DiscoveryClient通过RESTClient分别请求/api和/apis接口，从而获取Kubernetes API Server所支持的资源组、资源版信息。这个是通过ServerGroups函数实现的
-
-有了group, version信息后，但是还是不够，因为还没有具体到资源。
-
-ServerGroupsAndResources 就获得了所有的资源信息（所有的GVR资源信息），而在Resource资源的定义中，会定义好该资源支持哪些操作：list, delelte ,get等等。
+Kubernetes API Server暴露出/api和/apis接口。DiscoveryClient通过RESTClient分别请求/api和/apis接口，从而获取Kubernetes API Server所支持的资源组、资源版信息。这个是通过ServerGroups函数实现的，有了group, version信息后，但是还是不够，因为还没有具体到资源。ServerGroupsAndResources 就获得了所有的资源信息（所有的GVR资源信息），而在Resource资源的定义中，会定义好该资源支持哪些操作：list, delelte ,get等等。
 
 所以kubectl中就使用discovery做了资源的校验。获取所有资源的版本信息，以及支持的操作。就可以判断客户端当前操作是否合理。
 
-先上调用discover包的实例：
+先上调用discovery包获取所有gv和gvr信息的代码：
 
 ```go
 package main
@@ -203,7 +199,7 @@ func (d *DiscoveryClient) ServerGroupsAndResources() ([]*metav1.APIGroup, []*met
 }
 ```
 
-withRetries 函数 多次尝试执行 函数 ServerGroupsAndResources(d DiscoveryInterface) ([]*metav1.APIGroup, []*metav1.APIResourceList, error) ，该函数的形式参数是interface，用到了golang中的多态。因为实参是结构体DiscoveryClient，随意多态会调用DiscoveryClient的方法。
+withRetries 函数 多次尝试执行 函数 ServerGroupsAndResources(d DiscoveryInterface) ([]*metav1.APIGroup, []*metav1.APIResourceList, error) ，该函数的形式参数是interface，用到了golang中的多态。因为实参是结构体DiscoveryClient，所以多态会调用DiscoveryClient下对应的具体方法。
 
 ```go
 func ServerGroupsAndResources(d DiscoveryInterface) ([]*metav1.APIGroup, []*metav1.APIResourceList, error) {
