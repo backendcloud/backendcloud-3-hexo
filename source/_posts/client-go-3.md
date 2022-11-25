@@ -90,7 +90,7 @@ Process finished with the exit code 0
 main方法分为以下几个步骤：
 step 1 加载kubeconfig文件，生成config对象，并充实config对象属性内容。
 step 2 用config对象，生成RESTClient对象。
-step 3 RESTClient客户端去查询default namespace下所有pod
+step 3 RESTClient客户端去查询default namespace下所有pod。
 step 4 并打印结果。
 
 下面这条语句是上面的main方法最核心的语句，rest请求也是该语句发出的，下面将该条语句分4步（step 3-1，3-2，3-3，3-4）分解说明。
