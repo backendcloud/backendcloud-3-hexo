@@ -16,7 +16,7 @@ client-go的客户端对象有4个，作用各有不同：
 
 本篇的主题restclient，是其他3个的调用对象，关系如下：
 
-![](/iimages/client-go-3/2022-11-25-14-27-58.png)
+![](/images/client-go-3/2022-11-25-14-27-58.png)
 
 下面是一个调用restclient，查询default namespace下所有pod的例子：
 
@@ -388,5 +388,32 @@ type Result struct {
 step 3-4 Into(result) 将Result结构体解码成类型为&corev1.PodList{}的变量result中去。
 
 ```go
-func (r Result) Into(obj runtime.Object) error
+func (r Result) Into(obj runtime.Object) error {
+	if r.err != nil {
+		// Check whether the result has a Status object in the body and prefer that.
+		return r.Error()
+	}
+	if r.decoder == nil {
+		return fmt.Errorf("serializer for %s doesn't exist", r.contentType)
+	}
+	if len(r.body) == 0 {
+		return fmt.Errorf("0-length response with status code: %d and content type: %s",
+			r.statusCode, r.contentType)
+	}
+
+	out, _, err := r.decoder.Decode(r.body, nil, obj)
+	if err != nil || out == obj {
+		return err
+	}
+	// if a different object is returned, see if it is Status and avoid double decoding
+	// the object.
+	switch t := out.(type) {
+	case *metav1.Status:
+		// any status besides StatusSuccess is considered an error.
+		if t.Status != metav1.StatusSuccess {
+			return errors.FromObject(t)
+		}
+	}
+	return nil
+}
 ```
