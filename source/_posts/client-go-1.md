@@ -1,6 +1,6 @@
 ---
 title: client-go 源码分析（1） - discovery模块：discoveryclient获取所有的gv和gvr
-readmore: true
+readmore: false
 date: 2022-11-24 12:21:32
 categories: 云原生
 tags:
