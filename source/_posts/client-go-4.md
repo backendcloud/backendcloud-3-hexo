@@ -159,3 +159,54 @@ func (c *pods) List(ctx context.Context, opts metav1.ListOptions) (result *v1.Po
 ```
 
 实际上 func (c *pods) List(ctx context.Context, opts metav1.ListOptions) (result *v1.PodList, err error) 方法就是调用上面讲到的 restclient 客户端。 参考 {% post_link client-go-3 %}
+
+上面是clientset查询pod list的，下面的删除，创建，都是调用的restclient客户端实现的：
+
+```go
+func (c *pods) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
+	return c.client.Delete().
+		Namespace(c.ns).
+		Resource("pods").
+		Name(name).
+		Body(&opts).
+		Do(ctx).
+		Error()
+}
+```
+
+```go
+func (c *pods) Create(ctx context.Context, pod *v1.Pod, opts metav1.CreateOptions) (result *v1.Pod, err error) {
+	result = &v1.Pod{}
+	err = c.client.Post().
+		Namespace(c.ns).
+		Resource("pods").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(pod).
+		Do(ctx).
+		Into(result)
+	return
+}
+```
+
+```go
+type Pod struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	// Specification of the desired behavior of the pod.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+	// +optional
+	Spec PodSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+
+	// Most recently observed status of the pod.
+	// This data may not be up to date.
+	// Populated by the system.
+	// Read-only.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+	// +optional
+	Status PodStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+}
+```
