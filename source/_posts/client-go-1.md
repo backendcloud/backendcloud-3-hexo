@@ -8,7 +8,7 @@ tags:
 ---
 
 本篇是client-go源码分析的第一篇，client-go是从事Kubernetes开发必研究的项目，client-go之所以重要，主要在以下几个方面：
-* 是调用Kubernetes API的唯一的golang官方库。
+* 是调用Kubernetes API的唯一的golang官方库。比如常用到的命令行工具kubectl项目就是通过client-go和Kubernetes API打交道。
 * 在Kubernetes源码中，如果Kubernetes的某个组件，需要List/Get Kubernetes中的Object，在绝大多 数情况下，会直接使用client-go中的Informer实例中的Lister()方法（该方法包含 了 Get 和 List 方法），而很少直接请求Kubernetes API。
 * 用operator sdk开发自己的crd和custom controller开发，必须要用到的golang库，因为kubernetes易扩展的架构设计，只要是基于kubernetes二次开发的项目，基本都要开发自己定制的crd和controller。
 
