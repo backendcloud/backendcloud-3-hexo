@@ -9,15 +9,13 @@ tags:
 
 Spring Boot 3.0 四天前（2022年11月24日）发布了，变化很大，基于spring6.0，spring6.0说是Spring下一个十年的新开端。
 
-https://start.spring.io/
-
 
 # JAVA 17
 
-Spring Boot3 版本最低支持 Java17，Springboot 2.7.3 最常用的jdk版本是Java 8，现在直接从8跳到了17，且强制要求，17以下的版本不再支持。这样可以使用17或17以上的Java语言的新特性。
+Spring Boot 3.0 版本最低支持 Java17，Springboot 2.7.3 最常用的jdk版本是Java 8，现在直接从8跳到了17，且强制要求，17以下的版本不再支持。这样可以使用17或17以上的Java语言的新特性。
 
 
-# Spring Native 云原生
+# Spring Native
 
 Spring Native 也是升级的一个重大特性，支持使用 GraalVM 将 Spring 的应用程序编译成本地可执行的镜像文件，可以显著提升启动速度、峰值性能以及减少内存使用。
 
@@ -28,13 +26,15 @@ Spring Native 也是升级的一个重大特性，支持使用 GraalVM 将 Sprin
 
 JavaEE 改名之后就叫 JakartaEE，比如我们之前的javax.servlet包现在就叫jakarta.servlet。也因此，代码中所有使用到比如 HttpServletRequest 对象的 import 都需要修改。
 
+https://start.spring.io/
+
 ```java
 import javax.servlet.http.HttpServletRequest;
 // 改为
 import jakarta.servlet.http.HttpServletRequest;
 ```
 
-```xml
+```XML
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
