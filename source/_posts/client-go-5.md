@@ -1,9 +1,10 @@
 ---
-title: client-go-5
+title: WIProcess-client-go-5
 readmore: true
-date: 2022-11-28 11:06:20
-categories:
+date: 2022-11-28 18:06:20
+categories: 云原生
 tags:
+- client-go
 ---
 
 
