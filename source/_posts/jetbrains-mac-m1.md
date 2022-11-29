@@ -43,4 +43,4 @@ Jetbrains 家的产品有一个很良心的地方，他会允许你试用 30 天
 
 > [于 2022.08.09 更新 Jetbrains 2022.2 正式版 破解方法 适用于Jetbrains全家桶，适用于全平台 mac m1/x86；windows；linux（centos/ubuntu）等](https://backendcloud.notion.site/jetbrains-2022-2-windows-64-mac-m1-mac-x86-linux-1091781f62f542b7af52dc80416a09d3)
 
-> 2022.3 已出，上面的2022.2的破解方式同样适用
+截至2022.11.29，部分IDE还是2022.2，部分是2022.3，所有目前最新版均适用于 2022.08.09 更新 Jetbrains 2022.2 正式版 破解方法。

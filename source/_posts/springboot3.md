@@ -1,5 +1,5 @@
 ---
-title: WIProcess-Spring Boot 3.0 hello-world
+title: Spring Boot 3.0 hello-world
 readmore: false
 date: 2022-11-29 12:33:44
 categories: 云原生
@@ -109,8 +109,37 @@ OpenJDK Runtime Environment GraalVM CE 22.3.0 (build 17.0.5+8-jvmci-22.3-b08)
 OpenJDK 64-Bit Server VM GraalVM CE 22.3.0 (build 17.0.5+8-jvmci-22.3-b08, mixed mode, sharing)
 ```
 
+在最小 Spring Boot 项目源码的基础上了个简单的controller。
+
+![](/images/springboot3/2022-11-28-16-35-09.png)
+
+```java
+package com.example.demo.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+public class QuickStartController {
+    @RequestMapping("/test")
+    @ResponseBody
+    public String test(){
+        return "springboot 3.0 访问测试";
+    }
+
+    @RequestMapping("/hello")
+    @ResponseBody
+    public String home(){
+        return "Hello World from springboot 3.0!";
+    }
+}
+```
+
+用java17 graalvm编译运行demo项目。
+
 ```bash
-C:\sdk\graalvm-ce-java17-22.3.0\bin\java.exe -XX:TieredStopAtLevel=1 -Dspring.output.ansi.enabled=always -Dcom.sun.management.jmxremote -Dspring.jmx.enabled=true -Dspring.liveBeansView.mbeanDomain -Dspring.application.admin.enabled=true "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2022.2\lib\idea_rt.jar=4655:C:\Program Files\JetBrains\IntelliJ IDEA 2022.2\bin" -Dfile.encoding=UTF-8 -classpath C:\Users\hanwei\Documents\JavaProject\demo-maven\target\classes;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter\3.0.0\spring-boot-starter-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot\3.0.0\spring-boot-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-context\6.0.2\spring-context-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.0.0\spring-boot-autoconfigure-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.0.0\spring-boot-starter-logging-3.0.0.jar;C:\Users\hanwei\.m2\repository\ch\qos\logback\logback-classic\1.4.5\logback-classic-1.4.5.jar;C:\Users\hanwei\.m2\repository\ch\qos\logback\logback-core\1.4.5\logback-core-1.4.5.jar;C:\Users\hanwei\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.19.0\log4j-to-slf4j-2.19.0.jar;C:\Users\hanwei\.m2\repository\org\apache\logging\log4j\log4j-api\2.19.0\log4j-api-2.19.0.jar;C:\Users\hanwei\.m2\repository\org\slf4j\jul-to-slf4j\2.0.4\jul-to-slf4j-2.0.4.jar;C:\Users\hanwei\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-core\6.0.2\spring-core-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-jcl\6.0.2\spring-jcl-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\yaml\snakeyaml\1.33\snakeyaml-1.33.jar;C:\Users\hanwei\.m2\repository\org\slf4j\slf4j-api\2.0.4\slf4j-api-2.0.4.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.0.0\spring-boot-starter-web-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.0.0\spring-boot-starter-json-3.0.0.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.14.1\jackson-databind-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.14.1\jackson-annotations-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.14.1\jackson-core-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.14.1\jackson-datatype-jdk8-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.14.1\jackson-datatype-jsr310-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.14.1\jackson-module-parameter-names-2.14.1.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.0.0\spring-boot-starter-tomcat-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.1\tomcat-embed-core-10.1.1.jar;C:\Users\hanwei\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.1\tomcat-embed-el-10.1.1.jar;C:\Users\hanwei\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.1\tomcat-embed-websocket-10.1.1.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-web\6.0.2\spring-web-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-beans\6.0.2\spring-beans-6.0.2.jar;C:\Users\hanwei\.m2\repository\io\micrometer\micrometer-observation\1.10.2\micrometer-observation-1.10.2.jar;C:\Users\hanwei\.m2\repository\io\micrometer\micrometer-commons\1.10.2\micrometer-commons-1.10.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-webmvc\6.0.2\spring-webmvc-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-aop\6.0.2\spring-aop-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-expression\6.0.2\spring-expression-6.0.2.jar com.example.demo.DemoApplication
+C:\sdk\graalvm-ce-java17-22.3.0\bin\java.exe -XX:TieredStopAtLevel=1 -Dspring.output.ansi.enabled=always -Dcom.sun.management.jmxremote -Dspring.jmx.enabled=true -Dspring.liveBeansView.mbeanDomain -Dspring.application.admin.enabled=true "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2022.2\lib\idea_rt.jar=9872:C:\Program Files\JetBrains\IntelliJ IDEA 2022.2\bin" -Dfile.encoding=UTF-8 -classpath C:\Users\hanwei\Documents\JavaProject\demo-maven\target\classes;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter\3.0.0\spring-boot-starter-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot\3.0.0\spring-boot-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-context\6.0.2\spring-context-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.0.0\spring-boot-autoconfigure-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.0.0\spring-boot-starter-logging-3.0.0.jar;C:\Users\hanwei\.m2\repository\ch\qos\logback\logback-classic\1.4.5\logback-classic-1.4.5.jar;C:\Users\hanwei\.m2\repository\ch\qos\logback\logback-core\1.4.5\logback-core-1.4.5.jar;C:\Users\hanwei\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.19.0\log4j-to-slf4j-2.19.0.jar;C:\Users\hanwei\.m2\repository\org\apache\logging\log4j\log4j-api\2.19.0\log4j-api-2.19.0.jar;C:\Users\hanwei\.m2\repository\org\slf4j\jul-to-slf4j\2.0.4\jul-to-slf4j-2.0.4.jar;C:\Users\hanwei\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-core\6.0.2\spring-core-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-jcl\6.0.2\spring-jcl-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\yaml\snakeyaml\1.33\snakeyaml-1.33.jar;C:\Users\hanwei\.m2\repository\org\slf4j\slf4j-api\2.0.4\slf4j-api-2.0.4.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.0.0\spring-boot-starter-web-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.0.0\spring-boot-starter-json-3.0.0.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.14.1\jackson-databind-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.14.1\jackson-annotations-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.14.1\jackson-core-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.14.1\jackson-datatype-jdk8-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.14.1\jackson-datatype-jsr310-2.14.1.jar;C:\Users\hanwei\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.14.1\jackson-module-parameter-names-2.14.1.jar;C:\Users\hanwei\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.0.0\spring-boot-starter-tomcat-3.0.0.jar;C:\Users\hanwei\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.1\tomcat-embed-core-10.1.1.jar;C:\Users\hanwei\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.1\tomcat-embed-el-10.1.1.jar;C:\Users\hanwei\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.1\tomcat-embed-websocket-10.1.1.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-web\6.0.2\spring-web-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-beans\6.0.2\spring-beans-6.0.2.jar;C:\Users\hanwei\.m2\repository\io\micrometer\micrometer-observation\1.10.2\micrometer-observation-1.10.2.jar;C:\Users\hanwei\.m2\repository\io\micrometer\micrometer-commons\1.10.2\micrometer-commons-1.10.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-webmvc\6.0.2\spring-webmvc-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-aop\6.0.2\spring-aop-6.0.2.jar;C:\Users\hanwei\.m2\repository\org\springframework\spring-expression\6.0.2\spring-expression-6.0.2.jar com.example.demo.DemoApplication
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -120,25 +149,24 @@ C:\sdk\graalvm-ce-java17-22.3.0\bin\java.exe -XX:TieredStopAtLevel=1 -Dspring.ou
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.0.0)
 
-2022-11-28T16:31:48.488+08:00  INFO 14684 --- [           main] com.example.demo.DemoApplication         : Starting DemoApplication using Java 17.0.5 with PID 14684 (C:\Users\hanwei\Documents\JavaProject\demo-maven\target\classes started by hanwei in C:\Users\hanwei\Documents\JavaProject\demo-maven)
-2022-11-28T16:31:48.491+08:00  INFO 14684 --- [           main] com.example.demo.DemoApplication         : No active profile set, falling back to 1 default profile: "default"
-2022-11-28T16:31:49.254+08:00  INFO 14684 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2022-11-28T16:31:49.263+08:00  INFO 14684 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2022-11-28T16:31:49.263+08:00  INFO 14684 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.1]
-2022-11-28T16:31:49.352+08:00  INFO 14684 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2022-11-28T16:31:49.352+08:00  INFO 14684 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 821 ms
-2022-11-28T16:31:49.656+08:00  INFO 14684 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2022-11-28T16:31:49.665+08:00  INFO 14684 --- [           main] com.example.demo.DemoApplication         : Started DemoApplication in 1.547 seconds (process running for 2.261)
-2022-11-28T16:31:59.271+08:00  INFO 14684 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-11-28T16:31:59.271+08:00  INFO 14684 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2022-11-28T16:31:59.271+08:00  INFO 14684 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2022-11-29T10:19:58.816+08:00  INFO 20116 --- [           main] com.example.demo.DemoApplication         : Starting DemoApplication using Java 17.0.5 with PID 20116 (C:\Users\hanwei\Documents\JavaProject\demo-maven\target\classes started by hanwei in C:\Users\hanwei\Documents\JavaProject\demo-maven)
+2022-11-29T10:19:58.818+08:00  INFO 20116 --- [           main] com.example.demo.DemoApplication         : No active profile set, falling back to 1 default profile: "default"
+2022-11-29T10:19:59.501+08:00  INFO 20116 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-11-29T10:19:59.510+08:00  INFO 20116 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-11-29T10:19:59.510+08:00  INFO 20116 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.1]
+2022-11-29T10:19:59.594+08:00  INFO 20116 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-11-29T10:19:59.594+08:00  INFO 20116 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 737 ms
+2022-11-29T10:19:59.866+08:00  INFO 20116 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-11-29T10:19:59.872+08:00  INFO 20116 --- [           main] com.example.demo.DemoApplication         : Started DemoApplication in 1.386 seconds (process running for 2.036)
 ```
 
-![](/images/springboot3/2022-11-28-17-18-57.png)
 
-![](/images/springboot3/2022-11-28-16-35-09.png)
+
+
 
 rest api测试ok。
+
+![](/images/springboot3/2022-11-28-17-18-57.png)
 
 ```bash
 http://localhost:8080/hello
@@ -170,13 +198,16 @@ springboot 3.0 访问测试
 Response code: 200; Time: 17ms (17 ms); Content length: 19 bytes (19 B)
 ```
 
-打包二进制可执行文件需要执行 gu install native-image 命令。
+打包二进制可执行文件需要安装 native-image ， 执行 gu install native-image 命令。
 
-打包二进制可执行文件，执行出错，需要安装windows docker。
+打包二进制可执行文件，执行出错：
 
 ![](/images/springboot3/2022-11-29-09-11-08.png)
 
-需要开启docker服务，安装windows dockerdesktop。启动报错：
+上面报错，因为需要安装windows docker。
+
+
+官网下载安装windows dockerdesktop完成后。启动windows dockerdesktop报错（可能是因为 Windows 11 的默认网络配置被改了，正常不会报错，毕竟是很常用的工具）：
 
 ```bash
 stderr: 
@@ -213,25 +244,26 @@ stderr:
 netsh winsock reset
 ```
 
-执行该命令后记得重启！
+> 执行该命令后记得重启！
 
-重启后，windows 11下的dockerdesktop可以正常启动。
+重启后，Windows 11下的dockerdesktop可以正常启动。
 
 对于没有vmware需求，没有虚拟机vpn网络需求，仅仅开发springboot3.0，上面的方式已经可以实现目标。
 
 不过若有VMware需求，以及有VMware虚拟机共享宿主机vpn网络的需求，上面的重置命令慎用，会导致VMware里运行的虚拟机使用宿主机vpn网络出现问题，网络不通。
 
-并且由于windows下的dockerdesktop需要打开hyper-v或者WSL 2，一旦打开会影响VMware 嵌套虚拟化功能，导致嵌套虚拟化功能不可用。
+并且由于windows下的dockerdesktop需要打开hyper-v或者WSL 2，一旦打开会影响VMware 嵌套虚拟化功能，导致VMware下虚拟机的嵌套虚拟化功能不可用。
 
 不过也不用担心，只需要3步可以恢复：
 1. 卸载windows dockerdesktop
 2. 设置 - 应用 - 可选功能 - 更多windows功能，取消 WSL 2 和 hyper-v 的勾，重启电脑
 3. 卸载wmware，重新安装wmware。
 
+这种情况还是在沙盒环境里编译打包原生可执行文件，比如下面的用Linux环境。
 
 # Spring Boot 3.0 初步使用（Linux）
 
-上面windows跑通的项目放到Linux下，执行，报错：
+上面windows跑通的项目源码直接放到Linux下，执行，报错：
 
 ```bash
 [ERROR] Internal error: java.lang.RuntimeException: GraalVM native-image is missing from your system.
