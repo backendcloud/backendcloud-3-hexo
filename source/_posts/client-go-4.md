@@ -1,5 +1,5 @@
 ---
-title: client-go 源码分析（4） - ClientSet客户端
+title: client-go 源码分析（4） - ClientSet客户端 和 DynamicClient客户端。
 readmore: true
 date: 2022-11-25 20:24:49
 categories: 云原生
@@ -210,3 +210,107 @@ type Pod struct {
 	Status PodStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 ```
+
+DynamicClient是一种动态客户端，它可以对任意Kubernetes资源进行RESTful操作，包括CRD自定义资源。DynamicClient与ClientSet操作类似，同样封装了RESTClient，同样提供了Create、Update、Delete、Get、List、Watch、Patch等方法。DynamicClient与ClientSet最大的不同之处是，ClientSet仅能访问Kubernetes自带的资源（即客户端集合内的资源），不能直接访问CRD自定义资源。ClientSet需要预先实现每种Resource和Version的操作，其内部的数据都是结构化数据（即已知数据结构）。而DynamicClient内部实现了Unstructured，用于处理非结构化数据结构（即无法提前预知数据结构），这也是DynamicClient能够处理CRD自定义资源的关键。
+
+注意：
+* DynamicClient获得的数据都是一个object类型。存的时候是 unstructured
+* DynamicClient不是类型安全的，因此在访问CRD自定义资源时需要特别注意。例如，在操作指针不当的情况下可能会导致程序崩溃。
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	apiv1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/tools/clientcmd"
+)
+
+func main() {
+	// 加载kubeconfig文件，生成config对象
+	config, err := clientcmd.BuildConfigFromFlags("", "C:\\Users\\hanwei\\config")
+	if err != nil {
+		panic(err)
+	}
+
+	// dynamic.NewForConfig函数通过config实例化dynamicClient对象
+	dynamicClient, err := dynamic.NewForConfig(config)
+	if err != nil {
+		panic(err)
+	}
+
+	// 通过schema.GroupVersionResource设置请求的资源版本和资源组，设置命名空间和请求参数,得到unstructured.UnstructuredList指针类型的PodList
+	gvr := schema.GroupVersionResource{Version: "v1", Resource: "pods"}
+	unstructObj, err := dynamicClient.Resource(gvr).Namespace(apiv1.NamespaceDefault).List(context.TODO(), metav1.ListOptions{Limit: 500})
+	if err != nil {
+		panic(err)
+	}
+
+	// 通过runtime.DefaultUnstructuredConverter函数将unstructured.UnstructuredList转为PodList类型
+	podList := &corev1.PodList{}
+	err = runtime.DefaultUnstructuredConverter.FromUnstructured(unstructObj.UnstructuredContent(), podList)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, d := range podList.Items {
+		fmt.Printf("NAMESPACE: %v NAME:%v \t STATUS: %+v\n", d.Namespace, d.Name, d.Status.Phase)
+	}
+}
+```
+
+```bash
+GOROOT=C:\go\go1.19 #gosetup
+GOPATH=C:\Users\hanwei\go #gosetup
+C:\go\go1.19\bin\go.exe build -o C:\Users\hanwei\AppData\Local\Temp\GoLand\___4go_build_lab.exe lab #gosetup
+C:\Users\hanwei\AppData\Local\Temp\GoLand\___4go_build_lab.exe
+NAMESPACE: default NAME:cdi-upload-windows-2003-001      STATUS: Running
+NAMESPACE: default NAME:hp-volume-7lvp4          STATUS: Running
+NAMESPACE: default NAME:tomcat-deployment-5b689c848f-2jprs       STATUS: Running
+NAMESPACE: default NAME:virt-launcher-bc-2003-0907-001-vkd8f     STATUS: Running
+NAMESPACE: default NAME:virt-launcher-test-sg-111-lc9kf          STATUS: Running
+NAMESPACE: default NAME:virt-launcher-test-sg-v98xt      STATUS: Running
+NAMESPACE: default NAME:virt-launcher-test-snapshot-v-z52fv      STATUS: Running
+NAMESPACE: default NAME:virt-launcher-test-vpc-q8rwz     STATUS: Running
+NAMESPACE: default NAME:virt-launcher-vm-centos-q5zq5    STATUS: Running
+
+Process finished with the exit code 0
+```
+
+和ClientSet客户端一样，调用的ResetClient客户端。不同的是将response body的数据转成非结构化的数据体返回。
+
+```go
+func (c *dynamicResourceClient) List(ctx context.Context, opts metav1.ListOptions) (*unstructured.UnstructuredList, error) {
+	result := c.client.client.Get().AbsPath(c.makeURLSegments("")...).SpecificallyVersionedParams(&opts, dynamicParameterCodec, versionV1).Do(ctx)
+	if err := result.Error(); err != nil {
+		return nil, err
+	}
+	retBytes, err := result.Raw()
+	if err != nil {
+		return nil, err
+	}
+	uncastObj, err := runtime.Decode(unstructured.UnstructuredJSONScheme, retBytes)
+	if err != nil {
+		return nil, err
+	}
+	if list, ok := uncastObj.(*unstructured.UnstructuredList); ok {
+		return list, nil
+	}
+
+	list, err := uncastObj.(*unstructured.Unstructured).ToList()
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
+}
+```
+
+在调用 runtime.DefaultUnstructuredConverter.FromUnstructured 将上面的非结构化数据转换成Kubernetes资源对象数据类型（使用encoding/json/Unmarshaler进行转换，若无法通过上述方式转换，用反射机制进行转换）。
