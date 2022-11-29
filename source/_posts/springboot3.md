@@ -1,5 +1,5 @@
 ---
-title: Spring Boot 3.0 hello-world
+title: 云原生时代的Spring Boot 3.0: GraalVM原生镜像，启动速度提升近30倍
 readmore: false
 date: 2022-11-29 12:33:44
 categories: 云原生
