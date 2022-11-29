@@ -138,6 +138,8 @@ C:\sdk\graalvm-ce-java17-22.3.0\bin\java.exe -XX:TieredStopAtLevel=1 -Dspring.ou
 
 ![](/images/springboot3/2022-11-28-16-35-09.png)
 
+rest api测试ok。
+
 ```bash
 http://localhost:8080/hello
 
@@ -168,11 +170,13 @@ springboot 3.0 访问测试
 Response code: 200; Time: 17ms (17 ms); Content length: 19 bytes (19 B)
 ```
 
-打包二进制可执行文件，出错，需要安装windows docker
+打包二进制可执行文件需要执行 gu install native-image 命令。
+
+打包二进制可执行文件，执行出错，需要安装windows docker。
 
 ![](/images/springboot3/2022-11-29-09-11-08.png)
 
-需要开启docker服务，而windows下的dockerdesktop需要打开hyper-v或者WSL 2，一旦打开会影响VMware 嵌套虚拟化功能，导致该功能不可用。
+需要开启docker服务，安装windows dockerdesktop。启动报错：
 
 ```bash
 stderr: 
@@ -215,15 +219,269 @@ netsh winsock reset
 
 对于没有vmware需求，没有虚拟机vpn网络需求，仅仅开发springboot3.0，上面的方式已经可以实现目标。
 
-不过若有VMware需求，以及有VMware虚拟机共享宿主机vpn网络的需求，上面的重置命令慎用，用了会导致不仅VMware不可使用嵌套虚拟化，也会导致VMware里运行的虚拟机使用宿主机vpn网络出现问题，网络不通。
+不过若有VMware需求，以及有VMware虚拟机共享宿主机vpn网络的需求，上面的重置命令慎用，会导致VMware里运行的虚拟机使用宿主机vpn网络出现问题，网络不通。
+
+并且由于windows下的dockerdesktop需要打开hyper-v或者WSL 2，一旦打开会影响VMware 嵌套虚拟化功能，导致嵌套虚拟化功能不可用。
 
 不过也不用担心，只需要3步可以恢复：
 1. 卸载windows dockerdesktop
 2. 设置 - 应用 - 可选功能 - 更多windows功能，取消 WSL 2 和 hyper-v 的勾，重启电脑
 3. 卸载wmware，重新安装wmware。
 
-```bash
-[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.0.0:build-image (default-cli) on project demo: Execution default-cli of goal org.springframework.boot:spring-boot-maven-plugin:3.0.0:build-image failed: Connection to the Docker daemon at 'localhost' failed with error "[2] No such file or directory"; ensure the Docker daemon is running and accessible: com.sun.jna.LastErrorException: [2] No such file or directory -> [Help 1]
-```
 
 # Spring Boot 3.0 初步使用（Linux）
+
+上面windows跑通的项目放到Linux下，执行，报错：
+
+```bash
+[ERROR] Internal error: java.lang.RuntimeException: GraalVM native-image is missing from your system.
+[ERROR]  Make sure that GRAALVM_HOME environment variable is present.
+```
+
+按报错信息，配置 GRAALVM_HOME 和 安装 GraalVM native-image。
+
+```bash
+export GRAALVM_HOME 到/etc/bashrc
+```
+
+```bash
+[hanwei@backendcloud-centos9 ~]$ gu install native-image
+Downloading: Component catalog from www.graalvm.org
+Processing Component: Native Image
+Downloading: Component native-image: Native Image from github.com
+Installing new component: Native Image (org.graalvm.native-image, version 22.3.0)
+```
+
+再执行报错：
+
+```bash
+Test configuration file wasn't found.
+```
+
+toggle 'Skip Tests' mode，就是在Linux Idea的Maven窗口，点击跳过测试按钮。
+
+再执行ok。
+
+```bash
+/home/hanwei/sdk/graalvm-ce-java17-22.3.0/bin/java -XX:TieredStopAtLevel=1 -Dspring.output.ansi.enabled=always -Dcom.sun.management.jmxremote -Dspring.jmx.enabled=true -Dspring.liveBeansView.mbeanDomain -Dspring.application.admin.enabled=true -javaagent:/home/hanwei/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/222.4459.24/lib/idea_rt.jar=41343:/home/hanwei/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/222.4459.24/bin -Dfile.encoding=UTF-8 -classpath /home/hanwei/demo/target/classes:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter/3.0.0/spring-boot-starter-3.0.0.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot/3.0.0/spring-boot-3.0.0.jar:/home/hanwei/.m2/repository/org/springframework/spring-context/6.0.2/spring-context-6.0.2.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.0.0/spring-boot-autoconfigure-3.0.0.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.0.0/spring-boot-starter-logging-3.0.0.jar:/home/hanwei/.m2/repository/ch/qos/logback/logback-classic/1.4.5/logback-classic-1.4.5.jar:/home/hanwei/.m2/repository/ch/qos/logback/logback-core/1.4.5/logback-core-1.4.5.jar:/home/hanwei/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.19.0/log4j-to-slf4j-2.19.0.jar:/home/hanwei/.m2/repository/org/apache/logging/log4j/log4j-api/2.19.0/log4j-api-2.19.0.jar:/home/hanwei/.m2/repository/org/slf4j/jul-to-slf4j/2.0.4/jul-to-slf4j-2.0.4.jar:/home/hanwei/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/home/hanwei/.m2/repository/org/springframework/spring-core/6.0.2/spring-core-6.0.2.jar:/home/hanwei/.m2/repository/org/springframework/spring-jcl/6.0.2/spring-jcl-6.0.2.jar:/home/hanwei/.m2/repository/org/yaml/snakeyaml/1.33/snakeyaml-1.33.jar:/home/hanwei/.m2/repository/org/slf4j/slf4j-api/2.0.4/slf4j-api-2.0.4.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.0.0/spring-boot-starter-web-3.0.0.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.0.0/spring-boot-starter-json-3.0.0.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.14.1/jackson-databind-2.14.1.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.14.1/jackson-annotations-2.14.1.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.14.1/jackson-core-2.14.1.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.14.1/jackson-datatype-jdk8-2.14.1.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.14.1/jackson-datatype-jsr310-2.14.1.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.14.1/jackson-module-parameter-names-2.14.1.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.0.0/spring-boot-starter-tomcat-3.0.0.jar:/home/hanwei/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.1/tomcat-embed-core-10.1.1.jar:/home/hanwei/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.1/tomcat-embed-el-10.1.1.jar:/home/hanwei/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.1/tomcat-embed-websocket-10.1.1.jar:/home/hanwei/.m2/repository/org/springframework/spring-web/6.0.2/spring-web-6.0.2.jar:/home/hanwei/.m2/repository/org/springframework/spring-beans/6.0.2/spring-beans-6.0.2.jar:/home/hanwei/.m2/repository/io/micrometer/micrometer-observation/1.10.2/micrometer-observation-1.10.2.jar:/home/hanwei/.m2/repository/io/micrometer/micrometer-commons/1.10.2/micrometer-commons-1.10.2.jar:/home/hanwei/.m2/repository/org/springframework/spring-webmvc/6.0.2/spring-webmvc-6.0.2.jar:/home/hanwei/.m2/repository/org/springframework/spring-aop/6.0.2/spring-aop-6.0.2.jar:/home/hanwei/.m2/repository/org/springframework/spring-expression/6.0.2/spring-expression-6.0.2.jar com.example.demo.DemoApplication
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.0.0)
+
+2022-11-29T00:02:01.348+08:00  INFO 11794 --- [           main] com.example.demo.DemoApplication         : Starting DemoApplication using Java 17.0.5 with PID 11794 (/home/hanwei/demo/target/classes started by hanwei in /home/hanwei/demo)
+2022-11-29T00:02:01.352+08:00  INFO 11794 --- [           main] com.example.demo.DemoApplication         : No active profile set, falling back to 1 default profile: "default"
+2022-11-29T00:02:02.011+08:00  INFO 11794 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-11-29T00:02:02.018+08:00  INFO 11794 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-11-29T00:02:02.018+08:00  INFO 11794 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.1]
+2022-11-29T00:02:02.089+08:00  INFO 11794 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-11-29T00:02:02.090+08:00  INFO 11794 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 687 ms
+2022-11-29T00:02:02.347+08:00  INFO 11794 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-11-29T00:02:02.350+08:00  INFO 11794 --- [           main] com.example.demo.DemoApplication         : Started DemoApplication in 1.335 seconds (process running for 16.893)
+```
+
+可见执行传统jar包的启动速度是 1.335 seconds ，下面编译原生二进制文件。点击Linux Idea的Maven窗口的 build image 按钮。会在项目的target目录下（和生成的jar包在同一级目录）生成二进制可执行文件。
+
+```bash
+/home/hanwei/sdk/graalvm-ce-java17-22.3.0/bin/java -Dmaven.multiModuleProjectDirectory=/home/hanwei/demo -Dmaven.home=/home/hanwei/.m2/wrapper/dists/apache-maven-3.8.6-bin/1ks0nkde5v1pk9vtc31i9d0lcd/apache-maven-3.8.6 -Dclassworlds.conf=/home/hanwei/.m2/wrapper/dists/apache-maven-3.8.6-bin/1ks0nkde5v1pk9vtc31i9d0lcd/apache-maven-3.8.6/bin/m2.conf -Dmaven.ext.class.path=/home/hanwei/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/222.4459.24/plugins/maven/lib/maven-event-listener.jar -javaagent:/home/hanwei/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/222.4459.24/lib/idea_rt.jar=44943:/home/hanwei/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/222.4459.24/bin -Dfile.encoding=UTF-8 -classpath /home/hanwei/.m2/wrapper/dists/apache-maven-3.8.6-bin/1ks0nkde5v1pk9vtc31i9d0lcd/apache-maven-3.8.6/boot/plexus-classworlds.license:/home/hanwei/.m2/wrapper/dists/apache-maven-3.8.6-bin/1ks0nkde5v1pk9vtc31i9d0lcd/apache-maven-3.8.6/boot/plexus-classworlds-2.6.0.jar org.codehaus.classworlds.Launcher -Didea.version=2022.2.4 -DskipTests=true org.graalvm.buildtools:native-maven-plugin:0.9.16:build -P native
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------------< com.example:demo >--------------------------
+[INFO] Building demo 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- native-maven-plugin:0.9.16:build (default-cli) @ demo ---
+[WARNING] 'native:build' goal is deprecated. Use 'native:compile-no-fork' instead.
+[INFO] Found GraalVM installation from GRAALVM_HOME variable.
+[INFO] [graalvm reachability metadata repository for ch.qos.logback:logback-classic:1.4.5]: Configuration directory not found. Trying latest version.
+[INFO] [graalvm reachability metadata repository for ch.qos.logback:logback-classic:1.4.5]: Configuration directory is ch.qos.logback/logback-classic/1.4.1
+[INFO] [graalvm reachability metadata repository for org.apache.tomcat.embed:tomcat-embed-core:10.1.1]: Configuration directory not found. Trying latest version.
+[INFO] [graalvm reachability metadata repository for org.apache.tomcat.embed:tomcat-embed-core:10.1.1]: Configuration directory is org.apache.tomcat.embed/tomcat-embed-core/10.0.20
+[INFO] Executing: /home/hanwei/sdk/graalvm-ce-java17-22.3.0/bin/native-image -cp /home/hanwei/demo/target/classes:/home/hanwei/.m2/repository/org/slf4j/jul-to-slf4j/2.0.4/jul-to-slf4j-2.0.4.jar:/home/hanwei/.m2/repository/org/springframework/spring-web/6.0.2/spring-web-6.0.2.jar:/home/hanwei/.m2/repository/ch/qos/logback/logback-core/1.4.5/logback-core-1.4.5.jar:/home/hanwei/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.14.1/jackson-annotations-2.14.1.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.0.0/spring-boot-starter-json-3.0.0.jar:/home/hanwei/.m2/repository/org/springframework/spring-core/6.0.2/spring-core-6.0.2.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.14.1/jackson-module-parameter-names-2.14.1.jar:/home/hanwei/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.1/tomcat-embed-websocket-10.1.1.jar:/home/hanwei/.m2/repository/ch/qos/logback/logback-classic/1.4.5/logback-classic-1.4.5.jar:/home/hanwei/.m2/repository/org/springframework/spring-jcl/6.0.2/spring-jcl-6.0.2.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.0.0/spring-boot-starter-web-3.0.0.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.0.0/spring-boot-autoconfigure-3.0.0.jar:/home/hanwei/.m2/repository/org/springframework/spring-beans/6.0.2/spring-beans-6.0.2.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.0.0/spring-boot-starter-tomcat-3.0.0.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.14.1/jackson-datatype-jsr310-2.14.1.jar:/home/hanwei/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.1/tomcat-embed-el-10.1.1.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.14.1/jackson-core-2.14.1.jar:/home/hanwei/.m2/repository/org/apache/logging/log4j/log4j-api/2.19.0/log4j-api-2.19.0.jar:/home/hanwei/.m2/repository/org/springframework/spring-expression/6.0.2/spring-expression-6.0.2.jar:/home/hanwei/.m2/repository/org/springframework/spring-webmvc/6.0.2/spring-webmvc-6.0.2.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot/3.0.0/spring-boot-3.0.0.jar:/home/hanwei/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.1/tomcat-embed-core-10.1.1.jar:/home/hanwei/.m2/repository/org/springframework/spring-aop/6.0.2/spring-aop-6.0.2.jar:/home/hanwei/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.19.0/log4j-to-slf4j-2.19.0.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter/3.0.0/spring-boot-starter-3.0.0.jar:/home/hanwei/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.0.0/spring-boot-starter-logging-3.0.0.jar:/home/hanwei/.m2/repository/org/slf4j/slf4j-api/2.0.4/slf4j-api-2.0.4.jar:/home/hanwei/.m2/repository/org/springframework/spring-context/6.0.2/spring-context-6.0.2.jar:/home/hanwei/.m2/repository/io/micrometer/micrometer-observation/1.10.2/micrometer-observation-1.10.2.jar:/home/hanwei/.m2/repository/org/yaml/snakeyaml/1.33/snakeyaml-1.33.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.14.1/jackson-databind-2.14.1.jar:/home/hanwei/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.14.1/jackson-datatype-jdk8-2.14.1.jar:/home/hanwei/.m2/repository/io/micrometer/micrometer-commons/1.10.2/micrometer-commons-1.10.2.jar --no-fallback -H:Path=/home/hanwei/demo/target -H:Name=demo -H:ConfigurationFileDirectories=/home/hanwei/demo/target/graalvm-reachability-metadata/39f9c4cd5765941e97b499c39e24353f8a36ebd3/org.apache.tomcat.embed/tomcat-embed-core/10.0.20,/home/hanwei/demo/target/graalvm-reachability-metadata/39f9c4cd5765941e97b499c39e24353f8a36ebd3/ch.qos.logback/logback-classic/1.4.1
+========================================================================================================================
+GraalVM Native Image: Generating 'demo' (executable)...
+========================================================================================================================
+[1/7] Initializing...                                                                                    (6.4s @ 0.18GB)
+ Version info: 'GraalVM 22.3.0 Java 17 CE'
+ Java version info: '17.0.5+8-jvmci-22.3-b08'
+ C compiler: gcc (redhat, x86_64, 11.3.1)
+ Garbage collector: Serial GC
+ 1 user-specific feature(s)
+ - org.springframework.aot.nativex.feature.PreComputeFieldFeature
+The bundle named: org.apache.el.Messages, has not been found. If the bundle is part of a module, verify the bundle name is a fully qualified class name. Otherwise verify the bundle path is accessible in the classpath.
+Field org.springframework.core.NativeDetector#imageCode set to true at build time
+Field org.apache.commons.logging.LogAdapter#log4jSpiPresent set to true at build time
+Field org.apache.commons.logging.LogAdapter#log4jSlf4jProviderPresent set to true at build time
+Field org.apache.commons.logging.LogAdapter#slf4jSpiPresent set to true at build time
+Field org.apache.commons.logging.LogAdapter#slf4jApiPresent set to true at build time
+Field org.springframework.format.support.DefaultFormattingConversionService#jsr354Present set to false at build time
+Field org.springframework.core.KotlinDetector#kotlinPresent set to false at build time
+Field org.springframework.core.KotlinDetector#kotlinReflectPresent set to false at build time
+Field org.springframework.cglib.core.AbstractClassGenerator#imageCode set to true at build time
+Field org.springframework.boot.logging.java.JavaLoggingSystem$Factory#PRESENT set to true at build time
+Field org.springframework.boot.logging.log4j2.Log4J2LoggingSystem$Factory#PRESENT set to false at build time
+Field org.springframework.boot.logging.logback.LogbackLoggingSystem$Factory#PRESENT set to true at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#romePresent set to false at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#jaxb2Present set to false at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#jackson2Present set to true at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#jackson2XmlPresent set to false at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#jackson2SmilePresent set to false at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#jackson2CborPresent set to false at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#gsonPresent set to false at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#jsonbPresent set to false at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#kotlinSerializationCborPresent set to false at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#kotlinSerializationJsonPresent set to false at build time
+Field org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#kotlinSerializationProtobufPresent set to false at build time
+Field org.springframework.web.servlet.view.InternalResourceViewResolver#jstlPresent set to false at build time
+Field org.springframework.web.context.support.StandardServletEnvironment#jndiPresent set to true at build time
+Field org.springframework.web.context.support.WebApplicationContextUtils#jsfPresent set to false at build time
+Field org.springframework.web.context.request.RequestContextHolder#jsfPresent set to false at build time
+Field org.springframework.context.event.ApplicationListenerMethodAdapter#reactiveStreamsPresent set to false at build time
+Field org.springframework.boot.logging.logback.LogbackLoggingSystemProperties#JBOSS_LOGGING_PRESENT set to false at build time
+Field org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter#jaxb2Present set to false at build time
+Field org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter#jackson2Present set to true at build time
+Field org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter#jackson2XmlPresent set to false at build time
+Field org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter#jackson2SmilePresent set to false at build time
+Field org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter#gsonPresent set to false at build time
+Field org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter#jsonbPresent set to false at build time
+Field org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter#kotlinSerializationCborPresent set to false at build time
+Field org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter#kotlinSerializationJsonPresent set to false at build time
+Field org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter#kotlinSerializationProtobufPresent set to false at build time
+Field org.springframework.boot.autoconfigure.web.format.WebConversionService#JSR_354_PRESENT set to false at build time
+Field org.springframework.web.client.RestTemplate#romePresent set to false at build time
+Field org.springframework.web.client.RestTemplate#jaxb2Present set to false at build time
+Field org.springframework.web.client.RestTemplate#jackson2Present set to true at build time
+Field org.springframework.web.client.RestTemplate#jackson2XmlPresent set to false at build time
+Field org.springframework.web.client.RestTemplate#jackson2SmilePresent set to false at build time
+Field org.springframework.web.client.RestTemplate#jackson2CborPresent set to false at build time
+Field org.springframework.web.client.RestTemplate#gsonPresent set to false at build time
+Field org.springframework.web.client.RestTemplate#jsonbPresent set to false at build time
+Field org.springframework.web.client.RestTemplate#kotlinSerializationCborPresent set to false at build time
+Field org.springframework.web.client.RestTemplate#kotlinSerializationJsonPresent set to false at build time
+Field org.springframework.web.client.RestTemplate#kotlinSerializationProtobufPresent set to false at build time
+Field org.springframework.core.ReactiveAdapterRegistry#reactorPresent set to false at build time
+Field org.springframework.core.ReactiveAdapterRegistry#rxjava3Present set to false at build time
+Field org.springframework.core.ReactiveAdapterRegistry#kotlinCoroutinesPresent set to false at build time
+Field org.springframework.core.ReactiveAdapterRegistry#mutinyPresent set to false at build time
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+Field org.springframework.web.servlet.mvc.method.annotation.ReactiveTypeHandler#isContextPropagationPresent set to false at build time
+Field org.springframework.web.servlet.support.RequestContext#jstlPresent set to false at build time
+[2/7] Performing analysis...  [*********]                                                               (54.5s @ 1.28GB)
+  15,278 (92.35%) of 16,544 classes reachable
+  24,932 (67.63%) of 36,867 fields reachable
+  73,534 (62.25%) of 118,132 methods reachable
+     780 classes,   163 fields, and 3,506 methods registered for reflection
+      64 classes,    70 fields, and    55 methods registered for JNI access
+       4 native libraries: dl, pthread, rt, z
+[3/7] Building universe...                                                                               (5.2s @ 4.12GB)
+[4/7] Parsing methods...      [**]                                                                       (4.2s @ 4.35GB)
+[5/7] Inlining methods...     [***]                                                                      (1.9s @ 2.82GB)
+[6/7] Compiling methods...    [*****]                                                                   (27.8s @ 3.46GB)
+[7/7] Creating image...                                                                                  (6.1s @ 1.15GB)
+  32.83MB (49.82%) for code area:    48,151 compilation units
+  32.75MB (49.70%) for image heap:  354,531 objects and 320 resources
+ 324.99KB ( 0.48%) for other data
+  65.90MB in total
+------------------------------------------------------------------------------------------------------------------------
+Top 10 packages in code area:                               Top 10 object types in image heap:
+   1.63MB sun.security.ssl                                     7.21MB byte[] for code metadata
+   1.04MB java.util                                            3.88MB byte[] for embedded resources
+ 832.55KB java.lang.invoke                                     3.63MB java.lang.Class
+ 718.00KB com.sun.crypto.provider                              3.39MB java.lang.String
+ 541.00KB org.apache.catalina.core                             2.80MB byte[] for java.lang.String
+ 499.59KB org.apache.tomcat.util.net                           2.79MB byte[] for general heap data
+ 490.49KB org.apache.coyote.http2                              1.28MB com.oracle.svm.core.hub.DynamicHubCompanion
+ 472.53KB java.lang                                          815.22KB byte[] for reflection metadata
+ 461.63KB sun.security.x509                                  659.44KB java.lang.String[]
+ 459.52KB java.util.concurrent                               648.80KB java.util.HashMap$Node
+  25.43MB for 637 more packages                                5.47MB for 3070 more object types
+------------------------------------------------------------------------------------------------------------------------
+                        9.1s (7.9% of total time) in 37 GCs | Peak RSS: 6.43GB | CPU load: 4.46
+------------------------------------------------------------------------------------------------------------------------
+Produced artifacts:
+ /home/hanwei/demo/target/demo (executable)
+ /home/hanwei/demo/target/demo.build_artifacts.txt (txt)
+========================================================================================================================
+Finished generating 'demo' in 1m 53s.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:55 min
+[INFO] Finished at: 2022-11-28T23:55:32+08:00
+[INFO] ------------------------------------------------------------------------
+
+Process finished with exit code 0
+```
+
+执行二进制可执行文件，启动速度只有 0.052 seconds 。
+
+```bash
+[hanwei@backendcloud-centos9 ~]$ cd demo/target/
+[hanwei@backendcloud-centos9 target]$ ls
+classes  demo  demo-0.0.1-SNAPSHOT.jar  demo-0.0.1-SNAPSHOT.jar.original  demo.build_artifacts.txt  generated-sources  generated-test-sources  graalvm-reachability-metadata  maven-archiver  maven-status  spring-aot  surefire-reports  test-classes
+[hanwei@backendcloud-centos9 target]$ ./demo 
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.0.0)
+
+2022-11-29T00:03:59.026+08:00  INFO 12061 --- [           main] com.example.demo.DemoApplication         : Starting AOT-processed DemoApplication using Java 17.0.5 with PID 12061 (/home/hanwei/demo/target/demo started by hanwei in /home/hanwei/demo/target)
+2022-11-29T00:03:59.026+08:00  INFO 12061 --- [           main] com.example.demo.DemoApplication         : No active profile set, falling back to 1 default profile: "default"
+2022-11-29T00:03:59.040+08:00  INFO 12061 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-11-29T00:03:59.040+08:00  INFO 12061 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-11-29T00:03:59.040+08:00  INFO 12061 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.1]
+2022-11-29T00:03:59.044+08:00  INFO 12061 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-11-29T00:03:59.044+08:00  INFO 12061 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 18 ms
+2022-11-29T00:03:59.068+08:00  INFO 12061 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-11-29T00:03:59.068+08:00  INFO 12061 --- [           main] com.example.demo.DemoApplication         : Started DemoApplication in 0.052 seconds (process running for 0.056)
+```
+
+```bash
+[hanwei@backendcloud-centos9 target]$ ll -h
+total 84M
+drwxr-xr-x. 5 hanwei hanwei   74 Nov 28 23:15 classes
+-rwxr-xr-x. 1 hanwei hanwei  66M Nov 28 23:55 demo
+-rw-r--r--. 1 hanwei hanwei  18M Nov 28 23:49 demo-0.0.1-SNAPSHOT.jar
+-rw-r--r--. 1 hanwei hanwei 119K Nov 28 23:49 demo-0.0.1-SNAPSHOT.jar.original
+-rw-r--r--. 1 hanwei hanwei   19 Nov 28 23:55 demo.build_artifacts.txt
+drwxr-xr-x. 3 hanwei hanwei   25 Nov 28 22:59 generated-sources
+drwxr-xr-x. 3 hanwei hanwei   30 Nov 28 22:59 generated-test-sources
+drwxr-xr-x. 4 hanwei hanwei  101 Nov 28 23:42 graalvm-reachability-metadata
+drwxr-xr-x. 2 hanwei hanwei   28 Nov 28 22:59 maven-archiver
+drwxr-xr-x. 3 hanwei hanwei   35 Nov 28 22:59 maven-status
+drwxr-xr-x. 3 hanwei hanwei   18 Nov 28 22:59 spring-aot
+drwxr-xr-x. 2 hanwei hanwei  153 Nov 28 23:03 surefire-reports
+drwxr-xr-x. 3 hanwei hanwei   17 Nov 28 22:59 test-classes
+```
+
+对比两种打包方式：jar包和原生可执行文件，jar包18兆，原生可执行文件因为可以不依赖java运行环境而直接运行，所以体积大些，60兆。
+
+
+上面是通过Linux Idea的Maven窗口执行的。也可以通过命令行执行mvn命令生成原生二进制文件。
+
+```bash
+[hanwei@backendcloud-centos9 target]$ which mvn
+~/.local/bin/mvn
+[hanwei@backendcloud-centos9 target]$ ll ~/.local/bin/mvn
+lrwxrwxrwx. 1 hanwei hanwei 107 Nov 28 22:57 /home/hanwei/.local/bin/mvn -> /home/hanwei/.m2/wrapper/dists/apache-maven-3.8.6-bin/1ks0nkde5v1pk9vtc31i9d0lcd/apache-maven-3.8.6/bin/mvn
+# 到feature-native目录下
+[hanwei@backendcloud-centos9 demo]$ cd ..
+[hanwei@backendcloud-centos9 demo]$ mvn clean
+# 打包
+[hanwei@backendcloud-centos9 demo]$ mvn package -Pnative
+# 可执行文件
+[hanwei@backendcloud-centos9 demo]$ mvn native:compile-no-fork 
+# 到target目录下启动可执行文件
+```
+
+从上面的执行效果对比看出，云原生时代的Spring Boot 3.0: GraalVM编译的二进制可执行文件，启动速度相对于传统jar包提升近30倍（1.335 seconds -> 0.052 seconds）。
