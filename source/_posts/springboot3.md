@@ -1,5 +1,5 @@
 ---
-title: WIProcess-Spring Boot 3.0 初步使用
+title: WIProcess-Spring Boot 3.0 hello-world
 readmore: false
 date: 2022-11-29 12:33:44
 categories: 云原生
@@ -8,12 +8,12 @@ tags:
 ---
 
 
-Spring Boot 3.0 四天前（2022年11月24日）发布了，变化很大，基于spring6.0，spring6.0说是Spring下一个十年的新开端。
+Spring Boot 3.0 五天前（2022年11月24日）发布了，变化很大，基于spring6.0，spring6.0是Spring下一个未来十年的新开端。
 
 
 # JAVA 17
 
-Spring Boot 3.0 版本最低支持 Java17，Springboot 2.7.3 最常用的jdk版本是Java 8，现在直接从8跳到了17，且强制要求，17以下的版本不再支持。这样可以使用17或17以上的Java语言的新特性。
+Spring Boot 3.0 版本最低支持 Java17，Springboot 2.7.3 最常用的jdk版本是Java 8，现在直接跳了9个版本直接从8跳到了17，且是强制要求，必须17或17以上的java版本。所以以后开发可以用上17或17以上的Java语言的新特性。
 
 
 # Spring Native
@@ -22,6 +22,7 @@ Spring Native 也是升级的一个重大特性，支持使用 GraalVM 将 Sprin
 
 我们传统的应用都是编译成字节码，然后通过 JVM 解释并最终编译成机器码来运行，而 Spring Native 则是通过 AOT 提前编译为机器码，在运行时直接静态编译成可执行文件，不依赖 JVM。
 
+![](/images/springboot3/1.jpg)
 
 # Jakarta EE
 
@@ -35,15 +36,17 @@ import jakarta.servlet.http.HttpServletRequest;
 
 # Spring Boot 3.0 初步使用（Windows）
 
-创建Spring Boot 3.0 项目由两种方式，一种是Idea直接创建。
+创建Spring Boot 3.0 项目有两种方式，一种是Idea直接创建。
 
 ![](/images/springboot3/2022-11-29-09-17-59.png)
 
 ![](/images/springboot3/2022-11-29-09-18-17.png)
 
-若IDE不是最新版本，不支持创建Spring Boot 3.0，可以去网址 https://start.spring.io/ 生成Spring Boot 3.0项目。
+若IDE不是最新版本，不支持创建Spring Boot 3.0，还有第二种方式创建Spring Boot 3.0项目，登录官网 https://start.spring.io/ 生成 Spring Boot 3.0 初始项目。
 
 ![](/images/springboot3/2022-11-29-09-14-43.png)
+
+下面是Spring Boot 3.0 的最小pom文件内容：
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -94,6 +97,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 </project>
 ```
+
+运行spring boot项目，需要安装开发环境，spring boot 3.0开始不用jdk了，取而代之的是graalvm，且最低版本要求是java17 graalvm版本。
 
 https://github.com/graalvm/graalvm-ce-builds/releases 下载对应操作系统的java17 graalvm版本。
 
