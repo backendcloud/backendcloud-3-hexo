@@ -1,9 +1,10 @@
 ---
 title: WIProcess-Spring Boot 3.0 初步使用
 readmore: false
-date: 2022-11-28 18:33:44
+date: 2022-11-29 12:33:44
 categories: 云原生
 tags:
+- Spring Boot 3
 ---
 
 
@@ -26,13 +27,23 @@ Spring Native 也是升级的一个重大特性，支持使用 GraalVM 将 Sprin
 
 JavaEE 改名之后就叫 JakartaEE，比如我们之前的javax.servlet包现在就叫jakarta.servlet。也因此，代码中所有使用到比如 HttpServletRequest 对象的 import 都需要修改。
 
-https://start.spring.io/
-
 ```java
 import javax.servlet.http.HttpServletRequest;
 // 改为
 import jakarta.servlet.http.HttpServletRequest;
 ```
+
+# Spring Boot 3.0 初步使用（Windows）
+
+创建Spring Boot 3.0 项目由两种方式，一种是Idea直接创建。
+
+![](/images/springboot3/2022-11-29-09-17-59.png)
+
+![](/images/springboot3/2022-11-29-09-18-17.png)
+
+若IDE不是最新版本，不支持创建Spring Boot 3.0，可以去网址 https://start.spring.io/ 生成Spring Boot 3.0项目。
+
+![](/images/springboot3/2022-11-29-09-14-43.png)
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -84,6 +95,8 @@ import jakarta.servlet.http.HttpServletRequest;
 </project>
 ```
 
+https://github.com/graalvm/graalvm-ce-builds/releases 下载对应操作系统的java17 graalvm版本。
+
 ```bash
 PS C:\Users\hanwei> java --version
 openjdk 17.0.5 2022-10-18
@@ -116,6 +129,8 @@ C:\sdk\graalvm-ce-java17-22.3.0\bin\java.exe -XX:TieredStopAtLevel=1 -Dspring.ou
 2022-11-28T16:31:59.271+08:00  INFO 14684 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
 ```
 
+![](/images/springboot3/2022-11-28-17-18-57.png)
+
 ![](/images/springboot3/2022-11-28-16-35-09.png)
 
 ```bash
@@ -147,6 +162,10 @@ springboot 3.0 访问测试
 
 Response code: 200; Time: 17ms (17 ms); Content length: 19 bytes (19 B)
 ```
+
+打包二进制可执行文件，出错，需要安装windows docker
+
+![](/images/springboot3/2022-11-29-09-11-08.png)
 
 需要开启docker服务，而windows下的dockerdesktop需要打开hyper-v或者WSL 2，一旦打开会影响VMware 嵌套虚拟化功能，导致该功能不可用。
 
@@ -198,3 +217,8 @@ netsh winsock reset
 2. 设置 - 应用 - 可选功能 - 更多windows功能，取消 WSL 2 和 hyper-v 的勾，重启电脑
 3. 卸载wmware，重新安装wmware。
 
+```bash
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.0.0:build-image (default-cli) on project demo: Execution default-cli of goal org.springframework.boot:spring-boot-maven-plugin:3.0.0:build-image failed: Connection to the Docker daemon at 'localhost' failed with error "[2] No such file or directory"; ensure the Docker daemon is running and accessible: com.sun.jna.LastErrorException: [2] No such file or directory -> [Help 1]
+```
+
+# Spring Boot 3.0 初步使用（Linux）
