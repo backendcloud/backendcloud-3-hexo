@@ -9,7 +9,9 @@
 
 # 后端云分享的免费内容包括但不限于
 
-## 免费书籍
+* [文章](https://book.backendcloud.cn/)
+* [视频] work in process 。。。
+* 免费书籍
   * [《KubeVirt CI》](https://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。已完成24篇
   * [《Bazel在企业项目中的应用》](https://book.backendcloud.cn/bazel-book/) work in process 。。。已完成15篇
   * [《KubeVirt源码分析》](https://book.backendcloud.cn/kubevirt-book/) work in process 。。。已完成16篇
