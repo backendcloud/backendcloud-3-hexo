@@ -341,4 +341,9 @@ indices: {
 * map index 的key/value是 map Indexers的value函数 通过入参obj算出来后插入的。
 * mapindex 的value不是的obj，而是 map items 中的key，通过map items[key]可以获取obj。
 
+增删改查索引的实现都挺简单的，其实主要还是要对 indices、indexs 这些数据结构非常了解，这样就非常容易了。
+
+主要难点就是 indices、indexs 这些数据结构，另外还有几个次要的点，不要概念搞混了，indexFunc，keyFunc，items。可以将 indexFunc 当成当前对象的命名空间来看待，对理解又有一定的帮助。
+
 通过索引的设计，可以看出极大加快了查询obj的速度，并且可以自定义索引函数，实现快速个性化索引查询。数据库查询为了加快查询速度也会有索引的设计，上面也可以算是个数据库索引的本地存储的实现。
+
