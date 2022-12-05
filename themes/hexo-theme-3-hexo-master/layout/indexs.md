@@ -3,14 +3,23 @@
 * 云原生基础设施生态：Kubernetes，KubeVirt，Istio。
 * 云原生生态：Spin，Dapr，KEDA，Knative。
 * DevOps(Bazel，ArgoCD，DroneCI，Tekton，Cloud Native Buildpacks，Shipwright)。
+* Rust生态(侧重OS，VMM，虚拟机，容器底层)。
 * Fuchsia生态。
-* Rust生态。
 
 
 # 后端云分享的免费内容包括但不限于
 
+## 免费书籍
+  * [《KubeVirt CI》](https://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。已完成24篇
+  * [《Bazel在企业项目中的应用》](https://book.backendcloud.cn/bazel-book/) work in process 。。。已完成15篇
+  * [《KubeVirt源码分析》](https://book.backendcloud.cn/kubevirt-book/) work in process 。。。已完成16篇
+  * [《client-go源码分析》]() work in process 。。。已完成5篇
+  * [《Moby(Docker)源码分析》]() work in process 。。。
+  * [《Kubernetes源码分析》]() work in process 。。。
+
 ## 开源项目
-* 开源项目[KubeFusion](https://github.com/kubefusion)（该Github账号下的主项目KubeFusion是包含多种融合技术的集成和定制以及KubeFusion自身特有功能，其他项目是关于fusion scheme以及主项目的关联小项目。在筹备中，可能2022年会上几个小项目，2023年上半年发布KubeFusion v0.1版）
+* 开源项目[backendcloud](https://github.com/backendcloud)（后端云网站[内容](https://github.com/backendcloud/backendcloud.github.io)和[源码](https://github.com/backendcloud/backendcloud-3-hexo)以及网站[CI](https://github.com/backendcloud/backendcloud-3-hexo/blob/master/.github/workflows/ci.yml)和[CD](https://github.com/backendcloud/backendcloud.github.io/blob/master/.github/workflows/cd.yml)的存放仓库，以及文章里的example代码的存放仓库）
+* 开源项目[KubeFusion](https://github.com/kubefusion)（该Github账号下的主项目KubeFusion是包含多种云原生技术的融合和集成定制以及KubeFusion自身特有功能（无侵入修改，后续可以随着上游项目升级而升级），其他项目是主项目的关联小项目。在筹备中，2023年上半年发布KubeFusion v0.1版）
 
 > **背景：**
 > * 互联网大潮期间，一种说法：应用开发者可能三成时间开发业务，七成时间折腾服务器；
@@ -20,19 +29,8 @@
 > **KubeFusion参考的开源项目：**
 > * 云原生基础设施生态：Kubernetes（网络插件：Multus，Flannel，Calico，userspace-cni，Cilium（Cilium基于高性能的eBPF（相对于iptables的netfilter），Cilium可以替换kube-proxy，Cilium和Istio结合））） + KubeVirt + service mesh（linkerd2 和 Istio（Istio含Envoy）二选一，linkerd2轻量，Istio功能更完备））
 > * Assembly，Serverless，FaaS生态：（focus on business and everything else is a headache of a cloud provider）（下一代微服务框架spin）（Dapr+KEDA 和 Knative serving+event 二选一，Dapr+KEDA优于Knative serving+event）(Tekton，Cloud Native Buildpacks，Shipwright)
->
-> **KubeFusion开发的内容：**
-> * 整合上述开源项目，根据需要裁剪不需要的功能和重叠功能（无侵入修改，后续可以随着上游项目升级而升级），根据需要开发实现特定功能的模块。模块化的可配置的部署脚本和Operator。e2e test。案例。Telemetry（logs，metrics，traces）。UI界面。Devops。等等。
-
-## 免费书籍
-  * [《KubeVirt CI》](https://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。
-  * [《Bazel在企业项目中的应用》](https://book.backendcloud.cn/bazel-book/) work in process 。。。
-  * [《KubeVirt源码分析》](https://book.backendcloud.cn/kubevirt-book/) work in process 。。。
 
 
-## 其他
-* 免费视频课程（3个主力长视频平台频道：bilibili，西瓜视频，youtube） 规划中 。。。
-* 免费技术文章（3个主力平台：[“后端云”网站](https://www.backendcloud.cn)，微信公众号“后端云”(底部二维码扫一扫)，[腾讯云开发者社区“后端云”](https://cloud.tencent.com/developer/column/72779)。“后端云”网站为最初文章发布平台，其他都是镜像，为了“后端云”网站的文章先被google收录从而判定为原创，镜像平台会晚几天~几周同步。）
 
 
 
