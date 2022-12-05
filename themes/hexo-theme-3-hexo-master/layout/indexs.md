@@ -9,7 +9,7 @@
 
 # 后端云分享的免费内容包括但不限于
 
-* [后端云网站发布的文章](https://book.backendcloud.cn/)以及“后端云”微信公众号（二维码见底部）。
+* [后端云网站](https://book.backendcloud.cn/)发布的文章以及“后端云”微信公众号（二维码见底部）。
 * [后端云发布的视频] work in process 。。。
 * 后端云发布的免费书籍
   * [《KubeVirt CI》](https://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。已完成24篇
