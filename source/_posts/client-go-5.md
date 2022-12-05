@@ -1,5 +1,5 @@
 ---
-title: WIProcess-client-go 源码分析（5） - informer机制中的本地存储
+title: client-go 源码分析（5） - informer机制中的本地存储
 readmore: true
 date: 2022-12-05 18:16:20
 categories: 云原生
@@ -19,11 +19,8 @@ type cache struct {
 }
 ```
 
-该结构体包含有一个KeyFunc函数属性和ThreadSafeStore接口，下面的threadSafeMap struct实现了ThreadSafeStore接口的所有方法。
+该结构体包含有一个KeyFunc函数属性（一个cache对象，或者说一个indexer，或者说一个本地存储，只有一个KeyFunc，作用是为items的value：obj生成对应的key，这里的KeyFunc和下面的IndexFunc不一样，别搞混了）和ThreadSafeStore接口，下面的threadSafeMap struct实现了ThreadSafeStore接口的所有方法。
 
-```go
-type KeyFunc func(obj interface{}) (string, error)
-```
 
 KeyFunc用于实现将某个对象通过KeyFunc函数算出对对应的key，该key就是items的key，而items map就是实际的本地存储。
 
@@ -176,7 +173,7 @@ Process finished with the exit code 0
 ByIndex(indexName, indexedValue string) ([]interface{}, error)
 ```
 
-ByIndex 方法，更加索引器名称，比如上面main方法例子中的nodeName索引器名称，获取索引函数NodeNameIndexFunc，所根据索引器名称获得的索引函数为nil，则往上层报错索引器不存在。并根据索引器名称nodeName获取真正的索引index，对应上图的右下角的表格，ByIndex 方法的第二个参数对应上图右下角表格的第一列，set := index[indexedValue]中的set对应第二列，set对应items的key值，items map是实际存储obj的map。通过set对应items的key值可以获取实际的obj，即main方法中的pod list。
+ByIndex 方法，根据索引器名称，比如上面main方法例子中的nodeName索引器名称，获取索引函数NodeNameIndexFunc，所根据索引器名称获得的索引函数为nil，则往上层报错索引器不存在。并通过map indices（map indices的key是索引器名称，value是index）根据索引器名称nodeName获取真正的索引index，index对应上图的右下角的表格，ByIndex 方法的第二个参数对应上图右下角表格的第一列，set := index[indexedValue]中的set对应第二列，set对应items的key值，items map是实际存储obj的map。通过set对应items的key值可以获取实际的obj，即main方法中的pod list。
 
 ```go
 // ByIndex returns a list of the items whose indexed values in the given index include the given indexed value
@@ -201,14 +198,99 @@ func (c *threadSafeMap) ByIndex(indexName, indexedValue string) ([]interface{}, 
 }
 ```
 
-```go
 
+```go
+	_ = index.Add(pod1)
+	_ = index.Add(pod2)
+	_ = index.Add(pod3)
+```
+
+index.Add的方法是对obj对象建立索引。上面的main方法对三个pod对象创建索引。注意，在对obj创建索引之前需要先创建索引器，否则会报错。换一种说法，在创建索引器的时候会检查items是否为空，若不为空会报错。
+
+```go
+// Add inserts an item into the cache.
+func (c *cache) Add(obj interface{}) error {
+	key, err := c.keyFunc(obj)
+	if err != nil {
+		return KeyError{obj, err}
+	}
+	c.cacheStorage.Add(key, obj)
+	return nil
+}
+```
+
+index.Add 先通过KeyFunc算出obj的key，然后将key/value对存入items中。并调用c.cacheStorage.Add方法，该方法会调用 updateIndices 方法。
+
+```go
+func (c *threadSafeMap) Add(key string, obj interface{}) {
+	c.Update(key, obj)
+}
+
+func (c *threadSafeMap) Update(key string, obj interface{}) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	oldObject := c.items[key]
+	c.items[key] = obj
+	c.updateIndices(oldObject, obj, key)
+}
+```
+
+updateIndices中的oldObj为nil（以main方法为例），下面的代码主要处理的工作是：
+1. 遍历所有indexers，获得key/value对，即索引器名称和索引函数，用索引函数算出obj的indexValues，那上面的main方法中的 nodeName索引器名称，获取索引函数NodeNameIndexFunc 这一对map indexers的key/value对举例，indexValues, err = indexFunc(newObj)这句代码算出三个pod的所在节点
+2. 执行 c.addKeyToIndex(key, value, index) 这一句代码。三个参数分别为：第一个参数为 pod obj的存储在items map中的key值，第二个参数为pod obj的pod所在节点的信息，第三个参数为index map，即上图右下角的表格。
+3. addKeyToIndex方法的就是更新index map，index map的key是对应的上面的node信息，key对应的value是pod obj的item中的key值。
+
+```go
+func (c *threadSafeMap) updateIndices(oldObj interface{}, newObj interface{}, key string) {
+	var oldIndexValues, indexValues []string
+	var err error
+	for name, indexFunc := range c.indexers {
+		if oldObj != nil {
+			oldIndexValues, err = indexFunc(oldObj)
+		} else {
+			oldIndexValues = oldIndexValues[:0]
+		}
+		if err != nil {
+			panic(fmt.Errorf("unable to calculate an index entry for key %q on index %q: %v", key, name, err))
+		}
+
+		if newObj != nil {
+			indexValues, err = indexFunc(newObj)
+		} else {
+			indexValues = indexValues[:0]
+		}
+		if err != nil {
+			panic(fmt.Errorf("unable to calculate an index entry for key %q on index %q: %v", key, name, err))
+		}
+
+		index := c.indices[name]
+		if index == nil {
+			index = Index{}
+			c.indices[name] = index
+		}
+
+		if len(indexValues) == 1 && len(oldIndexValues) == 1 && indexValues[0] == oldIndexValues[0] {
+			// We optimize for the most common case where indexFunc returns a single value which has not been changed
+			continue
+		}
+
+		for _, value := range oldIndexValues {
+			c.deleteKeyFromIndex(key, value, index)
+		}
+		for _, value := range indexValues {
+			c.addKeyToIndex(key, value, index)
+		}
+	}
+}
 ```
 
 ```go
-
-```
-
-```go
-
+func (c *threadSafeMap) addKeyToIndex(key, indexValue string, index Index) {
+	set := index[indexValue]
+	if set == nil {
+		set = sets.String{}
+		index[indexValue] = set
+	}
+	set.Insert(key)
+}
 ```
