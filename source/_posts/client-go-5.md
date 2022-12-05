@@ -22,7 +22,7 @@ type cache struct {
 该结构体包含有一个KeyFunc函数属性（一个cache对象，或者说一个indexer，或者说一个本地存储，只有一个KeyFunc，作用是为items的value：obj生成对应的key，这里的KeyFunc和下面的IndexFunc不一样，别搞混了）和ThreadSafeStore接口，下面的threadSafeMap struct实现了ThreadSafeStore接口的所有方法。
 
 
-KeyFunc用于实现将某个对象通过KeyFunc函数算出对对应的key，该key就是items的key，而items map就是实际的本地存储。
+KeyFunc函数的作用是算出一个obj对象的不重复的key，将算出的key作为items的key，obj作为items的value。而items map就是实际的存储本地存储数据的地方。
 
 ```go
 type threadSafeMap struct {
@@ -62,7 +62,7 @@ storeIndex是items map的索引，且设计的比较精妙，但是理解起来�
 3. Indices: 索引数据集合，它为一个map，其key和Indexers中的key对应，表示索引器的名字。Value为当前到达数据通过该索引函数计算出来的Index。
 4. Index: 索引与数据key集合，它的key为索引器计算出来的索引数组中的每一项，value为对应的资源的key(默认namespace/name)集合。
 
-通读下client-go\tools\cache 包下的 store.go 和 thread_safe_store.go 的代码，其中索引有点绕，多次反复对照上图可以获得更好理解。再结合下面实际的建立和查询索引的例子：
+通读下client-go\tools\cache 包下的 store.go 和 thread_safe_store.go 的代码，其中索引有点绕，多次反复对照上图可以获得更好理解。再结合下面实际的建立和查询索引的例子更加有助理解代码：
 
 ```go
 package main
@@ -173,7 +173,7 @@ Process finished with the exit code 0
 ByIndex(indexName, indexedValue string) ([]interface{}, error)
 ```
 
-ByIndex 方法，根据索引器名称，比如上面main方法例子中的nodeName索引器名称，获取索引函数NodeNameIndexFunc，所根据索引器名称获得的索引函数为nil，则往上层报错索引器不存在。并通过map indices（map indices的key是索引器名称，value是index）根据索引器名称nodeName获取真正的索引index，index对应上图的右下角的表格，ByIndex 方法的第二个参数对应上图右下角表格的第一列，set := index[indexedValue]中的set对应第二列，set对应items的key值，items map是实际存储obj的map。通过set对应items的key值可以获取实际的obj，即main方法中的pod list。
+ByIndex 方法主要工作是：根据索引器名称，比如上面main方法例子中的nodeName索引器名称，获取索引函数NodeNameIndexFunc，所根据索引器名称获得的索引函数为nil，则往上层报错索引器不存在。并通过map indices（map indices的key是索引器名称，value是index）根据索引器名称nodeName获取真正的索引index，index对应上图的右下角的表格，ByIndex 方法的第二个参数对应上图右下角表格的第一列，set := index[indexedValue]中的set对应第二列，set对应items的key值，items map是实际存储obj的map。通过set对应items的key值可以获取实际的obj，即main方法中的pod list。
 
 ```go
 // ByIndex returns a list of the items whose indexed values in the given index include the given indexed value
@@ -205,7 +205,7 @@ func (c *threadSafeMap) ByIndex(indexName, indexedValue string) ([]interface{}, 
 	_ = index.Add(pod3)
 ```
 
-index.Add的方法是对obj对象建立索引。上面的main方法对三个pod对象创建索引。注意，在对obj创建索引之前需要先创建索引器，否则会报错。换一种说法，在创建索引器的时候会检查items是否为空，若不为空会报错。
+index.Add的方法是对obj对象建立索引。上面的main方法对三个pod对象创建索引。注意，在对obj创建索引之前需要先创建索引器，否则会报错。也可换一种说法，在创建索引器的时候会检查items是否为空，若不为空会报错。
 
 ```go
 // Add inserts an item into the cache.
@@ -236,7 +236,7 @@ func (c *threadSafeMap) Update(key string, obj interface{}) {
 ```
 
 updateIndices中的oldObj为nil（以main方法为例），下面的代码主要处理的工作是：
-1. 遍历所有indexers，获得key/value对，即索引器名称和索引函数，用索引函数算出obj的indexValues，那上面的main方法中的 nodeName索引器名称，获取索引函数NodeNameIndexFunc 这一对map indexers的key/value对举例，indexValues, err = indexFunc(newObj)这句代码算出三个pod的所在节点
+1. 遍历所有indexers，获得key/value对，即索引器名称和索引函数，用索引函数算出obj的indexValues，那上面的main方法中的 nodeName索引器名称，获取索引函数NodeNameIndexFunc 这一对map indexers的key/value对举例，indexValues, err = indexFunc(newObj)这句代码算出三个pod的所在节点。
 2. 执行 c.addKeyToIndex(key, value, index) 这一句代码。三个参数分别为：第一个参数为 pod obj的存储在items map中的key值，第二个参数为pod obj的pod所在节点的信息，第三个参数为index map，即上图右下角的表格。
 3. addKeyToIndex方法的就是更新index map，index map的key是对应的上面的node信息，key对应的value是pod obj的item中的key值。
 
