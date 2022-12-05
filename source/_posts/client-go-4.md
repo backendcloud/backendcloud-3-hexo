@@ -314,36 +314,3 @@ func (c *dynamicResourceClient) List(ctx context.Context, opts metav1.ListOption
 ```
 
 在调用 runtime.DefaultUnstructuredConverter.FromUnstructured 将上面的非结构化数据转换成Kubernetes资源对象数据类型（使用encoding/json/Unmarshaler进行转换，若无法通过上述方式转换，用反射机制进行转换）。
-
-总结下，上面的main方法生成的索引相关的map如下：
-
-```yaml
-# Indexers 就是包含的所有索引器(分类)以及对应实现
-indexers: {  
-  "namespace": NamespaceIndexFunc,
-  "nodeName": NodeNameIndexFunc,
-}
-# Indices 就是包含的所有索引分类中所有的索引数据
-indices: {
- "namespace": {  #namespace 这个索引分类下的所有索引数据
-  "default": ["pod-1", "pod-2"],  # Index 就是一个索引键下所有的对象键列表
-  "kube-system": ["pod-3"]   # Index
- },
- "nodeName": {  # nodeName 这个索引分类下的所有索引数据(对象键列表)
-  "node1": ["pod-1"],  # Index
-  "node2": ["pod-2", "pod-3"]  # Index
- }
-}
-```
-
-* 这两个map 的 key 数量和 名称完全一致。 key是索引器名称，value分别是索引器函数和index map。
-* map indices的value也是map，是index map。
-* map index 的key/value是 map Indexers的value函数 通过入参obj算出来后插入的。
-* mapindex 的value不是的obj，而是 map items 中的key，通过map items[key]可以获取obj。
-
-增删改查索引的实现都挺简单的，其实主要还是要对 indices、indexs 这些数据结构非常了解，这样就非常容易了。
-
-主要难点就是 indices、indexs 这些数据结构，另外还有几个次要的点，不要概念搞混了，indexFunc，keyFunc，items。可以将 indexFunc 当成当前对象的命名空间来看待，对理解又有一定的帮助。
-
-通过索引的设计，可以看出极大加快了查询obj的速度，并且可以自定义索引函数，实现快速个性化索引查询。数据库查询为了加快查询速度也会有索引的设计，上面也可以算是个数据库索引的本地存储的实现。
-

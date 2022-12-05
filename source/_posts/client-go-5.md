@@ -294,3 +294,81 @@ func (c *threadSafeMap) addKeyToIndex(key, indexValue string, index Index) {
 	set.Insert(key)
 }
 ```
+
+总结下，上面的main方法生成的索引相关的map如下：
+
+```yaml
+# Indexers 就是包含的所有索引器(分类)以及对应实现
+indexers: {  
+  "namespace": NamespaceIndexFunc,
+  "nodeName": NodeNameIndexFunc,
+}
+# Indices 就是包含的所有索引分类中所有的索引数据
+indices: {
+ "namespace": {  #namespace 这个索引分类下的所有索引数据
+  "default": ["pod-1", "pod-2"],  # Index 就是一个索引键下所有的对象键列表
+  "kube-system": ["pod-3"]   # Index
+ },
+ "nodeName": {  # nodeName 这个索引分类下的所有索引数据(对象键列表)
+  "node1": ["pod-1"],  # Index
+  "node2": ["pod-2", "pod-3"]  # Index
+ }
+}
+```
+
+* 这两个map 的 key 数量和 名称完全一致。 key是索引器名称，value分别是索引器函数和index map。
+* map indices的value也是map，是index map。
+* map index 的key/value是 map Indexers的value函数 通过入参obj算出来后插入的。
+* mapindex 的value不是的obj，而是 map items 中的key，通过map items[key]可以获取obj。
+
+增删改查索引的实现都挺简单的，其实主要还是要对 indices、indexs 这些数据结构非常了解，这样就非常容易了。
+
+主要难点就是 indices、indexs 这些数据结构，另外还有几个次要的点，不要概念搞混了，indexFunc，keyFunc，items。可以将 indexFunc 当成当前对象的命名空间来看待，对理解又有一定的帮助。
+
+通过索引的设计，可以看出极大加快了查询obj的速度，并且可以自定义索引函数，实现快速个性化索引查询。数据库查询为了加快查询速度也会有索引的设计，上面也可以算是个数据库索引的本地存储的实现。
+
+理解了上面的主线代码，理解任何informer 的 local cache的代码都容易理解了。比如下面Index 函数已经很好理解了，虽然是所有代码中剩下的最复杂的方法了：
+
+Index 函数就是获取一个指定对象的指定索引下面的所有的对象全部获取到，比如我们要获取一个 Pod 所在命名空间下面的所有 Pod，如果更抽象一点，就是符合对象某些特征的所有对象。
+
+```go
+// Index returns a list of items that match the given object on the index function.
+// Index is thread-safe so long as you treat all items as immutable.
+func (c *threadSafeMap) Index(indexName string, obj interface{}) ([]interface{}, error) {
+	c.lock.RLock()
+	defer c.lock.RUnlock()
+
+	indexFunc := c.indexers[indexName]
+	if indexFunc == nil {
+		return nil, fmt.Errorf("Index with name %s does not exist", indexName)
+	}
+
+	indexedValues, err := indexFunc(obj)
+	if err != nil {
+		return nil, err
+	}
+	index := c.indices[indexName]
+
+	var storeKeySet sets.String
+	if len(indexedValues) == 1 {
+		// In majority of cases, there is exactly one value matching.
+		// Optimize the most common path - deduping is not needed here.
+		storeKeySet = index[indexedValues[0]]
+	} else {
+		// Need to de-dupe the return list.
+		// Since multiple keys are allowed, this can happen.
+		storeKeySet = sets.String{}
+		for _, indexedValue := range indexedValues {
+			for key := range index[indexedValue] {
+				storeKeySet.Insert(key)
+			}
+		}
+	}
+
+	list := make([]interface{}, 0, storeKeySet.Len())
+	for storeKey := range storeKeySet {
+		list = append(list, c.items[storeKey])
+	}
+	return list, nil
+}
+```
