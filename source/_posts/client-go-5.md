@@ -1,5 +1,5 @@
 ---
-title: client-go 源码分析（5） - informer机制中的本地存储
+title: client-go 源码分析（5） - informer机制中的本地存储indexer
 readmore: true
 date: 2022-12-05 18:16:20
 categories: 云原生
