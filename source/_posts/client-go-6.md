@@ -252,6 +252,97 @@ func (f *DeltaFIFO) ListKeys() []string {
 	}
 	return list
 }
+
+// 根据 delta 对象，获得delta对应的key的 deltas对象
+func (f *DeltaFIFO) Get(obj interface{}) (item interface{}, exists bool, err error) {
+	key, err := f.KeyOf(obj)
+	if err != nil {
+		return nil, false, KeyError{obj, err}
+	}
+	return f.GetByKey(key)
+}
+
+func (f *DeltaFIFO) GetByKey(key string) (item interface{}, exists bool, err error) {
+	f.lock.RLock()
+	defer f.lock.RUnlock()
+	d, exists := f.items[key]
+	if exists {
+		// Copy item's slice so operations on this slice
+		// won't interfere with the object we return.
+		d = copyDeltas(d)
+	}
+	return d, exists, nil
+}
+
+func copyDeltas(d Deltas) Deltas {
+	d2 := make(Deltas, len(d))
+	copy(d2, d)
+	return d2
+}
+
+// IsClosed 检查是否DeltaFIFO已经close
+func (f *DeltaFIFO) IsClosed() bool {
+	f.lock.Lock()
+	defer f.lock.Unlock()
+	return f.closed
+}
+
+// DeltaFIFO的pop方法
+// 内层for循环是当DeltaFIFO队列为空的时候，f.cond.Wait() 让程序block住，等待队列有push新的元素
+// 一旦DeltaFIFO close，会发送cond broadcasted广播，block打断，继续进入下一次内层for循环，进入判断条件，函数返回 return nil, ErrFIFOClosed
+// 若是 f.initialPopulationCount > 0 即首次，第一批对象放入FIFO，减减
+// 第二层for循环是为了在 item, ok := f.items[id] 失败的时候，pop FIFO的下一个元素
+// 若一切正常，则移除queue[0]，后面的index全部左移一位；删除pod出来的元素，函数返回 return item, err
+// 若pop出来的元素 process PopProcessFunc(item) 失败，f.addIfNotPresent(id, item) 再次将元素push 回 DeltaFIFO
+func (f *DeltaFIFO) Pop(process PopProcessFunc) (interface{}, error) {
+	f.lock.Lock()
+	defer f.lock.Unlock()
+	for {
+		for len(f.queue) == 0 {
+			// When the queue is empty, invocation of Pop() is blocked until new item is enqueued.
+			// When Close() is called, the f.closed is set and the condition is broadcasted.
+			// Which causes this loop to continue and return from the Pop().
+			if f.closed {
+				return nil, ErrFIFOClosed
+			}
+
+			f.cond.Wait()
+		}
+		id := f.queue[0]
+		f.queue = f.queue[1:]
+		depth := len(f.queue)
+		if f.initialPopulationCount > 0 {
+			f.initialPopulationCount--
+		}
+		item, ok := f.items[id]
+		if !ok {
+			// This should never happen
+			klog.Errorf("Inconceivable! %q was in f.queue but not f.items; ignoring.", id)
+			continue
+		}
+		delete(f.items, id)
+		// Only log traces if the queue depth is greater than 10 and it takes more than
+		// 100 milliseconds to process one item from the queue.
+		// Queue depth never goes high because processing an item is locking the queue,
+		// and new items can't be added until processing finish.
+		// https://github.com/kubernetes/kubernetes/issues/103789
+		if depth > 10 {
+			trace := utiltrace.New("DeltaFIFO Pop Process",
+				utiltrace.Field{Key: "ID", Value: id},
+				utiltrace.Field{Key: "Depth", Value: depth},
+				utiltrace.Field{Key: "Reason", Value: "slow event handlers blocking the queue"})
+			defer trace.LogIfLong(100 * time.Millisecond)
+		}
+		err := process(item)
+		if e, ok := err.(ErrRequeue); ok {
+			f.addIfNotPresent(id, item)
+			err = e.Err
+		}
+		// Don't need to copyDeltas here, because we're transferring
+		// ownership to the caller.
+		return item, err
+	}
+}
 ```
 
 ![](/images/client-go-6/2022-12-06-16-52-02.png)
