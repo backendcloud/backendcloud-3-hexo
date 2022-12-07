@@ -7,7 +7,7 @@ tags:
 - client-go
 ---
 
-> https://github.com/uber-go/ratelimit
+> https://github.com/golang/time
 
 ![](/images/client-go-6/2022-12-06-15-28-32.png)
 
