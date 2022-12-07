@@ -15,7 +15,7 @@
   * [《KubeVirt CI》](https://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。已完成24篇
   * [《Bazel在企业项目中的应用》](https://book.backendcloud.cn/bazel-book/) work in process 。。。已完成15篇
   * [《KubeVirt源码分析》](https://book.backendcloud.cn/kubevirt-book/) work in process 。。。已完成16篇
-  * [《client-go源码分析》] work in process 。。。已完成5篇
+  * [《client-go源码分析》](https://book.backendcloud.cn/client-go-book/) work in process 。。。已完成8篇
   * [《Moby(Docker)源码分析》] work in process 。。。
   * [《Kubernetes源码分析》] work in process 。。。
 * 后端云发布的开源项目

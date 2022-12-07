@@ -496,7 +496,7 @@ drwxr-xr-x. 2 hanwei hanwei  153 Nov 28 23:03 surefire-reports
 drwxr-xr-x. 3 hanwei hanwei   17 Nov 28 22:59 test-classes
 ```
 
-对比两种打包方式：jar包和原生可执行文件，jar包18兆，原生可执行文件因为可以不依赖java运行环境而直接运行，所以体积大些，60兆。
+对比两种打包方式：jar包和原生可执行文件，jar包18兆，原生可执行文件因为可以不依赖java运行环境而直接运行，所以体积大些，66兆。
 
 
 上面是通过Linux Idea的Maven窗口执行的。也可以通过命令行执行mvn命令生成原生二进制文件。
