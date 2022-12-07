@@ -1,5 +1,5 @@
 ---
-title: WIProcess- client-go 源码分析（7） - Golang 标准库限流器
+title: client-go 源码分析（7） - Golang 标准库限流器
 readmore: true
 date: 2022-12-07 12:55:52
 categories: 云原生
@@ -15,7 +15,7 @@ tags:
 
 本篇是关于 Golang 标准库限流器。
 
-令牌桶就是想象有一个固定大小的桶，通过有取有放，实现了限流目的。
+Golang 标准库限流器通过令牌桶实现。令牌桶可以想象有一个固定大小的桶，通过有取有放，实现了限流目的。
 
 放：系统会以恒定速率向桶中放 Token，桶满则暂时不放。
 
@@ -46,13 +46,14 @@ func Every(interval time.Duration) Limit {
 ```go
 type Limiter struct {
 	mu     sync.Mutex
-    // limit 最大事件率
+	// limit 最大事件率
 	limit  Limit
-    // burst 桶大小
+	// burst 桶大小
 	burst  int
-    // tokens 桶的当前令牌数目
+	// tokens 桶的当前令牌数目
 	tokens float64
 	// last is the last time the limiter's tokens field was updated
+	// last是关键，只加了一个结构体成员，就可以避免上面提到的不必要的定时器和token队列，转而用lazyload方式使用计算时间差的方法更新token数目
 	last time.Time
 	// lastEvent is the latest time of a rate-limited event (past or future)
 	lastEvent time.Time
@@ -82,6 +83,14 @@ reserve 方法的大致流程：
 4. 更新last时间为将now时间，返回结构体Reservation
 
 ```go
+// Usage example:
+//   r := lim.ReserveN(time.Now(), 1)
+//   if !r.OK() {
+//     // Not allowed to act! Did you remember to set lim.burst to be > 0 ?
+//     return
+//   }
+//   time.Sleep(r.Delay())
+//   Act()
 func (lim *Limiter) Reserve() *Reservation {
 	return lim.ReserveN(time.Now(), 1)
 }
@@ -171,6 +180,49 @@ func (lim *Limiter) advance(now time.Time) (newNow time.Time, newLast time.Time,
 }
 ```
 
-```go
+CancelAt 表示预订持有者不会执行预订的操作，并考虑到可能已经进行了其他预订，并尽可能地逆转此预订对速率限制的影响。
 
+CancelAt 方法的大致流程：
+1. 四种直接返回的情况： !r.ok   r.lim.limit == Inf   r.tokens == 0  r.timeToAct.Before(now)
+2. restoreTokens := float64(r.tokens) - r.limit.tokensFromDuration(r.lim.lastEvent.Sub(r.timeToAct)) 算出要归还的token数目
+3. r.lim.advance(now) lazyload 方式算出当前时间的token数目
+4. tokens += restoreTokens 算出归还后的token数目
+
+```go
+func (r *Reservation) CancelAt(now time.Time) {
+	if !r.ok {
+		return
+	}
+
+	r.lim.mu.Lock()
+	defer r.lim.mu.Unlock()
+
+	if r.lim.limit == Inf || r.tokens == 0 || r.timeToAct.Before(now) {
+		return
+	}
+
+	// calculate tokens to restore
+	// The duration between lim.lastEvent and r.timeToAct tells us how many tokens were reserved
+	// after r was obtained. These tokens should not be restored.
+	restoreTokens := float64(r.tokens) - r.limit.tokensFromDuration(r.lim.lastEvent.Sub(r.timeToAct))
+	if restoreTokens <= 0 {
+		return
+	}
+	// advance time to now
+	now, _, tokens := r.lim.advance(now)
+	// calculate new number of tokens
+	tokens += restoreTokens
+	if burst := float64(r.lim.burst); tokens > burst {
+		tokens = burst
+	}
+	// update state
+	r.lim.last = now
+	r.lim.tokens = tokens
+	if r.timeToAct == r.lim.lastEvent {
+		prevEvent := r.timeToAct.Add(r.limit.durationFromTokens(float64(-r.tokens)))
+		if !prevEvent.Before(now) {
+			r.lim.lastEvent = prevEvent
+		}
+	}
+}
 ```
