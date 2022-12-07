@@ -1,11 +1,13 @@
 ---
-title: client-go 源码分析（7） - Golang 标准库限流器
+title: Golang 限流器（1） - Golang 标准库限流器
 readmore: true
 date: 2022-12-07 12:55:52
 categories: 云原生
 tags:
 - client-go
 ---
+
+> https://github.com/uber-go/ratelimit
 
 ![](/images/client-go-6/2022-12-06-15-28-32.png)
 
