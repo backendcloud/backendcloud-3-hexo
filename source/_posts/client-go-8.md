@@ -19,7 +19,7 @@ type DelayingInterface interface {
 }
 
 type delayingType struct {
-	Interface
+	Interface // 实例化延迟队列的同时实例化了普通队列
 
 	// clock tracks time for delayed firing
 	clock clock.Clock
@@ -148,6 +148,7 @@ func (q *delayingType) waitingLoop() {
 	waitingEntryByData := map[t]*waitFor{}
 
 	for {
+		// 如果该延迟队列包含wrap的普通队列的属性和方法，得知该队列正在被关闭，则跳出整个waitingLoop()方法
 		if q.Interface.ShuttingDown() {
 			return
 		}
@@ -157,6 +158,7 @@ func (q *delayingType) waitingLoop() {
 		// Add ready entries
 		for waitingForQueue.Len() > 0 {
 			entry := waitingForQueue.Peek().(*waitFor)
+			// heap的第一个item是最接近到期时间的，该item时间还没到，则heap不动，若该item时间已到，则pop出来，并将该item加入workqueue和从唯一无序set集合waitingEntryByData删除该item。
 			if entry.readyAt.After(now) {
 				break
 			}
@@ -167,14 +169,17 @@ func (q *delayingType) waitingLoop() {
 		}
 
 		// Set up a wait for the first item's readyAt (if one exists)
+		// nextReadyAt是个定时器，never是永不到期的定时器
 		nextReadyAt := never
+		//若 heeap：waitingForQueue 还有item
 		if waitingForQueue.Len() > 0 {
+			// 若定时器在工作，则停止改计时器
 			if nextReadyAtTimer != nil {
 				nextReadyAtTimer.Stop()
 			}
-			entry := waitingForQueue.Peek().(*waitFor)
-			nextReadyAtTimer = q.clock.NewTimer(entry.readyAt.Sub(now))
-			nextReadyAt = nextReadyAtTimer.C()
+			entry := waitingForQueue.Peek().(*waitFor) // 获取 heeap：waitingForQueue 首个item
+			nextReadyAtTimer = q.clock.NewTimer(entry.readyAt.Sub(now)) // 获取该首个item还有多久到期（到期时间减去现在时间），根据该时间创建定时器 nextReadyAtTimer.C()
+			nextReadyAt = nextReadyAtTimer.C() 
 		}
 
 		select {
@@ -215,6 +220,8 @@ func (q *delayingType) waitingLoop() {
 上面的代码中的select方法，满足心跳时间 或者 pop后的heap的第一个元素的时间已经到了 或者q.waitingForAddCh channel有数据，就进入下一次的for循环。
 
 其中，从q.waitingForAddCh取出数据后，根据item的到期时间，决定是放入堆中（item的到期时间晚于现在的时间），还是放入工作队列（item的到期时间早于现在的时间）。本次的放入工作队列不同于上面几行的放入工作队列的代码，区别是上次是从堆里拿出的item，这次是从channel拿出的item跳过了放入堆的过程直接放入工作队列。（因为item的到期时间已经晚于现在的时间，没必要放投入堆里进行排序了，提高执行效率，避免做无用功）
+
+for !drained 是为了将 q.waitingForAddCh channel里的items处理完，当 drained = true 表示已处理完成该channel的全部items。
 
 insert方法往heap添加元素，分两种情况。若元素存在则update，若不存在，push该元素到heap中，并将入参的 knownEntries（即waitingLoop方法的waitingEntryByData） set集合添加该元素的值，为了保证不重复。
 
