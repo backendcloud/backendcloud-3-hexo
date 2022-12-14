@@ -1,6 +1,6 @@
 ---
 title: client-go 源码分析（8） - workerqueue之延时队列DelayingQueue
-readmore: true
+readmore: false
 date: 2022-12-14 12:59:07
 categories: 云原生
 tags:
