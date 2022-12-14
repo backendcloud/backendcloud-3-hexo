@@ -130,7 +130,7 @@ func (q *delayingType) AddAfter(item interface{}, duration time.Duration) {
 }
 ```
 
-waitingLoop方法，随着delayingType实例的创建而启动，并一直运行下去直到workqueue被shutdown。waitingLoop方法一直在做的事情就是 不停的将上面的 AddAfter方法 放进 waitingForAddCh channel的item取出来，根据item的时间是早于现在还是晚于现在，早于现在就加入工作队列，晚于现在就放到heap上。
+waitingLoop方法，随着delayingType实例的创建而启动，并一直运行下去直到workqueue被shutdown。waitingLoop方法一直在做的事情就是 不停的将上面的 AddAfter方法 放进 q.waitingForAddCh channel的item取出来，根据item的时间是早于现在还是晚于现在，早于现在就加入工作队列，晚于现在就放到heap上。
 
 ```go
 func (q *delayingType) waitingLoop() {
@@ -211,6 +211,10 @@ func (q *delayingType) waitingLoop() {
 	}
 }
 ```
+
+上面的代码中的select方法，满足心跳时间 或者 pop后的heap的第一个元素的时间已经到了 或者q.waitingForAddCh channel有数据，进入洗一次for循环。
+
+其中，从q.waitingForAddCh取出数据后，根据item的到期时间，决定是放入堆中（item的到期时间晚于现在的时间），还是放入工作队列（item的到期时间早于现在的时间）。本次的放入工作队列不同于上面几行的放入工作队列的代码，区别是上次是从堆里拿出的item，这次是从channel拿出的item提过放入堆直接放入工作队列。（因为item的到期时间已经晚于现在的时间，没必要放投入堆里进行排序了，提高执行效率，避免做无用功）
 
 insert方法往heap添加元素，分两种情况。若元素存在则update，若不存在，push该元素到heap中，并将入参的 knownEntries set集合添加该元素的值，为了保证不重复。
 
