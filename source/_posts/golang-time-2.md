@@ -294,6 +294,10 @@ func addtimer(t *timer) {
 }
 ```
 
+cleantimers方法获取heap上的第一个item，检查其状态。
+
+若是timerDeleted状态，
+
 ```go
 // cleantimers cleans up the head of the timer queue. This speeds up
 // programs that create and delete timers; leaving them in the heap
