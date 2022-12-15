@@ -261,4 +261,4 @@ func (t Time) Equal(u Time) bool {
 
 其他time相关的具体的时间相关的函数（分布在time.go local.go zoneinfo.go）很多，都比较简单，不一一分析了。
 
-待以后再分析timer和ticker相关的代码。
+待以后再分析timer和ticker相关的代码（实际上timer和ticker相关的源码已经不属于time包了，在runtime包里）。
