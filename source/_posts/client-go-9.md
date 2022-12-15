@@ -10,7 +10,7 @@ tags:
 
 workerqueue的限速队列RateLimitingQueue搞明白三件事就可以了。
 1. 代码结构
-2. 5种限速RateLimitingQueue(限速队列)
+2. 5种RateLimitingQueue(限速队列)
 3. Kubernetes主要用了上述5种限速队列的哪几种
 
 # 代码结构

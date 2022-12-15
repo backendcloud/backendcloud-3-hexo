@@ -81,7 +81,9 @@ func (pq *waitForPriorityQueue) Pop() interface{} {
 	*pq = (*pq)[0:(n - 1)]
 	return item
 }
-// 返回第一个元素，非heap接口的实现方法
+// 返回第一个元素，非heap接口的实现方法。
+// 这里没有写错，函数接收器不用指针是为了不改变waitForPriorityQueue内的数据。
+// 后面调用该方法都是为了检查最小堆pop的item，（因为是最小堆，pop出来的item的到期时间一定是最早的）的到期时间是比now时间早还是晚
 func (pq waitForPriorityQueue) Peek() interface{} {
     return pq[0]
 }
