@@ -7,7 +7,7 @@ tags:
 - Golang
 ---
 
-timer也叫定时器，ticker是反复触发的定时器。实际上 timer和ticker 的代码已经都不在time标准库里了，都在golang的runtime包里。
+timer也叫定时器，ticker是反复触发的定时器。实际上 timer和ticker 的代码已经基本不在time包里了，主要都都在golang的runtime包里。
 
 在Go 在1.14版本之后，timer源码实现上有了巨大变更，移除了timersBucket，所有的timer都以最小四叉堆的形式存储 P 中（Golang GPM调度模型中的P）。（最小四叉堆参考之前的最小二叉堆的源码分析，完全一样的逻辑）
 
@@ -173,6 +173,241 @@ type p struct {
 
  超级复杂的p结构体，但本篇仅需要关注 p结构体中的 timers []*timer timer的最小四叉堆，timer0When uint64 timer最小四叉堆的第一个条目的 when 字段。
 
+Timer结构体和其构造函数：
 
+```go
+type Timer struct {
+	C <-chan Time
+	r runtimeTimer
+}
 
-timer 的触发 设计golang的GMP，golang的调度，待以后再分析。
+func NewTimer(d Duration) *Timer {
+	c := make(chan Time, 1)
+	t := &Timer{
+		C: c,
+		r: runtimeTimer{
+			when: when(d),
+			f:    sendTime,
+			arg:  c,
+		},
+	}
+	startTimer(&t.r)
+	return t
+}
+```
+
+回调函数sendTime将当前时间放入管道：
+
+```go
+func sendTime(c any, seq uintptr) {
+	select {
+	case c.(chan Time) <- Now():
+	default:
+	}
+}
+```
+
+startTimer方法映射的是runtime中的startTimer方法：
+
+```go
+// startTimer adds t to the timer heap.
+//
+//go:linkname startTimer time.startTimer
+func startTimer(t *timer) {
+	if raceenabled {
+		racerelease(unsafe.Pointer(t))
+	}
+	addtimer(t)
+}
+```
+
+Timer结构体包含一个runtimeTimer结构体，runtimeTimer结构体映射的是runtime包下的timer结构体。
+
+```go
+// If this struct changes, adjust ../time/sleep.go:/runtimeTimer.
+type timer struct {
+	// If this timer is on a heap, which P's heap it is on.
+	// puintptr rather than *p to match uintptr in the versions
+	// of this struct defined in other packages.
+	pp puintptr
+
+	// Timer wakes up at when, and then at when+period, ... (period > 0 only)
+	// each time calling f(arg, now) in the timer goroutine, so f must be
+	// a well-behaved function and not block.
+	//
+	// when must be positive on an active timer.
+	when   int64
+	period int64
+	f      func(any, uintptr)
+	arg    any
+	seq    uintptr
+
+	// What to set the when field to in timerModifiedXX status.
+	nextwhen int64
+
+	// The status field holds one of the values below.
+	status uint32
+}
+```
+
+addtimer方法做的事情：
+1. t.when 和 t.period 不可以是负数。
+2. 将定时器 的状态改成 timerWaiting。
+3. 调用cleantimers对定时器最小四叉堆做清理工作。
+4. 调用doaddtimer将定时器timer加入到最小四叉堆中。
+5. 调用 wakeNetPoller 唤醒 netpoller 中休眠的线程。
+
+```go
+// addtimer adds a timer to the current P.
+// This should only be called with a newly created timer.
+// That avoids the risk of changing the when field of a timer in some P's heap,
+// which could cause the heap to become unsorted.
+func addtimer(t *timer) {
+	// when must be positive. A negative value will cause runtimer to
+	// overflow during its delta calculation and never expire other runtime
+	// timers. Zero will cause checkTimers to fail to notice the timer.
+	if t.when <= 0 {
+		throw("timer when must be positive")
+	}
+	if t.period < 0 {
+		throw("timer period must be non-negative")
+	}
+	if t.status != timerNoStatus {
+		throw("addtimer called with initialized timer")
+	}
+	t.status = timerWaiting
+
+	when := t.when
+
+	// Disable preemption while using pp to avoid changing another P's heap.
+	mp := acquirem()
+
+	pp := getg().m.p.ptr()
+	lock(&pp.timersLock)
+	cleantimers(pp)
+	doaddtimer(pp, t)
+	unlock(&pp.timersLock)
+
+	wakeNetPoller(when)
+
+	releasem(mp)
+}
+```
+
+```go
+// cleantimers cleans up the head of the timer queue. This speeds up
+// programs that create and delete timers; leaving them in the heap
+// slows down addtimer. Reports whether no timer problems were found.
+// The caller must have locked the timers for pp.
+func cleantimers(pp *p) {
+	gp := getg()
+	for {
+		if len(pp.timers) == 0 {
+			return
+		}
+
+		// This loop can theoretically run for a while, and because
+		// it is holding timersLock it cannot be preempted.
+		// If someone is trying to preempt us, just return.
+		// We can clean the timers later.
+		if gp.preemptStop {
+			return
+		}
+
+		t := pp.timers[0]
+		if t.pp.ptr() != pp {
+			throw("cleantimers: bad p")
+		}
+		switch s := atomic.Load(&t.status); s {
+		case timerDeleted:
+			if !atomic.Cas(&t.status, s, timerRemoving) {
+				continue
+			}
+			dodeltimer0(pp)
+			if !atomic.Cas(&t.status, timerRemoving, timerRemoved) {
+				badTimer()
+			}
+			atomic.Xadd(&pp.deletedTimers, -1)
+		case timerModifiedEarlier, timerModifiedLater:
+			if !atomic.Cas(&t.status, s, timerMoving) {
+				continue
+			}
+			// Now we can change the when field.
+			t.when = t.nextwhen
+			// Move t to the right position.
+			dodeltimer0(pp)
+			doaddtimer(pp, t)
+			if !atomic.Cas(&t.status, timerMoving, timerWaiting) {
+				badTimer()
+			}
+		default:
+			// Head of timers does not need adjustment.
+			return
+		}
+	}
+}
+```
+
+```go
+// doaddtimer adds t to the current P's heap.
+// The caller must have locked the timers for pp.
+func doaddtimer(pp *p, t *timer) {
+	// Timers rely on the network poller, so make sure the poller
+	// has started.
+	if netpollInited == 0 {
+		netpollGenericInit()
+	}
+
+	if t.pp != 0 {
+		throw("doaddtimer: P already set in timer")
+	}
+	t.pp.set(pp)
+	i := len(pp.timers)
+	pp.timers = append(pp.timers, t)
+	siftupTimer(pp.timers, i)
+	if t == pp.timers[0] {
+		atomic.Store64(&pp.timer0When, uint64(t.when))
+	}
+	atomic.Xadd(&pp.numTimers, 1)
+}
+```
+
+doaddtimer方法中调用了siftupTimer方法。
+
+```go
+// Heap maintenance algorithms.
+// These algorithms check for slice index errors manually.
+// Slice index error can happen if the program is using racy
+// access to timers. We don't want to panic here, because
+// it will cause the program to crash with a mysterious
+// "panic holding locks" message. Instead, we panic while not
+// holding a lock.
+
+// siftupTimer puts the timer at position i in the right place
+// in the heap by moving it up toward the top of the heap.
+// It returns the smallest changed index.
+func siftupTimer(t []*timer, i int) int {
+	if i >= len(t) {
+		badTimer()
+	}
+	when := t[i].when
+	if when <= 0 {
+		badTimer()
+	}
+	tmp := t[i]
+	for i > 0 {
+		p := (i - 1) / 4 // parent
+		if when >= t[p].when {
+			break
+		}
+		t[i] = t[p]
+		i = p
+	}
+	if tmp != t[i] {
+		t[i] = tmp
+	}
+	return i
+}
+```
+
+timer 的触发 涉及golang的GMP，golang的调度，待以后再分析。netpoll 也待以后分析。
