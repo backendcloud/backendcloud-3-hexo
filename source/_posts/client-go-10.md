@@ -1,10 +1,15 @@
 ---
-title: client-go-6
+title: client-go 源码分析（10） - 使用client-go实现一个简单controller的例子
 readmore: true
-date: 2022-12-06 18:38:33
-categories:
+date: 2022-12-16 12:38:33
+categories: 云原生
 tags:
+- client-go
 ---
+
+下面的example也是client-go官方的例子。通过这个简单的例子正好把之前的源码分析的一个个模块都串起来了。
+
+main方法里构造indexer，queue，informer，从而构造自己的Controller。程序运行过程中 processNextItem方法一直在执行，从限速队列中取出deltaFIFO的item进行处理。处理方法是syncToStdout，syncToStdout 是控制器的业务逻辑。在此控制器中，它只是将有关 pod 的信息打印到 stdout。如果发生错误，它必须简单地返回错误。重试逻辑不应是业务逻辑的一部分。重试逻辑单独的方法handleErr。
 
 ```go
 /*
@@ -229,6 +234,8 @@ func main() {
 }
 ```
 
+运行main方法：
+
 ```bash
 GOROOT=C:\go\go1.19 #gosetup
 GOPATH=C:\Users\hanwei\go #gosetup
@@ -296,6 +303,8 @@ virt-launcher-testvm-gd649             0/2     Init:0/2   0          2s
 virt-launcher-vm-centos-hc5rc          1/1     Running    0          19h
 virt-launcher-zal-vm-centos-zng7m      1/1     Running    0          3h7m
 ```
+
+控制台更新以下输出：
 
 ```bash
 Sync/Add/Update for Pod virt-launcher-testvm-gd649
