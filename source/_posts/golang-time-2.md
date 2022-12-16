@@ -1,7 +1,7 @@
 ---
-title: workinprocess- Golang标准库time（2） - timer和ticker
+title: Golang标准库time（2） - timer和ticker
 readmore: true
-date: 2022-12-15 18:44:01
+date: 2022-12-16 08:44:01
 categories: 云原生
 tags:
 - Golang
@@ -296,13 +296,13 @@ func addtimer(t *timer) {
 
 cleantimers方法获取heap上的第一个item，检查其状态。
 
-若是timerDeleted状态，
+若是timerDeleted状态，将其置为timerRemoving状态，调用dodeltimer0方法pop heap首个item，并置为timerRemoved状态。
+
+若是timerModifiedEarlier, timerModifiedLater状态，将其置为timerRemoving状态，改变when字段为nextwhen字段的值，调用dodeltimer0方法pop heap首个item再将其push到heap，并置为timerWaiting状态。
+
+上面几种状态都调用到的dodeltimer0方法，就是从heap上pop出首个元素（或者说删除更准确），完成do首个定时器time0的操作。具体是将切片的首个元素赋值成末尾元素从而实现time0的删除，然后调用siftdownTimer方法对time0元素在heap最小四叉堆做下沉操作。调用updateTimer0When方法更新上面复杂的p结构体的timer0When字段的操作。heap的长度减1。
 
 ```go
-// cleantimers cleans up the head of the timer queue. This speeds up
-// programs that create and delete timers; leaving them in the heap
-// slows down addtimer. Reports whether no timer problems were found.
-// The caller must have locked the timers for pp.
 func cleantimers(pp *p) {
 	gp := getg()
 	for {
@@ -350,7 +350,40 @@ func cleantimers(pp *p) {
 		}
 	}
 }
+
+func dodeltimer0(pp *p) {
+	if t := pp.timers[0]; t.pp.ptr() != pp {
+		throw("dodeltimer0: wrong P")
+	} else {
+		t.pp = 0
+	}
+	last := len(pp.timers) - 1
+	if last > 0 {
+		pp.timers[0] = pp.timers[last]
+	}
+	pp.timers[last] = nil
+	pp.timers = pp.timers[:last]
+	if last > 0 {
+		siftdownTimer(pp.timers, 0)
+	}
+	updateTimer0When(pp)
+	n := atomic.Xadd(&pp.numTimers, -1)
+	if n == 0 {
+		// If there are no timers, then clearly none are modified.
+		atomic.Store64(&pp.timerModifiedEarliest, 0)
+	}
+}
+
+func updateTimer0When(pp *p) {
+	if len(pp.timers) == 0 {
+		atomic.Store64(&pp.timer0When, 0)
+	} else {
+		atomic.Store64(&pp.timer0When, uint64(pp.timers[0].when))
+	}
+}
 ```
+
+doaddtimer方法将入参的timer t掺入到golang GMP调度的P对应的最小四叉堆上。具体设置timer的pp字段指定p，将timer先放进heap的末尾，调用了siftupTimer方法对末尾元素做上浮操作。
 
 ```go
 // doaddtimer adds t to the current P's heap.
@@ -376,20 +409,9 @@ func doaddtimer(pp *p, t *timer) {
 }
 ```
 
-doaddtimer方法中调用了siftupTimer方法。
+siftupTimer方法和siftdownTimer方法分别是对最小四叉堆的上浮操作和下沉操作，参考之前的golang标准库heap源码的分析，逻辑是一样的。
 
 ```go
-// Heap maintenance algorithms.
-// These algorithms check for slice index errors manually.
-// Slice index error can happen if the program is using racy
-// access to timers. We don't want to panic here, because
-// it will cause the program to crash with a mysterious
-// "panic holding locks" message. Instead, we panic while not
-// holding a lock.
-
-// siftupTimer puts the timer at position i in the right place
-// in the heap by moving it up toward the top of the heap.
-// It returns the smallest changed index.
 func siftupTimer(t []*timer, i int) int {
 	if i >= len(t) {
 		badTimer()
@@ -411,6 +433,49 @@ func siftupTimer(t []*timer, i int) int {
 		t[i] = tmp
 	}
 	return i
+}
+
+func siftdownTimer(t []*timer, i int) {
+	n := len(t)
+	if i >= n {
+		badTimer()
+	}
+	when := t[i].when
+	if when <= 0 {
+		badTimer()
+	}
+	tmp := t[i]
+	for {
+		c := i*4 + 1 // left child
+		c3 := c + 2  // mid child
+		if c >= n {
+			break
+		}
+		w := t[c].when
+		if c+1 < n && t[c+1].when < w {
+			w = t[c+1].when
+			c++
+		}
+		if c3 < n {
+			w3 := t[c3].when
+			if c3+1 < n && t[c3+1].when < w3 {
+				w3 = t[c3+1].when
+				c3++
+			}
+			if w3 < w {
+				w = w3
+				c = c3
+			}
+		}
+		if w >= when {
+			break
+		}
+		t[i] = t[c]
+		i = c
+	}
+	if tmp != t[i] {
+		t[i] = tmp
+	}
 }
 ```
 
