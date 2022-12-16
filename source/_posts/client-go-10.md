@@ -9,7 +9,7 @@ tags:
 
 下面的example也是client-go官方的例子。通过这个简单的例子正好把之前的源码分析的一个个模块都串起来了。
 
-main方法里构造indexer，queue，informer，从而构造自己的Controller。程序运行过程中 processNextItem方法一直在执行，从限速队列中取出deltaFIFO的item进行处理。处理方法是syncToStdout，syncToStdout 是控制器的业务逻辑。在此控制器中，它只是将有关 pod 的信息打印到 stdout。如果发生错误，它必须简单地返回错误。重试逻辑不应是业务逻辑的一部分。重试逻辑单独的方法handleErr。
+main方法里构造indexer，queue，informer，从而构造自己的Controller。程序运行过程中 processNextItem方法一直在执行，从限速队列中取出item进行处理。处理方法是syncToStdout，syncToStdout 是控制器的业务逻辑。在此控制器中，业务逻辑只是将有关 pod 的信息打印到 stdout。如果发生错误，简单地返回错误。重试逻辑不应是业务逻辑的一部分。重试逻辑放在单独的方法handleErr中。
 
 ```go
 /*
@@ -309,4 +309,48 @@ virt-launcher-zal-vm-centos-zng7m      1/1     Running    0          3h7m
 ```bash
 Sync/Add/Update for Pod virt-launcher-testvm-gd649
 Sync/Add/Update for Pod virt-launcher-testvm-gd649
+```
+
+这里正好顺带说下listwatch的代码，之前的源码分析也没提到。因为广义的Kubernetes中的listwatch应该是整个informer实现机制，包括reflector，indexer，deltaFIFO，queue等。若仅仅是reflector的对Kubernetes API的listwatch的代码，很简单，就是用了rest api的短连接list，长连接进行watch，如下：
+
+```go
+	// create the pod watcher
+	podListWatcher := cache.NewListWatchFromClient(clientset.CoreV1().RESTClient(), "pods", v1.NamespaceDefault, fields.Everything())
+```
+
+```go
+// NewListWatchFromClient creates a new ListWatch from the specified client, resource, namespace and field selector.
+func NewListWatchFromClient(c Getter, resource string, namespace string, fieldSelector fields.Selector) *ListWatch {
+	optionsModifier := func(options *metav1.ListOptions) {
+		options.FieldSelector = fieldSelector.String()
+	}
+	return NewFilteredListWatchFromClient(c, resource, namespace, optionsModifier)
+}
+```
+
+```go
+// NewFilteredListWatchFromClient creates a new ListWatch from the specified client, resource, namespace, and option modifier.
+// Option modifier is a function takes a ListOptions and modifies the consumed ListOptions. Provide customized modifier function
+// to apply modification to ListOptions with a field selector, a label selector, or any other desired options.
+func NewFilteredListWatchFromClient(c Getter, resource string, namespace string, optionsModifier func(options *metav1.ListOptions)) *ListWatch {
+	listFunc := func(options metav1.ListOptions) (runtime.Object, error) {
+		optionsModifier(&options)
+		return c.Get().
+			Namespace(namespace).
+			Resource(resource).
+			VersionedParams(&options, metav1.ParameterCodec).
+			Do(context.TODO()).
+			Get()
+	}
+	watchFunc := func(options metav1.ListOptions) (watch.Interface, error) {
+		options.Watch = true
+		optionsModifier(&options)
+		return c.Get().
+			Namespace(namespace).
+			Resource(resource).
+			VersionedParams(&options, metav1.ParameterCodec).
+			Watch(context.TODO())
+	}
+	return &ListWatch{ListFunc: listFunc, WatchFunc: watchFunc}
+}
 ```

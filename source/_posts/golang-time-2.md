@@ -383,7 +383,7 @@ func updateTimer0When(pp *p) {
 }
 ```
 
-doaddtimer方法将入参的timer t掺入到golang GMP调度的P对应的最小四叉堆上。具体设置timer的pp字段指定p，将timer先放进heap的末尾，调用了siftupTimer方法对末尾元素做上浮操作。
+doaddtimer方法将入参的timer t push到golang GMP调度的P对应的最小四叉堆上。具体设置timer的pp字段指定p，将timer先放进heap的末尾，再调用siftupTimer方法对末尾元素做上浮操作。
 
 ```go
 // doaddtimer adds t to the current P's heap.
