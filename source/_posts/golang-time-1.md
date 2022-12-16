@@ -265,6 +265,38 @@ func (t Time) Equal(u Time) bool {
 }
 ```
 
+下一个版本的的Compare方法：
+
+即将于2023年2月发布的Golang 1.20版本新增了Compare方法。因为After，Before，Equal方法相当于<, >,=。还没有个<=. >=方法，于是新增了Compare方法。
+
+> https://github.com/golang/go/issues/50770
+> 
+> https://go-review.googlesource.com/c/go/+/382734
+
+```go
+// Compare compares the time instant t with u. If t is before u, it returns -1;
+// if t is after u, it returns +1; if they're the same, it returns 0.
+func (t Time) Compare(u Time) int {
+	var tc, uc int64
+	if t.wall&u.wall&hasMonotonic != 0 {
+		tc, uc = t.ext, u.ext
+	} else {
+		tc, uc = t.sec(), u.sec()
+		if tc == uc {
+			tc, uc = int64(t.nsec()), int64(u.nsec())
+		}
+	}
+	switch {
+	case tc < uc:
+		return -1
+	case tc > uc:
+		return +1
+	}
+	return 0
+}
+```
+
 其他time相关的具体的时间相关的函数（分布在time.go local.go zoneinfo.go）很多，都比较简单，不一一分析了。
 
 待以后再分析timer和ticker相关的代码（实际上timer和ticker相关的源码已经不属于time包了，在runtime包里）。
+
