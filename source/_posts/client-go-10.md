@@ -311,7 +311,7 @@ Sync/Add/Update for Pod virt-launcher-testvm-gd649
 Sync/Add/Update for Pod virt-launcher-testvm-gd649
 ```
 
-这里正好顺带说下listwatch的代码，之前的源码分析也没提到。因为广义的Kubernetes中的listwatch应该是整个informer实现机制，包括reflector，indexer，deltaFIFO，queue等。若仅仅是reflector的对Kubernetes API的listwatch的代码，很简单，就是用了rest api的短连接list，长连接进行watch，如下：
+main方法种创建了podListwatcher：
 
 ```go
 	// create the pod watcher
