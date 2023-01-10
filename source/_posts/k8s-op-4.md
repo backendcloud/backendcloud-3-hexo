@@ -218,7 +218,7 @@ func main() {
 }
 ```
 
-# python
+**python**
 
 ```python
 import signal, time, os
@@ -234,7 +234,7 @@ if __name__ == '__main__':
     # Main logic goes here
 ```
 
-# nodejs
+**nodejs**
 
 ```js
 process.on('SIGTERM', () => {
@@ -245,7 +245,7 @@ process.on('SIGTERM', () => {
 });
 ```
 
-# java
+**java**
 
 ```java
 import sun.misc.Signal;
@@ -271,12 +271,15 @@ public class ExampleSignalHandler {
 
 前面说的没有优雅中止的原因之一业务逻辑不是主进程，往往是因为采用了 /bin/sh -c my-app 这样的启动入口。 或者使用 /entrypoint.sh 这样的脚本文件作为入口，在脚本中再启动业务进程。容器主进程是 shell，业务进程是在 shell 中启动的，成为了 shell 进程的子进程。不做特别配置 shell是不会往自己的子进程传递 SIGTERM 信号的，从而导致业务进程不会触发停止逻辑。这时候只能等到 K8S 优雅停止超时时间 (terminationGracePeriodSeconds，默认 30s)，发送 SIGKILL 强制杀死 shell 及其子进程。
 
-**如何解决**
+**如何解决业务进程获取不到信号的问题**
 
 1. 尽量不使用 shell 启动业务进程，直接启动业务进程
-2. 如果一定要通过 shell 启动，需要一定的配置在 SHELL 中传递信号。具体有以下三种途径。
+2. 如果一定要通过 shell 启动，需要一定的配置在 SHELL 中传递信号。
 
+
+SHELL 中传递信号。具体有以下三种途径。
 1. 使用 exec 启动
+
 在 shell 中启动二进制的命令前加一个 exec 即可让该二进制启动的进程代替当前 shell 进程，即让新启动的进程成为主进程:
 
 ```bash
@@ -287,6 +290,7 @@ exec /bin/yourapp # 脚本中执行二进制
 ```
 
 2. 多进程场景: 使用 trap 传递信号
+
 单个容器中需要启动多个业务进程，这时也只能通过 shell 启动，但无法使用上面的 exec 方式来传递信号，因为 exec 只能让一个进程替代当前 shell 成为主进程。
 
 这个时候我们可以在 shell 中使用 trap 来捕获信号，当收到信号后触发回调函数来将信号通过 kill 传递给业务进程，脚本示例:
@@ -310,7 +314,8 @@ trap handle_sigterm SIGTERM # 捕获 SIGTERM 信号并回调 handle_sigterm 函�
 wait # 等待回调执行完，主进程再退出
 ```
 
-**完美方案: 使用 init 系统**
+3. 完美方案: 使用 init 系统
+
 前面一种方案实际是用脚本实现了一个极简的 init 系统 (或 supervisor) 来管理所有子进程，只不过它的逻辑很简陋，仅仅简单的透传指定信号给子进程，其实社区有更完善的方案，dumb-init 和 tini 都可以作为 init 进程，作为主进程 (PID 1) 在容器中启动，然后它再运行 shell 来执行我们指定的脚本 (shell 作为子进程)，shell 中启动的业务进程也成为它的子进程，当它收到信号时会将其传递给所有的子进程，从而也能完美解决 SHELL 无法传递信号问题，并且还有回收僵尸进程的能力。
 
 这是以 dumb-init 为例制作镜像的 Dockerfile 示例:
