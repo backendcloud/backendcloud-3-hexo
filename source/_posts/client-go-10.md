@@ -311,7 +311,7 @@ Sync/Add/Update for Pod virt-launcher-testvm-gd649
 Sync/Add/Update for Pod virt-launcher-testvm-gd649
 ```
 
-main方法种创建了podListwatcher：
+main方法种创建了podListwatcher，podListWatcher 实际是一个http短连接和一个http长连接：
 
 ```go
 	// create the pod watcher
