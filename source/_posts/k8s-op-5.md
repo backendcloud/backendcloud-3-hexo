@@ -1,5 +1,5 @@
 ---
-title: Kubernetes 运维遇到的问题记录（5）
+title: Kubernetes 运维记录（5）
 readmore: true
 date: 2023-01-11 13:01:06
 categories: 云原生
