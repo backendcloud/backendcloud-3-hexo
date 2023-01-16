@@ -327,7 +327,6 @@ spec:
             app: nginx
 ```
 
-
 如果集群节点支持跨可用区，也可以 **将 Pod 尽量均匀的打散调度到各个可用区** 以实现更高级别的高可用 (topologyKey 改为 `topology.kubernetes.io/zone`):
 
 ```yaml
