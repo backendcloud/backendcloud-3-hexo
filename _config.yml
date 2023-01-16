@@ -152,7 +152,7 @@ deploy:
   repo: git@github.com:backendcloud/backendcloud-aliyun-cd.git
   # repo: git@github.com:backendcloud/backendcloud.github.io.git
   # example, https://github.com/hexojs/hexojs.github.io
-  branch: master
+  branch: main
   ignore_hidden:
     public: false
 
