@@ -360,6 +360,6 @@ spec:
             app: nginx
 ```
 
-*=参考资料：*
+**参考资料：**
 * https://github.com/imroc/kubernetes-guide
 * https://mozillazg.com/2019/05/linux-what-net.ipv4.ip_local_port_range-effect-or-mean.html
