@@ -149,7 +149,8 @@ readmore:
 #  ignore_errors: false
 deploy:
   type: git
-  repo: git@github.com:backendcloud/backendcloud.github.io.git
+  repo: git@github.com:backendcloud/backendcloud-aliyun-cd.git
+  # repo: git@github.com:backendcloud/backendcloud.github.io.git
   # example, https://github.com/hexojs/hexojs.github.io
   branch: master
   ignore_hidden:
