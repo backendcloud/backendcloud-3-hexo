@@ -1,5 +1,6 @@
 title: Openstack运维常见问题记录(2)
 date: 2018-08-28 14:48:42
+readmore: true
 categories:
 - Openstack_op
 

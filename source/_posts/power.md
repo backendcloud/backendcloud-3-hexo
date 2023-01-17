@@ -1,5 +1,6 @@
 title: POWER架构服务器作为计算节点
 date: 2018-10-21 16:21:52
+readmore: true
 categories:
 - Openstack_op
 tags:

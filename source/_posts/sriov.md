@@ -1,5 +1,6 @@
 title: OpenStack实践SR-IOV计算节点
 date: 2018-10-14 05:15:24
+readmore: true
 categories:
 - Openstack_op
 tags:
@@ -16,7 +17,7 @@ SR-IOV 两种功能（function）：
 虚拟功能（Virtual Functions，VF）：简单的 PCIe 功能，它只能处理I/O。每个 VF 都是从 PF 中分离出来的。每个物理硬件都有一个 VF 数目的限制。一个 PF，能被虚拟成多个 VF 用于分配给多个虚拟机。
 Hypervisor 能将一个或者多个 VF 分配给一个虚机。在某一时刻，一个 VF 只能被分配给一个虚机。一个虚机可以拥有多个 VF。在虚机的操作系统看来，一个 VF 网卡看起来和一个普通网卡没有区别。SR-IOV 驱动是在内核中实现的。
 网卡 SR-IOV 的例子：
-![jpg](/images/sriov/1.png)
+![](/images/sriov/1.png)
 
 # 将sriov计算节点的PF虚拟化成多个VF
 
@@ -25,7 +26,8 @@ sriov计算节点选择光口1（例如 enp5s0f1）作为sriov网卡
 1) 在计算节点上，设置BIOS，对于Intel使支持VT-d，可通过cat /proc/cpuinfo | grep vmx验证
 
 2) 配置计算节点的/etc/default/grub文件，在GRUB_CMDLINE_LINUX中添加intel_iommu=on来激活VT-d功能，重启物理机（本环境采用intel 82599系列网卡）
-```
+
+```bash
     $ cat /etc/default/grub
     GRUB_TIMEOUT=5
     GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
@@ -43,7 +45,7 @@ $ reboot
 
 <!-- more -->
 
-```
+```bash
     # echo '16' > /sys/class/net/enp5s0f1/device/sriov_numvfs
     ###查看是否生效
     # lspci | grep Ethernet
@@ -92,13 +94,15 @@ $ reboot
 ```
 
 4) 保证重启后vfs仍然存在，需要将设置vf的数目命令写入/etc/rc.local，命令如下
-```
+
+```bash
     # echo "echo '16' > /sys/class/net/enp5s0f1/device/sriov_numvfs" >> /etc/rc.local
     # chmod +x /etc/rc.local /etc/rc.d/rc.local
 ```
 
 5) 修改控制节点nova.conf文件，让nova-schedule支持对pci passthrough的过滤
-```
+
+```bash
     # vim /etc/nova/nova.conf
     enable_filters = RetryFilter, AvailabilityZoneFilter, RamFilter, ComputeFilter, ComputeCapabilitiesFilter, ImagePropertiesFilter, ServerGroupAntiAffinityFilter, ServerGroupAffinityFilter, PciPassthroughFilter
     available_filters = nova.scheduler.filters.all_filters
@@ -116,7 +120,8 @@ $ reboot
 可以将控制节点neutron.conf配置拷贝过来，修改相应参数即可，主要是修改本地管理网ip参数
 
 3) 配置sriov_agent.ini
-```
+
+```bash
     # vim /etc/neutron/plugins/ml2/sriov_agent.ini
     
     [securitygroup]
@@ -154,7 +159,7 @@ $ reboot
 
 即：设定vm的两个vnic在同一个非亲和组，生成的sriov虚拟机的两个vnic会分布在不同的两个物理SRIOV网卡上
 
-```
+```bash
 [root@controller ~]# openstack port create --vnic-type direct --binding-profile anti_affinity_group=gwgh729 --network 40fa3655-1dc6-4fa1-8a21-507ae2a92cc5 sriov-port-1
 +-----------------------+-----------------------------------------------------------------------------+
 | Field                 | Value                                                                       |

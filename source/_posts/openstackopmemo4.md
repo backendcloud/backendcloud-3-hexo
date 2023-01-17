@@ -1,5 +1,6 @@
 title: Openstack运维常见问题记录(4)
 date: 2020-01-01 20:28:32
+readmore: true
 categories:
 - Openstack_op
 tags:
