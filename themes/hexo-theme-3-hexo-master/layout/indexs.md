@@ -8,8 +8,8 @@
 
 
 # 后端云分享的免费内容包括但不限于
-
-* [后端云网站](https://www.backendcloud.cn/)发布的文章以及“后端云”微信公众号（二维码见底部）。
+* [English version of the website https://www.backendcloud.cn/](https://backendcloud.github.io/)后端云网站英文版。
+* [后端云网站](https://www.backendcloud.cn/)发布的文章以及“后端云”微信公众号（二维码见底部）。这两个平台是我亲自打理的，其他平台，比如腾讯云开发者社区“后端云”专栏是机器同步后社区管理员排版，比如知乎，简书，微博都是纯机器同步的，排版略差。体验感是：后端云网站 > 微信公众号 > 腾讯云开发者社区“后端云”专栏 > 知乎，简书，微博
 * [后端云发布的视频] work in process 。。。
 * 后端云发布的免费书籍
   * [《KubeVirt CI》](https://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。已完成24篇
