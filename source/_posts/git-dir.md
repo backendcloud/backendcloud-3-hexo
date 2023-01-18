@@ -56,7 +56,7 @@ tags目录保存的是本地仓库的tag和head信息。一个tag对应一个和
 
 通过修改该文件，可以实现同 git config --local 命令配置 一样的效果。
 
-**HEAD:是代码库当前指向的分支，这里为master。**
+**HEAD:是代码库当前指向的分支。**
 
 该文件记录当前所处的分支信息，比如 `ref: refs/heads/main`。
 
@@ -64,7 +64,9 @@ tags目录保存的是本地仓库的tag和head信息。一个tag对应一个和
 
 若修改该文件，一样可以达到和 git checkout 命令一样的切换分支的效果。
 
-**description:这个文件用于GitWeb。GitWeb 是 CGI 脚本(Common Gateway Interface，通用网关接口，简单地讲就是运行在Web服务器上的程序, 但由浏览器的输入触发)，让用户在web页面查看git内容。如果我们要启动 GitWeb 可用如下命令：**
+**description:这个文件用于GitWeb。**
+
+GitWeb 是 CGI 脚本(Common Gateway Interface，通用网关接口，简单地讲就是运行在Web服务器上的程序, 但由浏览器的输入触发)，让用户在web页面查看git内容。如果我们要启动 GitWeb 可用如下命令：
 
 git instaweb --start
 
@@ -206,6 +208,6 @@ add file1.md and dir2/file2.md
 
 commit后，继续修改文件内容，或新增文件，文件夹。不管是内容修改还是新建，校验和变了，就会在.git/objects目录下多出对应的对象，再次commit，会多出commit对象和该commit的整个tree的对象。
 
-所以即使有多个版本git不会保存多份相同文件，只会保存原始文件和增量内容，每一个commit版本都可以有清晰的结构快照，可以恢复到任意一次commit。新建分支，在其他分支的commit。通过分支信息文件，分支的HEAD信息文件，可以计算出不同分支的commit历史。
+所以即使有多个版本git不会保存多份相同文件内容，只会保存原始文件和增量内容，每一个commit版本都有清晰的结构快照，可以恢复到任意一次commit。新建分支，在其他分支的commit。通过分支信息文件，分支的HEAD信息文件，可以计算出不同分支的commit历史。
 
 
