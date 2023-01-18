@@ -1,5 +1,5 @@
 ---
-title: .git dir
+title: .git 目录的内部结构
 readmore: true
 date: 2023-01-18 18:37:35
 categories: Tools
