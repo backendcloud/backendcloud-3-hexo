@@ -18,7 +18,7 @@ OpenStack Stein 强化裸机和网络管理性能，同时更快速的启动 Kub
 
 查看nova-compute.log日志，报消息队列错误
 
-```
+```bash
 2019-09-20 13:38:32.411 68483 INFO os_vif [-] Loaded VIF plugins: ovs, linux_bridge, noop
 2019-09-20 13:38:32.878 68483 ERROR oslo.messaging._drivers.impl_rabbit [req-b955a570-83bc-4a14-966f-2eefe5a82579 - - - - -] Connection failed: [Errno 113] EHOSTUNREACH (retrying in 2.0 seconds): error: [Errno 113] EHOSTUNREACH
 2019-09-20 13:38:34.888 68483 ERROR oslo.messaging._drivers.impl_rabbit [req-b955a570-83bc-4a14-966f-2eefe5a82579 - - - - -] Connection failed: [Errno 113] EHOSTUNREACH (retrying in 4.0 seconds): error: [Errno 113] EHOSTUNREACH
@@ -35,7 +35,7 @@ OpenStack Stein 强化裸机和网络管理性能，同时更快速的启动 Kub
 
 # compute节点部署完nova-compute，执行nova service-list，计算节点服务正常，但是计算节点的nova日志报错，和资源有关，感觉是和placement服务有关
 
-```
+```bash
 2019-09-20 14:20:24.477 69378 ERROR nova.compute.manager [req-128f79a5-8b18-471b-9967-aae3cfde3043 - - - - -] Error updating resources for node compute.: ResourceProviderRetrievalFailed: Failed to get resource provider with UUID 092506db-b8fe-49d3-a962-9182e0025dea
 2019-09-20 14:20:24.477 69378 ERROR nova.compute.manager Traceback (most recent call last):
 2019-09-20 14:20:24.477 69378 ERROR nova.compute.manager   File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 8148, in _update_available_resource_for_node
@@ -71,7 +71,7 @@ OpenStack Stein 强化裸机和网络管理性能，同时更快速的启动 Kub
 
 网上搜下该问题，和权限有关
 
-```
+```bash
 # vim /etc/httpd/conf.d/00-placement-api.conf
 # add
 <Directory /usr/bin>
@@ -95,6 +95,7 @@ OpenStack Stein 强化裸机和网络管理性能，同时更快速的启动 Kub
 
 在/etc/sysctl.conf中添加：
 
+```bash
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 执行sysctl -p 时出现：
@@ -107,6 +108,7 @@ sysctl: cannot stat /proc/sys/net/bridge/bridge-nf-call-iptables: No such file o
 [root@localhost ~]# sysctl -p
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
+```
 
 重启后模块失效，下面是开机自动加载模块的脚本
 
@@ -114,6 +116,7 @@ net.bridge.bridge-nf-call-iptables = 1
 
 cat /etc/rc.sysinit
 
+```bash
 #!/bin/bash
 for file in /etc/sysconfig/modules/*.modules ; do
 [ -x $file ] && $file
@@ -130,7 +133,7 @@ chmod 755 br_netfilter.modules
 [root@localhost ~]# lsmod |grep br_netfilter
 br_netfilter           22209  0
 bridge                136173  1 br_netfilter
-
+```
 
 # openstack虚拟机实例卡在系统引导，不能启动操作系统
 
