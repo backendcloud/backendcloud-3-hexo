@@ -1,6 +1,7 @@
 ---
 title: Java项目开发中的点滴记录（1）
 date: 2021-11-23 15:04:04
+readmore: true
 categories: 编程
 tags:
 - Java
@@ -452,7 +453,7 @@ public class FtpRouteBuilder extends RouteBuilder {
 
 ## 修改Logback在小时单位内按分钟打包(以修改SystemLog为例)（支持以下时间间隔：1，2，5，10，15，20，30分钟）
 
-```xml
+```bash
 <appender name="FILE-SFTP-SystemLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <!--日志文件输出的文件名 -->
     <File>${FILE_PATH_SFTP_SystemLog}</File>

@@ -40,7 +40,7 @@ ENTRYPOINT [ "/usr/bin/virt-launcher" ]
 
 # make virt-lancher image with-bazel
 
-使用Bazel BUILD文件。load rules_docker，`base = "@libvirt//image",`基础镜像采用上面制作的libevirt镜像，将编译好的virt-launcher复制到/usr/bin/virt-launcher，并作为ENTRYPOINT。
+使用Bazel BUILD文件。load rules_docker，`base = "@libvirt//image",`基础镜像采用上面制作的libvirt镜像，将编译好的virt-launcher复制到/usr/bin/virt-launcher，并作为ENTRYPOINT。
 
 ```bash
 ...

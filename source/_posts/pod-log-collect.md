@@ -1,6 +1,7 @@
 ---
 title: Fluentd 实现 Kubernetes Pod 日志收集
 date: 2021-11-30 16:36:50
+readmore: true
 categories: 云原生
 tags:
 - Kubernetes

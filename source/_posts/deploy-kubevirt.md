@@ -1,6 +1,7 @@
 ---
 title: 部署 Kubernetes + KubeVirt 以及 KubeVirt的基本使用
 date: 2022-05-06 14:17:28
+readmore: true
 categories: 云原生
 tags:
 - Kubernetes
