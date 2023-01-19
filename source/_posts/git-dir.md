@@ -30,7 +30,7 @@ Initialized empty Git repository in /root/git-dir/.git/
 applypatch-msg.sample  commit-msg.sample  post-update.sample  pre-applypatch.sample  pre-commit.sample  prepare-commit-msg.sample  pre-push.sample  pre-rebase.sample  update.sample
 ```
 
-**objects:是存储git各种对象及内容的对象库，包含正常的和压缩后的。**
+**objects:是存储git各种对象及内容的对象库。**
 
 文件名称是git管理的workspace文件内容的SHA-1 hash校验和，有40位，取前两位作为文件夹名称，后38位作为文件名。前2位作为文件夹是为了快速索引。
 

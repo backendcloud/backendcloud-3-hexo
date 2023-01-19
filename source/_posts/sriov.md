@@ -114,7 +114,9 @@ $ reboot
 
 1) 安装neutron-sriov-agent
 
+```bash
     # yum install openstack-neutron-sriov-nic-agent openstack-neutron
+```
 
 2) 配置neutron.conf
 可以将控制节点neutron.conf配置拷贝过来，修改相应参数即可，主要是修改本地管理网ip参数
@@ -134,15 +136,19 @@ $ reboot
 
 4)  启动neutron-sriov-agent服务
 
+```bash
     # systemctl enable neutron-sriov-nic-agent
     # systemctl start neutron-sriov-nic-agent
+```
 
 5)  修改该节点nova.conf文件，重启nova-compute
 
+```bash
     # vim /etc/nova/nova.conf
     passthrough_whitelist = {"devname": "enp5s0f1", "physical_network": "physnet1"}
 
     # systemctl restart openstack-nova-compute
+```
 
 若需要配置多块SRIOV网卡
 

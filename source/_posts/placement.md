@@ -224,26 +224,34 @@ MariaDB [nova_api]> select * from allocations;
 要创建数据库，请完成以下步骤：
 o   使用数据库访问客户端以root用户身份连接到数据库服务器：
 
+```bash
     $ mysql -u root -p
+```
 
 o   创建placement数据库：
 
+```bash
     MariaDB [(none)]> CREATE DATABASE placement;
+```
 
 o   授予对数据库的适当访问权限：
 
+```bash
     MariaDB [(none)]> GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'localhost' \
       IDENTIFIED BY 'PLACEMENT_DBPASS';
     MariaDB [(none)]> GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'%' \
       IDENTIFIED BY 'PLACEMENT_DBPASS';
     替换PLACEMENT_DBPASS为合适的密码。
+```
 
 o   退出数据库访问客户端。
 
 2 配置用户和端点
 1)  来源admin凭据来访问仅管理员CLI命令：
 
+```bash
     $ . admin-openrc
+```
 
 2)  使用您选择的创建Placement服务用户PLACEMENT_PASS：
 
@@ -341,14 +349,20 @@ $ openstack endpoint create --region RegionOne \
 
 3 安装和配置组件
 1)  安装包：
+
+```bash
     # yum install openstack-placement-api
+```
+
 2)  编辑/etc/placement/placement.conf文件并完成以下操作：
 o   在该[placement_database]部分中，配置数据库访问：
 
+```bash
     [placement_database]
     # ...
     connection = mysql+pymysql://placement:PLACEMENT_DBPASS@controller/placement
     替换PLACEMENT_DBPASS为您为放置数据库选择的密码。
+```
 
 o   在[api]和[keystone_authtoken]部分中，配置身份服务访问：
 
@@ -371,10 +385,17 @@ password = PLACEMENT_PASS
 ```
 
 3)  填充placement数据库：
+
+```bash
     # su -s /bin/sh -c "placement-manage db sync" placement
+```
+
 4 完成安装
 •  重启httpd服务：
+
+```bash
     # systemctl restart httpd
+```
 
 # 使用方法
 

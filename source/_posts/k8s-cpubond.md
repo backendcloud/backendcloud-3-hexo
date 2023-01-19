@@ -1,6 +1,6 @@
 title: k8s支持容器核绑定
 date: 2020-05-22 16:24:44
-readmore: false
+readmore: true
 categories: 云原生
 tags:
 - k8s

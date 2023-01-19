@@ -1,6 +1,6 @@
 title: k8s支持Capability机制
 date: 2020-05-22 15:18:59
-readmore: false
+readmore: true
 categories: 云原生
 tags:
 - k8s
