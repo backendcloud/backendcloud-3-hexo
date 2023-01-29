@@ -31,6 +31,8 @@ tags:
 
 ![](/images/chatGPT-1/chatGPT7.png)
 
+![](/images/chatGPT-1/chatGPT8.png)
+
 觉得让chatGPT阅读代码要比写代码难很多，写代码只要理解了需求，AI在题库中找给最接近的标准示例最为回答。但是阅读代码，每个人写的都不一样，甚至还有语法错误，bug。
 
 试了让chatGPT读了两段互相没关联的我之前写的React代码，算是理解了，但是连续发两段代码，chatGPT会将不相关的代码联系到一起理解。
@@ -38,5 +40,7 @@ tags:
 ![](/images/chatGPT-1/chatGPT4.png)
 
 ![](/images/chatGPT-1/chatGPT5.png)
+
+综合用下来，觉得对于chatGPT对代码的理解，已经有相当的智能了，并且因为AI背后收集了大量的数据，所以在某些场景下，chatGPT通过搜索+AI回答的内容已经超过相同问题在google搜索的返回内容和stackoverflow上的搜索的返回内容。
 
 录制视频的场景相对文本的代码和文章来说要稍稍复杂点，包括前期视频脚本编写，录制，PR剪辑等后期。chatGPT目前只能文字对话，那么就需要借助其他工具一起辅助，才能最大效率辅助视频工作。chatGPT辅助录制视频，待以后单独开一篇聊聊。
