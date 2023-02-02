@@ -19,7 +19,7 @@ dmesg命令查看内核消息，当内核消息报：NEIGHBOUR: ARP_CACHE: NEIGH
 
 下面是服务超过 6,000 个客户端的服务器的配置参考值: 
 
-```
+```bash
 sysctl -w net.ipv4.neigh.default.gc_thresh3=24456
 sysctl -w net.ipv4.neigh.default.gc_thresh2=12228
 sysctl -w net.ipv4.neigh.default.gc_thresh1=8192
@@ -75,7 +75,7 @@ IP 转发是操作系统在一个接口上接受传入网络数据包的能力�
 
 若该K8S节点网络使用了Linux网桥，bridge-nf-call-iptables参数需要设置为1。
 
-net.bridge.bridge-nf-call-iptables=1
+    net.bridge.bridge-nf-call-iptables=1
 
 否则会因为DNAT回包异常而丢包。
 
@@ -87,7 +87,7 @@ TCP 全连接队列的长度如果过小，在高并发环境可能导致队列�
 
 
 
-```
+```bash
 # 用 netstat 查看统计
 $ netstat -s | grep -E 'overflow|drop'
     12178939 times the listen queue of a socket overflowed
@@ -104,7 +104,7 @@ sysctl -w net.core.somaxconn=65535
 
 UDP socket 的发送和接收缓冲区是有上限的，如果缓冲区较小，高并发环境可能导致缓冲区满而丢包，通过下面的命令可以看出来:
 
-```
+```bash
 # 使用 netstat 查看统计
 $ netstat -s | grep "buffer errors"
     429469 receive buffer errors
@@ -161,13 +161,13 @@ sysctl -w net.netfilter.nf_conntrack_max=1000000
 
 可以将该值调足够大，比如 2147483647
 
- vim /etc/sysctl.conf
+    vim /etc/sysctl.conf
 
 做以下配置
 
-net.ipv6.route.max_size = 2147483647
+    net.ipv6.route.max_size = 2147483647
 
- 然后执行sysctl -p
+然后执行sysctl -p
 
 可能的话，再重启下网络。
 
@@ -185,7 +185,6 @@ net.ipv6.route.max_size = 2147483647
 
 大约8分钟左右，fe80这条默认路由丢失。
 
-解决方案及原因：
 
 ## 原因：
 
@@ -207,7 +206,6 @@ accept_ra这个内核参数默认为1。由于主机开启了路由转发，导�
 
 大约7分钟左右，主机会生成到fe80的路由。此时间和华为RA通告的时间间隔基本一致。
 
-解决方案及原因：
 
 ## 原因：
 
