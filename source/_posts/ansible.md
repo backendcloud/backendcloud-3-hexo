@@ -5,6 +5,7 @@ categories: Tools
 tags:
 - ansible
 ---
+
 # 安装
 
 ansible的安装算简单的了，不要配置数据库，不用在远程操作的节点安装任何东西。只需要本机安装ansible即可。

@@ -133,6 +133,9 @@ readmore:
   qrcode: 'https://www.backendcloud.cn/img/wechat-dingyuehao.jpg'
   random: 1
 
+sitemap:
+    path: sitemap.xml
+
 # google_analytics: UA-90951221-1
 
 # Deployment

@@ -52,6 +52,7 @@ jobs:
           npm install hexo-readmore --save
           npm install hexo-deployer-git --save
           npm install hexo-filter-github-emojis --save
+          npm install hexo-generator-sitemap --save
       - name: Deploy hexo
         env:
           SSH_HOST_PRI: ${{ secrets.SSH_HOST }}
