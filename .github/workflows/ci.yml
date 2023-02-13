@@ -64,6 +64,24 @@ jobs:
 #          rsync --delete -avz ./public/ ${SSH_HOST_PRI}:/usr/share/nginx/html/backendcloud/www/
 
 
+# 添加站点地图
+# 站点地图(Site Map)是用来注明网站结构的文件，我们希望搜索引擎的爬虫了解我们的网站结构，以便于高效爬取内容，快速建立索引。
+
+# 安装插件
+# 首先为Hexo安装hexo-generator-sitemap和hexo-generator-baidu-sitemap插件，在Hexo博客目录下运行：
+
+# npm install hexo-generator-sitemap --save
+# 修改配置文件
+# 打开博客根目录下的_config.yml文件，添加如下字段:
+
+# sitemap:
+#     path: sitemap.xml
+# 然后重新生成博客文件，运行
+# hexo clean
+# hexo g
+# 此时应该可以在public目录下看到sitemap.xml文件了。
+
+# ---------------------------------------------
 
 #name: Deploy site files
 #
