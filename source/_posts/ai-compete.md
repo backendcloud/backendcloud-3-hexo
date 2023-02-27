@@ -1,5 +1,5 @@
 ---
-title: ai-compete
+title: AI之间都这么卷了吗！本是同根生，相煎何太急！
 readmore: true
 date: 2023-02-27 17:01:08
 categories: 云原生
