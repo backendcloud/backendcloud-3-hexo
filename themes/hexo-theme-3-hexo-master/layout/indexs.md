@@ -7,13 +7,13 @@
 * Fuchsia生态。
 
 
-# 后端云分享的内容（除系统视频课程外均免费）包括但不限于
+# 后端云分享的内容（除后端云教育发布的视频课程外均免费）包括但不限于
 * [English version of the website](https://backendcloud.github.io/)后端云网站英文版。
 * [后端云网站](https://www.backendcloud.cn/)发布的文章以及“后端云”微信公众号（二维码见底部）。这两个平台是我亲自打理的，其他平台，比如腾讯云开发者社区“后端云”专栏是机器同步后社区管理员排版，比如知乎，微博都是纯机器同步的，排版略差。体验感是：后端云网站 > 微信公众号 > 腾讯云开发者社区“后端云”专栏 > 知乎，微博
-* [后端云发布的视频] work in process 。。。已完成3期
-* [后端云教育发布的课程]
-  * “Kubernetes scheduler源码分析” 正在录制中。。。
-  * “React+Golang从零搭建K8S后台管理系统” 正在录制中。。。
+* 后端云发布的视频 work in process 。。。已完成3期
+* 后端云教育发布的视频课程
+  * 【Kubernetes scheduler源码分析】正在录制中。。。
+  * 【React+Golang从零搭建K8S后台管理系统】正在录制中。。。
 * 后端云发布的免费书籍
   * [《KubeVirt CI》](https://book.backendcloud.cn/kubevirt-ci-book/) work in process 。。。已完成24篇
   * [《Bazel在企业项目中的应用》](https://book.backendcloud.cn/bazel-book/) work in process 。。。已完成15篇
