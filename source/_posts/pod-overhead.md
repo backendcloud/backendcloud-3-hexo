@@ -35,11 +35,11 @@ type PodSpec struct {
 type ResourceList map[ResourceName]resource.Quantity
 ```
 
-## scheduler 对 Overhead的处理
+## scheduler 对 Overhead 的处理
 
-调度程序、资源配额处理以及 Kubelet 的 pod cgroup 创建和驱逐处理将考虑开销，以及 pod 的容器请求的总和。
+调度程序、资源配额处理以及 Kubelet 的 pod cgroup 创建和驱逐处理将考虑Overhead，以及 pod 的容器请求的总和。
 
-水平和垂直自动缩放是根据容器级别的统计数据计算的，因此不应受到 pod 开销的影响。
+水平和垂直自动缩放是根据容器级别的统计数据计算的，因此不应受到 pod Overhead的影响。
 
 例如调度程序的calculatePodResourceRequest函数在计算某个pod的资源requst请求时，若pod的Overhead请求定义了，则需要将Overhead的值加入request统计。
 
@@ -77,5 +77,5 @@ podResourceRequest = max(sum(podSpec.Containers), podSpec.InitContainers) + over
 
 GetRequestForResource函数的参数 !r.useRequested 相当于 nonZero 取反后bool值等价。
 
-!r.useRequested 为 true表示不用request值，在不设置某一项pod request，不用0值，而是用默认值
+!r.useRequested 整体为 true 表示不采用request的值（比如零值），而是用默认值（默认值只涉及cpu和memory，cpu默认为0.1核，memory默认为200兆）
 
