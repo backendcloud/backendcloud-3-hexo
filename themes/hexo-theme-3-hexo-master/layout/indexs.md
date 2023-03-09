@@ -22,7 +22,7 @@
   * [《Moby(Docker)源码分析》] work in process 。。。
   * [《Kubernetes源码分析》](https://github.com/backendcloud/k8s-analysis) work in process 。。。
 * 后端云发布的开源项目
-  * 开源项目[backendcloud](https://github.com/backendcloud)（后端云网站[内容](https://github.com/backendcloud/backendcloud.github.io)和[源码](https://github.com/backendcloud/backendcloud-3-hexo)以及网站[CI](https://github.com/backendcloud/backendcloud-3-hexo/blob/master/.github/workflows/ci.yml)和[CD](https://github.com/backendcloud/backendcloud.github.io/blob/master/.github/workflows/cd.yml)的存放仓库，以及文章里的example代码的存放仓库）
+  * 开源项目[backendcloud](https://github.com/backendcloud)（后端云网站[内容](https://github.com/backendcloud/backendcloud-aliyun-cd)和[源码](https://github.com/backendcloud/backendcloud-3-hexo)以及网站[CI](https://github.com/backendcloud/backendcloud-3-hexo/blob/master/.github/workflows/ci.yml)和[CD](https://github.com/backendcloud/backendcloud-aliyun-cd/blob/main/.github/workflows/cd.yml)的存放仓库，以及文章里的example代码的存放仓库）
   * 开源项目[KubeFusion](https://github.com/kubefusion)（该Github账号下的主项目KubeFusion是包含多种云原生技术的融合和集成定制以及KubeFusion自身特有功能（无侵入修改，后续可以随着上游项目升级而升级），其他项目是主项目的关联小项目。KubeFusion项目还在筹备中。。。）
 
 > **背景：**
