@@ -20,7 +20,7 @@ tensile-kube核心组件为4个：
 
 tensile-kube基于微软开源项目virtual-kubelet开发，准确说是实现了virtual-kubelet的provider接口中的一种资源类型，kubernetes on kubernetes。
 
-> Virtual Kubelet（VK）[6]是一个“Kubernetes Kubelet[7]实现，它伪装成 Kubelet，将 Kubernetes 连接到其他 API”。初始的 VK 实现将远程服务建模为集群的节点，从而在 Kubernetes 集群中引入无服务器计算。后来，VK 在多集群上下文中变得流行起来：VK 提供者可以将远程集群映射到本地集群节点。包括Admiralty[8]、Tensile-kube[9]和 Liqo 在内的几个项目都采用了这种方法。
+> Virtual Kubelet（VK）是一个“Kubernetes Kubelet实现，它伪装成 Kubelet，将 Kubernetes 连接到其他 API”。初始的 VK 实现将远程服务建模为集群的节点，从而在 Kubernetes 集群中引入无服务器计算。后来，VK 在多集群上下文中变得流行起来：VK 提供者可以将远程集群映射到本地集群节点。包括Admiralty、Tensile-kube和 Liqo 在内的几个项目都采用了这种方法。virtual-kubelet项目本身是一个框架，并没有实际功能，通过provider项目实现provider功能才具备实际能力。
 > 
 > 与专用 API 服务器相比，这种方法有几个优点。首先，它引入了多集群，不需要额外的 API，而且它对应用程序透明。其次，它灵活地将远程集群的资源集成到调度器的可用性中：用户可以以与本地 pod 相同的方式调度远程集群 pod。第三，它使分散治理成为可能。
 
