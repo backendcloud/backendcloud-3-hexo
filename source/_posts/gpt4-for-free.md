@@ -29,9 +29,9 @@ tags:
 
     目前，GPT-4没有免费版本。如果想使用GPT-4模型，则需要每月付费20美元，订阅ChatGPT的会员版本。不过，Bing用户已经可以接入新的Bing聊天机器人，因此他们也可以间接体验GPT-4。
 
-要使用GPT4，目前主要3个途径：
+要使用GPT4，目前主要3个途径（第一个收费，后两个免费）：
 1. 用ChatGPT Plus，可以最好体验地试用GPT4。但是不是免费的，20美元/月的价格。
-2. 用bing AI聊天机器人，因为bing早在GPT4正式单独发布前就已经是用的GPT4版本的模型了。
+2. 用bing AI聊天机器人，因为bing早在GPT4正式单独发布前，就已经在用GPT4版本的模型了。
 3. [申请加入GPT4 API等待列表](https://openai.com/waitlist/gpt-4-api)
 
 为了证明bing AI聊天机器人用的是GPT4，而不是GPT3.5，用了个官方的测试GPT4的例子。
@@ -58,8 +58,8 @@ tags:
 
     A beautiful Cinderella dances eagerly; fairy grants her invitation; just keeps leaving midnight; noble prince questions royal stepsister; tries using vanished waltz xcessory; yearns zealously.👸
 
-bing AI和ChatGPT Plus给出近似一样的回答，可见都在用GPT4模型生成答案。ChatGPT目前只能给出下面的回答。
+bing AI和ChatGPT Plus给出近似一样的回答，可见都在用GPT4模型生成答案。ChatGPT目前只能给出下面的回答（GPT3.5只能写到A-G，就编不下去了）。
 
 ![](/images/gpt4-release/2023-03-15-17-20-55.png)
 
-bing搜索聊天机器人因为被严格限定在搜索领域，其定位首先是搜索AI，其次定位为聊天机器人。它的回答是基于搜索内容的。所以bing AI和CharGPT两者相比，ChatGPT的回答有更多的自由度和灵活性。
+bing搜索聊天机器人因为被严格限定在搜索领域，其定位首先是搜索AI，其次定位为聊天机器人。它的回答是基于搜索内容的。所以bing AI和CharGPT两者相比，ChatGPT的回答有更多的自由度，灵活性和创造性。总之bing AI被微软封印了很多技能，将其限定在搜索领域，因为微软只将其定位成搜索AI。
