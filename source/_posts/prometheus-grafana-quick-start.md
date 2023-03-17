@@ -339,11 +339,13 @@ Created symlink /etc/systemd/system/multi-user.target.wants/grafana-server.servi
 
 ![](/images/prometheus-grafana-quick-start/2023-03-17-17-30-48.png)
 
-![](/images/prometheus-grafana-quick-start/2023-03-17-17-32-27.png)
-
 ## 配置Grafana的数据源
 
 点击 配置 - Data Sources，选Prometheus。
+
+![](/images/prometheus-grafana-quick-start/2023-03-17-17-32-27.png)
+
+
 
 ![](/images/prometheus-grafana-quick-start/2023-03-17-17-33-12.png)
 
