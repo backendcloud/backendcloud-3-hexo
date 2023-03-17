@@ -8,7 +8,7 @@ tags:
 
 Prometheus+Grafana 是监控Kubernetes集群各项监控指标的主流开源工具。
 
-本篇是Prometheus+Grafana的快速入门。最简单的监控demo：对服务器节点的监控。把从服务器（即被监控机器）采集到的信息发到prometheus，经prometheus数据处理后在grafana进行直观的展示。
+本篇是关于Prometheus+Grafana的快速入门。最简单的监控demo：对服务器节点的监控。把从服务器（即被监控机器）采集到的信息发到prometheus，经prometheus数据处理后在grafana进行直观的展示。
 
 # 安装和配置node_exporter
 
@@ -148,6 +148,7 @@ prometheus-2.42.0.linux-amd64/promtool
 prometheus-2.42.0.linux-amd64/prometheus
 ```
 
+**配置Prometheus的数据源：scrape target**
 
 ```bash
 [root@centos9 ~]# cd prometheus-2.42.0.linux-amd64/
