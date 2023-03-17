@@ -228,7 +228,7 @@ ts=2023-03-17T08:54:20.406Z caller=main.go:978 level=info msg="Server is ready t
 ts=2023-03-17T08:54:20.407Z caller=manager.go:974 level=info component="rule manager" msg="Starting rule manager..."
 ```
 
-浏览器打开 http://<deploy-ip>:9090
+浏览器打开 `http://<deploy-ip>:9090`
 
 ![](/images/prometheus-grafana-quick-start/2023-03-17-17-01-15.png)
 
@@ -367,6 +367,6 @@ load dashboard后，界面如下：
 
 ![](/images/prometheus-grafana-quick-start/2023-03-17-17-44-10.png)
 
-等待一段事件后，发现有了监控的图表：
+等待一段事件后，发现有了监控的看板有了实时的数据：
 
 ![](/images/prometheus-grafana-quick-start/2023-03-17-17-53-05.png)

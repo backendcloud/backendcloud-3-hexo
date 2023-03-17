@@ -58,8 +58,12 @@ tags:
 
     A beautiful Cinderella dances eagerly; fairy grants her invitation; just keeps leaving midnight; noble prince questions royal stepsister; tries using vanished waltz xcessory; yearns zealously.👸
 
-bing AI和ChatGPT Plus给出近似一样的回答，可见都在用GPT4模型生成答案。ChatGPT目前只能给出下面的回答（GPT3.5只能写到A-G，就编不下去了）。
+bing AI和ChatGPT Plus给出近似一样的回答，可见都在用GPT4模型生成答案。ChatGPT目前只能给出下面的回答（GPT3.5只能写到B-H，就编不下去了）。
 
 ![](/images/gpt4-release/2023-03-15-17-20-55.png)
+
+下面是OpenAI的GPT-4回答的结果：
+
+![](/images/gpt4-for-free/2023-03-17-22-37-41.png)
 
 bing搜索聊天机器人因为被严格限定在搜索领域，其定位首先是搜索AI，其次定位为聊天机器人。它的回答是基于搜索内容的。所以bing AI和CharGPT两者相比，ChatGPT的回答有更多的自由度，灵活性和创造性。总之bing AI被微软封印了很多技能，将其限定在搜索领域，因为微软只将其定位成搜索AI。
