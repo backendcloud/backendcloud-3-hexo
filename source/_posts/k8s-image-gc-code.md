@@ -6,6 +6,14 @@ categories: 云原生
 tags:
 ---
 
+kubelet 镜像垃圾回收的参数:
+
+    --image-gc-high-threshold: 当磁盘使用率超过 85%, 则进行垃圾回收, 默认为 85%.
+    --image-gc-low-threshold: 当空间已经小于 80%, 则停止垃圾回收, 默认为 80%.
+    --minimum-image-ttl-duration: 镜像的最低存留时间, 默认为 2m0s.
+
+对应的结构体如下：
+
 ```go
 // ImageGCPolicy is a policy for garbage collecting images. Policy defines an allowed band in
 // which garbage collection will be run.
@@ -23,12 +31,7 @@ type ImageGCPolicy struct {
 }
 ```
 
-kubelet 镜像垃圾回收的参数:
-
-    --image-gc-high-threshold: 当磁盘使用率超过 85%, 则进行垃圾回收, 默认为 85%.
-    --image-gc-low-threshold: 当空间已经小于 80%, 则停止垃圾回收, 默认为 80%.
-    --minimum-image-ttl-duration: 镜像的最低存留时间, 默认为 2m0s.
-
+ImageGCManager 接口，核心方法就一个：GarbageCollect
 
 ```go
 // ImageGCManager is an interface for managing lifecycle of all images.
