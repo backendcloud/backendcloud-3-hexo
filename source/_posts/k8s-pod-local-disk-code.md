@@ -186,3 +186,92 @@ func (m *managerImpl) containerEphemeralStorageLimitEviction(podStats statsapi.P
 	return false
 }
 ```
+
+上面3个Limit检查的方法都调用了m.evictPod方法：
+
+```go
+// 首先，检查pod是否是CriticalPod，CriticalPod包括static pod，mirror pod以及根据优先级来判定是否是CriticalPod
+// static pod 的Annotations key：ConfigSourceAnnotationKey    = "kubernetes.io/config.source" 对应的value是file，普通的pod对应的value是api
+// mirror pod的Annotations key：kubernetes.io/config.mirror ，有此notation就是mirror pod
+func (m *managerImpl) evictPod(pod *v1.Pod, gracePeriodOverride int64, evictMsg string, annotations map[string]string, condition *v1.PodCondition) bool {
+	// If the pod is marked as critical and static, and support for critical pod annotations is enabled,
+	// do not evict such pods. Static pods are not re-admitted after evictions.
+	// https://github.com/kubernetes/kubernetes/issues/40573 has more details.
+	if kubelettypes.IsCriticalPod(pod) {
+		klog.ErrorS(nil, "Eviction manager: cannot evict a critical pod", "pod", klog.KObj(pod))
+		return false
+	}
+	// record that we are evicting the pod
+	//若不是CriticalPod，进入evict流程
+	// 1. 通过client-go recoder event发送给K8S event记录
+	// 2. evict信息记录日志
+	// 3. 调用  m.killPodFunc evict the pod
+	m.recorder.AnnotatedEventf(pod, annotations, v1.EventTypeWarning, Reason, evictMsg)
+	// this is a blocking call and should only return when the pod and its containers are killed.
+	klog.V(3).InfoS("Evicting pod", "pod", klog.KObj(pod), "podUID", pod.UID, "message", evictMsg)
+	err := m.killPodFunc(pod, true, &gracePeriodOverride, func(status *v1.PodStatus) {
+		status.Phase = v1.PodFailed
+		status.Reason = Reason
+		status.Message = evictMsg
+		if condition != nil {
+			podutil.UpdatePodCondition(status, condition)
+		}
+	})
+	if err != nil {
+		klog.ErrorS(err, "Eviction manager: pod failed to evict", "pod", klog.KObj(pod))
+	} else {
+		klog.InfoS("Eviction manager: pod is evicted successfully", "pod", klog.KObj(pod))
+	}
+	return true
+}
+```
+
+```go
+// killPodNow returns a KillPodFunc that can be used to kill a pod.
+// It is intended to be injected into other modules that need to kill a pod.
+// 这个方法的英文注释已经非常详尽了
+func killPodNow(podWorkers PodWorkers, recorder record.EventRecorder) eviction.KillPodFunc {
+	return func(pod *v1.Pod, isEvicted bool, gracePeriodOverride *int64, statusFn func(*v1.PodStatus)) error {
+		// determine the grace period to use when killing the pod
+		gracePeriod := int64(0)
+		if gracePeriodOverride != nil {
+			gracePeriod = *gracePeriodOverride
+		} else if pod.Spec.TerminationGracePeriodSeconds != nil {
+			gracePeriod = *pod.Spec.TerminationGracePeriodSeconds
+		}
+
+		// we timeout and return an error if we don't get a callback within a reasonable time.
+		// the default timeout is relative to the grace period (we settle on 10s to wait for kubelet->runtime traffic to complete in sigkill)
+		timeout := int64(gracePeriod + (gracePeriod / 2))
+		minTimeout := int64(10)
+		if timeout < minTimeout {
+			timeout = minTimeout
+		}
+		timeoutDuration := time.Duration(timeout) * time.Second
+
+		// open a channel we block against until we get a result
+		ch := make(chan struct{}, 1)
+		podWorkers.UpdatePod(UpdatePodOptions{
+			Pod:        pod,
+			UpdateType: kubetypes.SyncPodKill,
+			KillPodOptions: &KillPodOptions{
+				CompletedCh:                              ch,
+				Evict:                                    isEvicted,
+				PodStatusFunc:                            statusFn,
+				PodTerminationGracePeriodSecondsOverride: gracePeriodOverride,
+			},
+		})
+
+		// wait for either a response, or a timeout
+		select {
+		case <-ch:
+			return nil
+		case <-time.After(timeoutDuration):
+			recorder.Eventf(pod, v1.EventTypeWarning, events.ExceededGracePeriod, "Container runtime did not kill the pod within specified grace period.")
+			return fmt.Errorf("timeout waiting to kill pod")
+		}
+	}
+}
+```
+
+可见是调用的podWorkers.UpdatePod，实际的更新pod的方法，并给了相关的参数，实现了KillPodFunc，或者说evicting the pod。podWorkers.UpdatePod和其他podWorkers内容较多，令开一篇分析。
