@@ -18,6 +18,11 @@ Pod的每个container都可以配置：
     spec.containers[].resources.limits.ephemeral-storage
     spec.containers[].resources.requests.ephemeral-storage
 
+若发生因配置了临时存储限制，容器文件不断增长，超过阈值导致pod被驱逐，describe pod可以看到类似下面的event信息：
+
+    Warning  Evicted    1s    kubelet            Pod ephemeral local storage usage exceeds the total limit of containers 100Mi.
+
+如果没有特殊限制，我们不会配置ephemeral-storage的request和limit，但是如果你的pod存储会持续增长，但是又不想影响到节点其他容器运行，就可以设置下，这样当容器的存储达到limit设置大小后，只有这一个pod就会驱逐重建，而不是整个节点上所有pod都被驱逐。
 
 Evict Pod动作是由kubelet完成的。每个节点上的kubelet会启动一个evict manager，每隔一段固定的时间进行一次检查，ephemeral storage的检查也是在这个阶段完成的。
 
