@@ -2,7 +2,7 @@
 title: ChatGPT云原生开发实践 试用ChatGPT做Kubernetes Scheduler开发
 readmore: false
 date: 2023-02-13 12:15:05
-categories: 云原生
+categories: Tools
 tags:
 ---
 
