@@ -12,17 +12,17 @@ tags:
 
 在写代码之前，先说下Github Copilot在写文档写文章上的使用体验。
 
-Github Copilot不仅可以用来写代码，也可以用于写文档。实际上篇关于 集成GPT-4的Cursor 的文章里的内容，我就是用Github Copilot写的。Github Copilot的使用体验非常好，我只需要输入一些关键词，比如“集成GPT-4的Cursor”，然后就会自动给我不全接下来的内容，很多时候正式我需要的内容，只要按下tab键就会自动补全到我的文章里，这个过程非常快，非常方便。
+Github Copilot不仅可以用来写代码，也可以用于写文档。实际上篇公众号关于 集成GPT-4的Cursor 的文章里的内容，我就是用Github Copilot辅助完成的。Github Copilot的使用体验非常好，我只需要输入一些关键词，比如“集成GPT-4的Cursor”，然后就会自动给我补全接下来的内容，很多时候正是我需要的内容，只要按下tab键就会自动补全到文章里，这个过程非常快，非常方便。不像ChatGPT，bing AI需要在另外的聊天窗口执行后复制zhi到文章里，这个过程又慢又繁琐，Github Copilot可以将AI无缝接入到编辑的光标下。
 
-更神奇的是，我文章里用到了大量的图片，Github Copilot也能自动识别图片的信息和图片里的文字，补全相关文字的时候，显然是扫描过插入的图片后，综合图片的信息后给出的文字。
+更神奇的是，我文章里用到了大量的图片，Github Copilot也能自动识别图片的信息和图片里的文字，因为在补全相关文字的时候，应该是扫描过插入的图片后，综合图片的信息后给出的文字。
 
-下面开始写代码：
+下面开始用Github Copilot写代码：
 
 ![](/images/github-copilot-cursor/2023-03-29-14-13-40.png)
 
-Github Copilot的代码补全功能和Cursor不太一样的地方是，Cursor会给出完整的代码，而Github Copilot往往只给出一部分代码，或者一个完整的函数，且需要通过tab键决定是否采用Github Copilot的建议，整个过程往往还需要自己去写点代码。但这个过程也非常流畅，非常方便。Github Copilot更体现了Copilot，飞行副驾驶，辅助的特色。
+Github Copilot的代码补全功能和Cursor不太一样的地方是，Cursor会给出完整的代码，而Github Copilot往往只给出一部分代码，或者一个完整的函数，且需要通过tab键决定是否采用Github Copilot的建议，整个过程往往还需要自己去写点代码。但这个过程也非常流畅，非常方便。Github Copilot更体现了Copilot，飞行副驾驶，重在辅助。
 
-和Github Copilot一起写完的代码如下：
+和Github Copilot一起完成的代码如下：
 
 ```python
 # 写一个python程序，要求实现图片转字符画并写入文件，要用到pillow 库的使用，araparse库的使用，以及文件的读写
@@ -90,7 +90,7 @@ PS C:\Users\hanwei\Documents\GitHub\backendcloud-3-hexo\themes> python main.py .
 
 发现生成的图片太大了，整个屏幕只能显示一小部分，比如上面的耳朵和眼睛。
 
-对比下Cursor生成的代码，应该先将图像的像素缩小下。
+对比下Cursor生成的代码，应该先将图像的像素压缩下。
 
 将
 
@@ -115,11 +115,13 @@ def convert(image_file):
 
 ![](/images/github-copilot-cursor/2023-03-29-14-33-06.png)
 
-下面使用Github Copilot Lab。Github Copilot Lab可以让AI解释代码，翻译代码到其他编程语言，让AI写注释，写文档，让AI增加debug内容，让AI使得程序更健壮。
+显然比例不对，原来的横图压缩成了正方形的图，压缩的太廋了，不管了，意思一下就行。
 
-虽然还在github copilot X等待列表，没有体验过X，但是感觉Github Copilot和Github Copilot Lab的结合已经有了github copilot X的宣传的主要功能。
+下面使用Github Copilot Lab。Github Copilot Lab可以让AI解释代码，将代码翻译成其他编程语言，让AI写注释，写文档，让AI增加debug代码，让AI写单元测试，让AI修改程序让程序更健壮。
 
-删除所有注释，让Github Copilot Lab写注释：
+虽然笔者第一时间加入了等待列表，现在还在github copilot X等待列表，没有体验过X，但是感觉Github Copilot和Github Copilot Lab的结合已经有了github copilot X的宣传的主要功能。
+
+下面，先删除所有注释，让Github Copilot Lab重新写注释：
 
 ![](/images/github-copilot-cursor/2023-03-29-14-38-39.png)
 
