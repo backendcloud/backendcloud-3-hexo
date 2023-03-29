@@ -115,7 +115,7 @@ def convert(image_file):
 
 ![](/images/github-copilot-cursor/2023-03-29-14-33-06.png)
 
-显然比例不对，原来的横图压缩成了正方形的图，压缩的太廋了，不管了，意思一下就行。
+比例不对，后加的代码里的参数，用了80，80，原来的横图压缩成了正方形的图，压缩的太廋了，不调整了，意思一下就行。
 
 下面使用Github Copilot Lab。Github Copilot Lab可以让AI解释代码，将代码翻译成其他编程语言，让AI写注释，写文档，让AI增加debug代码，让AI写单元测试，让AI修改程序让程序更健壮。
 
