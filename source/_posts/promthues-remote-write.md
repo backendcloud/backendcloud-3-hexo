@@ -39,7 +39,7 @@ reloaders := []reloader{
 			name:     "remote_storage",
 			reloader: remoteStorage.ApplyConfig,
 		}
-        // ...
+		// ...
 ```
 
 ```go
