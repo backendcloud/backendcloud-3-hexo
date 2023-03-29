@@ -92,9 +92,63 @@ if __name__ == '__main__':
 
 ![](2023-03-29-12-01-11.png)
 
-![](2023-03-29-12-15-11.png)
+```bash
+(venv) PS C:\Users\hanwei\PycharmProjects\pythonProject> python .\main.py -h          
+usage: main.py [-h] [-o OUTPUT] [--width WIDTH] [--height HEIGHT] file
+
+positional arguments:
+  file
+
+options:
+  -h, --help            show this help message and exit
+  -o OUTPUT, --output OUTPUT
+  --width WIDTH
+  --height HEIGHT
+(venv) PS C:\Users\hanwei\PycharmProjects\pythonProject> python .\main.py .\golang.png
+```
 
 运行程序后，转换的效果如下：
 
 ![](2023-03-29-12-16-47.png)
 
+```python
+    gray = int(0.2126 * r + 0.7152 * g + 0.0722 * b)
+```
+
+这段代码好奇怪，问问Cursor是啥意思。安按下 ctrl+l，唤起聊天窗口，输入：这段代码是啥意思
+
+![](2023-03-29-12-19-19.png)
+
+![](2023-03-29-12-19-53.png)
+
+Cursor给出了解释，原来是通过r，g，b的值加权计算出灰度值，然后通过灰度值计算出字符。还给出了参考链接 https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+
+![](2023-03-29-12-22-40.png)
+
+![](2023-03-29-12-24-06.png)
+
+![](2023-03-29-12-25-29.png)
+
+按下 ctrl+k 唤醒需求文本框，输入：请将这段代码由生成黑白的字符改成生成彩色的字符
+
+![](2023-03-29-12-30-14.png)
+
+![](2023-03-29-12-30-51.png)
+
+curl只改动了2行的代码，实现了由生成黑白的字符改成生成彩色的字符。下面测试一下
+
+```bash
+(venv) PS C:\Users\hanwei\PycharmProjects\pythonProject> python .\main2.py .\golang.png
+```
+
+生成的结果如下，发现文本文件打开后，多了很多颜色的信息
+
+![](2023-03-29-12-39-19.png)
+
+但是这样无法看出原来的图像了，需要在终端查看颜色效果：
+
+![](2023-03-29-12-37-48.png)
+
+![](2023-03-29-12-38-09.png)
+
+可见，蓝色，且两种不同深浅的蓝色都显示了出来。
