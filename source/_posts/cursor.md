@@ -15,11 +15,13 @@ GPT-4和GPT-3.5在处理和编写代码的能力上差别还是很大的。官�
 
 集成GPT-4的Github Copilot X还在小范围内测中，而集成GPT-4的Cursor已公开发行。Cursor是一个集成GPT-4的IDE，可以用自然语言编写代码，让编写代码和聊天一样简单。
 
-集成GPT-4的Cursor，快捷键：windows电脑 ctrl+k，mac comand+k 唤起需求输入框，来用自然语言编写代码；ctrl+l，mac comand+l 唤起聊天窗口，让编写代码和聊天一样简单。
+集成GPT-4的Cursor，快捷键：windows电脑 ctrl+k，mac电脑 comand+k 唤起需求输入框，来用自然语言编写代码；ctrl+l，comand+l 唤起聊天窗口，让编写代码和聊天一样简单。
 
 首先，按下 ctrl+k。写下一段需求：写一个python程序，要求实现图片转字符画并写入文件，要用到pillow 库的使用，araparse库
 
 ![](/images/cursor/2023-03-29-11-56-05.png)
+
+cursor从一个空白的文件中，生成了一段完整的python代码。
 
 ![](/images/cursor/2023-03-29-12-13-26.png)
 
@@ -86,11 +88,11 @@ if __name__ == '__main__':
             f.write(txt)
 ```
 
-复制到Pycharm IDE看看自动生成的代码能否直接运行。
+看看自动生成的代码能否直接运行。
 
 用于转换的图片选用下面这张：
 
-![](/images/cursor/2023-03-29-12-01-11.png)
+![](/images/cursor/golang.png)
 
 ```bash
 (venv) PS C:\Users\hanwei\PycharmProjects\pythonProject> python .\main.py -h          
@@ -111,11 +113,13 @@ options:
 
 ![](/images/cursor/2023-03-29-12-16-47.png)
 
+下面来读读代码：
+
 ```python
     gray = int(0.2126 * r + 0.7152 * g + 0.0722 * b)
 ```
 
-这段代码好奇怪，问问Cursor是啥意思。安按下 ctrl+l，唤起聊天窗口，输入：这段代码是啥意思
+这段代码好奇怪，问问Cursor是啥意思。按下 ctrl+l，唤起聊天窗口，输入：这段代码是啥意思
 
 ![](/images/cursor/2023-03-29-12-19-19.png)
 
@@ -125,17 +129,27 @@ Cursor给出了解释，原来是通过r，g，b的值加权计算出灰度值�
 
 ![](/images/cursor/2023-03-29-12-22-40.png)
 
+按下 ctrl+l，唤起聊天窗口，让AI解释下整段代码，输入：用中文解释下整段代码
+
 ![](/images/cursor/2023-03-29-12-24-06.png)
 
 ![](/images/cursor/2023-03-29-12-25-29.png)
+
+
+可见AI解释的非常准确和详尽。
+
+上面代码的功能是将图片转换成黑白的带有灰度的ASCII字符画，下面来改造一下，让它能够生成彩色的字符画。
 
 按下 ctrl+k 唤醒需求文本框，输入：请将这段代码由生成黑白的字符改成生成彩色的字符
 
 ![](/images/cursor/2023-03-29-12-30-14.png)
 
+看到动画：AI会逐行扫描每一行代码，在需要改动的地方标注出来，然后在下面给出改动的代码。并保留原来的代码，方便对比。
+
 ![](/images/cursor/2023-03-29-12-30-51.png)
 
-curl只改动了2行的代码，实现了由生成黑白的字符改成生成彩色的字符。下面测试一下
+
+AI只改动了2行的代码，实现了由生成黑白的字符改成生成彩色的字符。下面测试一下：
 
 ```bash
 (venv) PS C:\Users\hanwei\PycharmProjects\pythonProject> python .\main2.py .\golang.png
@@ -145,10 +159,10 @@ curl只改动了2行的代码，实现了由生成黑白的字符改成生成彩
 
 ![](/images/cursor/2023-03-29-12-39-19.png)
 
-但是这样无法看出原来的图像了，需要在终端查看颜色效果：
+直接打开文本文件查看，是无法看出原来的图像了，需要在终端查看颜色效果：
 
 ![](/images/cursor/2023-03-29-12-37-48.png)
 
 ![](/images/cursor/2023-03-29-12-38-09.png)
 
-可见，蓝色，且两种不同深浅的蓝色都显示了出来。
+可见，原来图片的蓝色信息，且两种不同深浅的蓝色都显示了出来。Perfect！
