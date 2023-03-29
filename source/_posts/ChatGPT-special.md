@@ -1,5 +1,5 @@
 ---
-title: AI跨界挑战之当ChatGPT变成说唱歌手，当ChatGPT变成脱口秀选手，超燃的ChatGPT VS 人类五子棋对战
+title: 当ChatGPT变成说唱歌手，当ChatGPT变成脱口秀选手，超燃的ChatGPT VS 人类五子棋对战
 readmore: false
 date: 2023-03-28 19:03:13
 categories: Tools
