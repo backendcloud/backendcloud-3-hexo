@@ -1,5 +1,5 @@
 ---
-title: 告别ChatGPT的中断问题和吐字缓慢问题，免费体验像ChatGPT Plus一样顺畅流畅的交互体验
+title: 告别ChatGPT的中断问题和吐字缓慢问题，免费体验像ChatGPT Plus一样顺畅的交互体验
 readmore: false
 date: 2023-03-31 12:11:37
 categories: Tools
@@ -16,7 +16,7 @@ tags:
 
 https://github.com/Bin-Huang/chatbox
 
-下载下来试用了一把，完全没问题。可以 彻底告别ChatGPT的中断问题和吐字缓慢问题，免费体验像ChatGPT Plus一样顺畅流畅的交互体验。
+下载下来试用了一把，完全没问题。可以 彻底告别ChatGPT的中断问题和吐字缓慢问题，免费体验像ChatGPT Plus一样顺畅的交互体验。
 
 安装上面的软件，设置只需要一步：配置API Key，就可以通过调用API的方式和ChatGPT对话了。
 
