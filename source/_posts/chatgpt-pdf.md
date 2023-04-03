@@ -1,5 +1,5 @@
 ---
-title: chatgpt-pdf
+title: 用ChatGPT技术来分析和翻译，开启新时代的PDF文档处理方式
 readmore: false
 date: 2023-04-03 11:56:55
 categories: Tools
@@ -8,11 +8,31 @@ tags:
 - PDF
 ---
 
+> 本篇的源码放在 https://github.com/backendcloud/colab/blob/main/gpt-pdf.ipynb
 
+在当今科技快速发展的时代，PDF文件已经成为许多人工作生活中不可或缺的一部分。然而，对PDF文档进行分析和翻译仍然是一个相当繁琐的过程。但现在，随着ChatGPT技术的出现，这个过程变得更加高效和准确了。
 
-TOKEN = "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"
-     
-互联网上找一个pdf文件，这里就用了openai官网的gpt-4的文档作为示例。用requests库，将pdf文件下载下来。
+ChatGPT是一项先进的人工智能技术，可以通过深度学习和自然语言处理来理解和解析PDF文档。使用ChatGPT进行PDF分析和翻译的主要好处之一是高速和精准度。与传统的OCR方法相比，ChatGPT不仅可以识别文本，还可以识别和理解图像和表格内容，并输出高质量的分析结果。
+
+而且，ChatGPT还可以进行翻译，将PDF文档从一种语言翻译到另一种语言。这项功能对于那些需要处理多种语言的项目或文档的人来说非常有用，也可以帮助跨国公司更轻松地处理不同国别的客户或业务伙伴。
+
+总之，ChatGPT的出现带来了PDF分析和翻译方面的变革，并且将继续推动这个领域的发展。
+
+用ChatGPT分析PDF，已经有一些商业产品推出了。今天来测试下，首先随机找了一篇最新发表的论文，用ChatGPT来辅助分析一下论文。
+
+![](/images/chatgpt-pdf/2023-04-03-10-09-29.png)
+
+![](/images/chatgpt-pdf/2023-04-03-10-11-18.png)
+
+![](/images/chatgpt-pdf/2023-04-03-10-16-17.png)
+
+看了下结果，分析的也是简单的文字整合，显然没有真正读懂论文，也没有给出详细的分析。问了点难点的具体细节，直接卡壳了。
+
+这类利用ChatGPT的商用网站，说白了还是调用的GPT API，输出结果还都是GPT给出的回答。商用网站做的工作是设计一些交互和辅助一些提示词。
+
+下面分析下实现的源码，以翻译PDF为例，看看是怎么实现的。（分析PDF类似，只是提示词从翻译改成分析，解释等）
+
+## 互联网上找一个pdf文件，这里就用了openai官网的gpt-4的文档作为示例。用requests库，将pdf文件下载下来。
 
 ```python
 import requests
@@ -46,7 +66,8 @@ text
 ```
 
 'GPT-4 Technical Report\nOpenAI\x03\nAbstract\nWe report the development of GPT-4, a large-scale, multimodal model which can\naccept image and text inputs and produce text outputs. While less capable than\nhumans in many real-world scenarios, GPT-4 exhibits human-level performance\non various professional and academic benchmarks, including passing a simulated\nbar exam with a score around the top 10% of test takers. GPT-4 is a Transformer-\nbased model pre-trained to predict the next token in a document. The post-training\nalignment process results in improved performance on measures of factuality and\nadherence to desired behavior. A core component of this project was developing\ninfrastructure and optimization methods that behave predictably across a wide\nrange of scales. This allowed us to accurately predict some aspects of GPT-4’s\nperformance based on models trained with no more than 1/1,000th the compute of\nGPT-4.\n1 Introduction\nThis technical report presents GPT-4, a large multimodal model capable of processing image and\ntext inputs and producing text outputs. Such models are an important area of study as they have the\npotential to be used in a wide range of applications, such as dialogue systems, text summarization,\nand machine translation. As such, they have been the subject of substantial interest and progress in\nrecent years [1–34].\nOne of the main goals of developing such models is to improve their ability to understand and generate\nnatural language text, particularly in more complex and nuanced scenarios. To test its capabilities\nin such scenarios, GPT-4 was evaluated on a variety of exams originally designed for humans. In\nthese evaluations it performs quite well and often outscores the vast majority of human test takers.\nFor example, on a simulated bar exam, GPT-4 achieves a score that falls in the top 10% of test takers.\nThis contrasts with GPT-3.5, which scores in the bottom 10%.\nOn a suite of traditional NLP benchmarks, GPT-4 outperforms both previous large language models\nand most state-of-the-art systems (which often have benchmark-speciﬁc training or hand-engineering).\nOn the MMLU benchmark [ 35,36], an English-language suite of multiple-choice questions covering\n57 subjects, GPT-4 not only outperforms existing models by a considerable margin in English, but\nalso demonstrates strong performance in other languages. On translated variants of MMLU, GPT-4\nsurpasses the English-language state-of-the-art in 24 of 26 languages considered. We discuss these\nmodel capability results, as well as model safety improvements and results, in more detail in later\nsections.\nThis report also discusses a key challenge of the project, developing deep learning infrastructure and\noptimization methods that behave predictably across a wide range of scales. This allowed us to make\npredictions about the expected performance of GPT-4 (based on small runs trained in similar ways)\nthat were tested against the ﬁnal run to increase conﬁdence in our training.\nDespite its capabilities, GPT-4 has similar limitations to earlier GPT models [ 1,37,38]: it is not fully\nreliable (e.g. can suffer from “hallucinations”), has a limited context window, and does not learn\n\x03Please cite this work as “OpenAI (2023)". Full authorship contribution statements appear at the end of the\ndocument. Correspondence regarding this technical report can be sent to gpt4-report@openai.comarXiv:submit/4812508  [cs.CL]  27 Mar 2023'
-本来这里就可以调用GPT API进行处理了，但是GPT有单词输入文字的最大限制。所以要对pdf里的文字切分。等比例切分会中断句子。这里用了自然语言处理NLTK库，按句子的意思进行切分。
+
+## 本来这里就可以调用GPT API进行处理了，但是GPT有单词输入文字的最大限制。所以要对pdf里的文字切分。等比例切分会中断句子。这里用了自然语言处理NLTK库，按句子的意思进行切分。
 
 ```bash
 ! pip install nltk
@@ -159,7 +180,8 @@ document.
 ====================
 Correspondence regarding this technical report can be sent to gpt4-report@openai.comarXiv:submit/4812508  [cs.CL]  27 Mar 2023
 ====================
-调用GPT API对分段的文字进行翻译
+
+## 调用GPT API对分段的文字进行翻译
 
 ```bash
 ! pip install openai
