@@ -250,6 +250,7 @@ chunks
  'On the MMLU benchmark [ 35,36], an English-language suite of multiple-choice questions covering\n57 subjects, GPT-4 not only outperforms existing models by a considerable margin in English, but\nalso demonstrates strong performance in other languages.On translated variants of MMLU, GPT-4\nsurpasses the English-language state-of-the-art in 24 of 26 languages considered.We discuss these\nmodel capability results, as well as model safety improvements and results, in more detail in later\nsections.This report also discusses a key challenge of the project, developing deep learning infrastructure and\noptimization methods that behave predictably across a wide range of scales.This allowed us to make\npredictions about the expected performance of GPT-4 (based on small runs trained in similar ways)\nthat were tested against the ﬁnal run to increase conﬁdence in our training.Despite its capabilities, GPT-4 has similar limitations to earlier GPT models [ 1,37,38]: it is not fully\nreliable (e.g.can suffer from “hallucinations”), has a limited context window, and does not learn\n\x03Please cite this work as “OpenAI (2023)".',
  'Full authorship contribution statements appear at the end of the\ndocument.Correspondence regarding this technical report can be sent to gpt4-report@openai.comarXiv:submit/4812508  [cs.CL]  27 Mar 2023']
 
+```python
 completion = openai.ChatCompletion.create(
   model="gpt-3.5-turbo",
   messages=[
@@ -258,7 +259,8 @@ completion = openai.ChatCompletion.create(
     ]
 )
 completion.choices[0].message.content
-     
+```
+
 'GPT-4技术报告\nOpenAI\n摘要\n本文报道了GPT-4的开发情况，它是一个可接收图像和文本输入并生成文本输出的大规模多模态模型。虽然在许多实际情境中比人类能力差，但在各种专业和学术基准测试中，GPT-4表现出人类水平的性能，包括在模拟的律师考试中获得了约是前10%考生的成绩。GPT-4是基于Transformer的模型，预先训练以预测文档中的下一个标记。后训练对齐过程提高了其实际性能和符合所需行为的程度。该项目的核心组件是开发基础设施和优化方法，可在各种规模上可靠地预测GPT-4的某些方面性能，其中包括了通过使用不超过GPT-4计算量的1/1000的模型进行训练。\n1介绍\n本技术报告介绍了GPT-4，它是一个大规模多模态模型，能够处理图像和文本输入并生成文本输出。'
 
 ## 下面的代码将上面的所有分片的代码拼在在一起，完成对完整的pdf的翻译。
