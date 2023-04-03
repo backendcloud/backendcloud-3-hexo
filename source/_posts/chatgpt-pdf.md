@@ -1,5 +1,5 @@
 ---
-title: 用ChatGPT技术来分析和翻译，开启新时代的PDF文档处理方式
+title: 用ChatGPT技术来分析和翻译PDF文档，开启新时代的PDF文档处理方式
 readmore: false
 date: 2023-04-03 11:56:55
 categories: Tools
