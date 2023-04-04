@@ -1,5 +1,5 @@
 ---
-title: 通用人工智能的火花，GPT-4的早期实验
+title: GPT-4的早期实验，通用人工智能的火花
 readmore: false
 date: 2023-04-04 07:13:18
 categories: Tools
