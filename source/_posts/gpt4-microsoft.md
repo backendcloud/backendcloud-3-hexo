@@ -11,11 +11,7 @@ tags:
 
 文章的主要观点是虽然GPT-4还不完整，但是已经可以被视为，一个通用人工智能的早期版本。
 
-由于全文将近7万字，本篇将论文的内容做了一下精炼，有兴趣可阅读原文 https://arxiv.org/pdf/2303.12712.pdf
-
-或者中英文对照翻译 https://github.com/backendcloud/pdf_translate/tree/main/gpt4-microsoft/2303.12712.ipynb
-
-> 上面的论文翻译工作是用ChatGPT完成翻译的
+由于全文将近7万字，本篇将论文的内容做了一下精炼和解读，有兴趣可阅读原文 https://arxiv.org/pdf/2303.12712.pdf
 
 来自微软的科学家们认为，GPT-4的智能水平已经非常接近于人类的水平，而且远超之前的诸如先前ChatGPT用的GPT-3.5这样的模型，可以将GPT-4视为通用人工智能系统，也就是AGI的早期，但是并不完整的版本。
 
