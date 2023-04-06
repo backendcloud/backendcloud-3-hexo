@@ -43,3 +43,5 @@ ChatGPT：
 /imagine prompt: Birds are gone from the thousand mountains, and the paths show no signs of human travel. An aging fisherman sits alone on his lone boat, wearing a straw raincoat and a bamboo hat, and casting his lonely line into the icy waters of the river. Despite the bitter cold of winter and the desolation of nature, the fisherman remains undeterred, braving both the weather and the solitude to undertake his daily task.
 
 ![](/images/poetry/3.png)
+
+> 综合上面3个示例，发现ChatGPT对中国古诗的理解还是很准确的，但是生成的图像还是有点不太符合中国古诗的风格，可能是因为ChatGPT的训练数据不够多，或者是因为Dall-E 2的图像生成效果不够好，还需要进一步的优化。从理解古诗文上，就是一个以中文为母语的普通人，不经过一定的阅读训练，是很难理解古诗文的，但是ChatGPT却可以很好的理解古诗文，这就是ChatGPT的强大之处。
