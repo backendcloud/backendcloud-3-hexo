@@ -1,5 +1,5 @@
 ---
-title: ChatGPT 和 Dall-E 2 合作为中国古诗加入图像元素
+title: 浪漫古风，AI添彩——ChatGPT 和 Dall-E 2 联手为中国古诗注入生命和色彩！
 readmore: false
 date: 2023-04-06 12:50:56
 categories: Tools
