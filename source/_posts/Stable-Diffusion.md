@@ -7,6 +7,9 @@ tags:
 - AI
 ---
 
+**安装 Stable Diffusion 和 模板库**
+
+这里选了一套比较像真人的模板库
 
 ![](/images/Stable-Diffusion/2023-04-05-08-06-09.png)
 
@@ -14,6 +17,7 @@ tags:
 
 ![](/images/Stable-Diffusion/2023-04-05-08-06-52.png)
 
+**提示词：**
 
 (8k, RAW photo, best quality, masterpiece:1.2), (realistic, photo-realistic:1.4), ultra-detailed, (Kpop idol),perfect detail ,  looking at viewer,make up,
 
@@ -26,7 +30,7 @@ paintings,sketches, (worst quality:2), (low quality:2), (normal quality:2), lowr
 
 ![](/images/Stable-Diffusion/2023-04-05-08-10-55.png)
 
-下面是 用Stable Diffusion AI生成的几张照片。
+**下面是 用Stable Diffusion AI生成的几张照片：**
 
 ![](/images/Stable-Diffusion/1.png)
 
