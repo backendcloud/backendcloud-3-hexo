@@ -7,13 +7,73 @@ tags:
 - AI
 ---
 
+Stable Diffusion是一个基于Latent Diffusion Models（潜在扩散模型，LDMs）的文图生成（text-to-image）模型。它是由CompVis、Stability AI和LAION共同开发的一个文本转图像模型，可以将文本描述转换为图像。
+
 **安装 Stable Diffusion 和 模板库**
 
 这里选了一套比较像真人的模板库
 
+```bash
+Installing gfpgan
+Installing clip
+Installing open_clip
+Cloning Stable Diffusion into /content/stable-diffusion-webui/repositories/stable-diffusion-stability-ai...
+Cloning Taming Transformers into /content/stable-diffusion-webui/repositories/taming-transformers...
+Cloning K-diffusion into /content/stable-diffusion-webui/repositories/k-diffusion...
+Cloning CodeFormer into /content/stable-diffusion-webui/repositories/CodeFormer...
+Cloning BLIP into /content/stable-diffusion-webui/repositories/BLIP...
+Installing requirements for CodeFormer
+Installing requirements for Web UI
+Installing sd-webui-controlnet requirement: svglib
+
+
+Installing Deforum requirement: av
+Installing Deforum requirement: pims
+
+
+Installing rembg
+Installing onnxruntime for REMBG extension
+Installing pymatting for REMBG extension
+
+Installing pycloudflared
+
+
+Launching Web UI with arguments: --listen --xformers --enable-insecure-extension-access --theme dark --gradio-queue --multiple
+2023-04-06 02:26:14.767376: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-04-06 02:26:16.773685: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+Additional Network extension not installed, Only hijack built-in lora
+LoCon Extension hijack built-in lora successfully
+[AddNet] Updating model hashes...
+0it [00:00, ?it/s]
+[AddNet] Updating model hashes...
+0it [00:00, ?it/s]
+all detected, remote.moe trying to connect...
+Warning: Permanently added 'localhost.run,54.82.85.249' (RSA) to the list of known hosts.
+Warning: Permanently added 'remote.moe,159.69.126.209' (ECDSA) to the list of known hosts.
+all detected, cloudflared trying to connect...
+Download cloudflared...: 100% 34.0M/34.0M [00:00<00:00, 445MB/s]
+Calculating sha256 for /content/stable-diffusion-webui/models/Stable-diffusion/chilloutmix_NiPrunedFp32Fix.safetensors: fc2511737a54c5e80b89ab03e0ab4b98d051ab187f92860f3cd664dc9d08b271
+Loading weights [fc2511737a] from /content/stable-diffusion-webui/models/Stable-diffusion/chilloutmix_NiPrunedFp32Fix.safetensors
+Creating model from config: /content/stable-diffusion-webui/configs/v1-inference.yaml
+LatentDiffusion: Running in eps-prediction mode
+DiffusionWrapper has 859.52 M params.
+Downloading (…)olve/main/vocab.json: 961kB [00:00, 1.49MB/s]
+Downloading (…)olve/main/merges.txt: 525kB [00:00, 1.21MB/s]
+Downloading (…)cial_tokens_map.json: 100% 389/389 [00:00<00:00, 41.9kB/s]
+Downloading (…)okenizer_config.json: 100% 905/905 [00:00<00:00, 285kB/s]
+Downloading (…)lve/main/config.json: 4.52kB [00:00, 3.55MB/s]
+Applying xformers cross attention optimization.
+Textual inversion embeddings loaded(7): bad_prompt_version2, bad-artist, bad-artist-anime, ng_deepnegative_v1_75t, bad-image-v2-39000, EasyNegative, bad-hands-5
+Model loaded in 54.0s (calculate hash: 23.7s, load weights from disk: 0.6s, create model: 14.8s, apply weights to model: 14.7s).
+*Deforum ControlNet support: enabled*
+```
+
 ![](/images/Stable-Diffusion/2023-04-05-08-06-09.png)
 
 ![](/images/Stable-Diffusion/2023-04-05-08-06-39.png)
+
+**安装好后，进入界面：**
 
 ![](/images/Stable-Diffusion/2023-04-05-08-06-52.png)
 
