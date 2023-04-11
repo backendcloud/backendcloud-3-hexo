@@ -49,6 +49,8 @@ TOKEN = "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"
 ! pip install openai
 ```
 
+> 记得将TOKEN替换成你自己的TOKEN，即你在 https://platform.openai.com/account/api-keys 页面的API Key。
+
 ```bash
 Looking in indexes: https://pypi.org/simple, https://us-python.pkg.dev/colab-wheels/public/simple/
 Collecting openai
@@ -114,10 +116,9 @@ print(response["data"][0]["url"])
 
 **程序运行结果：**
 
-```bash
 /imagine prompt: A scene depicting the beauty of mid-June in West Lake as described in the poem "Seeing Lin Zifang Off to Jingci Temple in the Morning" by Yang Wanli. The view is different from other times of the year. In the painting, endless green lotus leaves reach up towards the sky, while the reflection of the sun on the water makes the lotus flowers appear a unique shade of red.
 https://oaidalleapiprodscus.blob.core.windows.net/private/org-zuDRR3x1ffIDMMVwGrkclQZ4/user-5TI7TlKvDEP8J1l1ByNdpdRp/img-jgOhwyqQw7UZEbxo9CWhLK2a.png?st=2023-04-11T07%3A27%3A54Z&se=2023-04-11T09%3A27%3A54Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-04-10T23%3A44%3A51Z&ske=2023-04-11T23%3A44%3A51Z&sks=b&skv=2021-08-06&sig=yC%2BJvbd6fC3jeaMwtaucQ1WiV4opebbE4iTPNR2wV7k%3D
-```
+
 
 > 上面的URL就是生成的图片，可以直接在浏览器中打开。
 
@@ -128,3 +129,5 @@ Resolution  | Price
 1024×1024|  $0.020 / image
 512×512| $0.018 / image
 256×256| $0.016 / image
+
+
