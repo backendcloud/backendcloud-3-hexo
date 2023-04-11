@@ -114,13 +114,15 @@ response = openai.Image.create(
 print(response["data"][0]["url"])
 ```
 
+> 若要替换其他的中国古诗，只需要将上面的`poem`变量替换成其他的古诗即可。诗句切记要选用描述性的写景的，不要选用抽象的，内心活动的，叙事的。也不要将描述完全不同画面的诗句放在一起。一段诗句只描述一个画面。
+
 **程序运行结果：**
 
 /imagine prompt: A scene depicting the beauty of mid-June in West Lake as described in the poem "Seeing Lin Zifang Off to Jingci Temple in the Morning" by Yang Wanli. The view is different from other times of the year. In the painting, endless green lotus leaves reach up towards the sky, while the reflection of the sun on the water makes the lotus flowers appear a unique shade of red.
 https://oaidalleapiprodscus.blob.core.windows.net/private/org-zuDRR3x1ffIDMMVwGrkclQZ4/user-5TI7TlKvDEP8J1l1ByNdpdRp/img-jgOhwyqQw7UZEbxo9CWhLK2a.png?st=2023-04-11T07%3A27%3A54Z&se=2023-04-11T09%3A27%3A54Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-04-10T23%3A44%3A51Z&ske=2023-04-11T23%3A44%3A51Z&sks=b&skv=2021-08-06&sig=yC%2BJvbd6fC3jeaMwtaucQ1WiV4opebbE4iTPNR2wV7k%3D
 
 
-> 上面的URL就是生成的图片，可以直接在浏览器中打开。
+> 结果输出AI绘画提示词prompt以及URL，上面的URL就是生成的图片，可以直接在浏览器中打开。
 
 **调用Dall-E 2的接口，生成图像的费用有点小贵，费用如下：**
 
