@@ -14,3 +14,4 @@ tags:
 * Docusaurus比Hexo更适合做技术文档类网站。因为Docusaurus有结构化知识库的功能，而Hexo没有。且Docusaurus带有blog的功能。
 * Docusaurus相比Hexo更像一个网站，便于营销。
 * Docusaurus对Github Actions的支持更好，可以自动化部署。Docusaurus对Github Pages的支持也更好，可以自动化部署到Github Pages。
+* Docusaurus支持多语种。
